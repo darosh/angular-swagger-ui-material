@@ -11,11 +11,13 @@
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2);
 }
 
+/*
 [swagger-ui-material] md-sidenav {
     width: 400px;
     min-width: 400px;
     max-width: 400px;
 }
+*/
 
 [swagger-ui-material] md-sidenav .md-subheader + .layout-padding {
     padding-top: 0;
