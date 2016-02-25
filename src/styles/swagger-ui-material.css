@@ -80,6 +80,11 @@
     line-height: 28px;
 }
 
+[swagger-ui-material] .sum-path-wrap {
+    line-height: 20px;
+    padding-top: 4px;
+}
+
 [swagger-ui-material] .sum-top {
     padding-top: 0;
 }
