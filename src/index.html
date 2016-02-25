@@ -57,7 +57,7 @@
                 .primaryPalette('teal')
                 .accentPalette('grey');
         })
-        .controller('MyCtrl', function ($scope, $location) {
+        .controller('MyCtrl', function ($scope, $location, $mdToast) {
             $scope.isLoading = false;
             $scope.swaggerUrl = $location.search()['url'] || 'http://petstore.swagger.io/v2/swagger.json';
             $scope.swaggerMethods = {
@@ -71,7 +71,8 @@
 
             // error management
             $scope.myErrorHandler = function (data, status) {
-                alert('Failed to load swagger: ' + status + ' ' + data);
+                $mdToast.show($mdToast.simple().textContent('Failed to load :-('));
+                console.error(status, data);
             };
         });
 </script>

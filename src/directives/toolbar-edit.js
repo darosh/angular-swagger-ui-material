@@ -7,6 +7,7 @@ angular.module('toolbarEdit', [])
             templateUrl: 'directives/toolbar-edit.html',
             scope: {
                 ngModel: '=',
+                open: '=',
                 displayTitle: '='
             },
             link: function (scope, element) {

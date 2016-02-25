@@ -76,6 +76,7 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
                 sum.searchFilter = '';
                 sum.searchObject = {httpMethod: '', path: ''};
                 sum.editUrl = scope.url;
+                sum.editOpen = false;
 
                 scope.$watch('sum.searchFilter', function () {
                     if (!sum.searchFilter) {
@@ -91,10 +92,10 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
                     }
                 });
 
-                scope.$watch('sum.editUrl', function () {
-                    $timeout(function () {
+                scope.$watch('sum.editOpen', function () {
+                    if (!sum.editOpen) {
                         scope.url = sum.editUrl;
-                    }, 200);
+                    }
                 });
             }
         };
