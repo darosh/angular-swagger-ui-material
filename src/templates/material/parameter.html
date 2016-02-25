@@ -1,15 +1,15 @@
 <div layout="row">
     <md-input-container flex ng-if="apiExplorer">
-        <label ng-bind="param.name + (param.required ? ' [required]' : '')"></label>
+        <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
 
         <div ng-if="param.in != 'body'" ng-switch="param.subtype">
             <input ng-switch-when="file" type="file" file-input ng-model="form[sum.sop.id][param.name]"
-                   placeholder="{{param.required?'[required]':''}}" ng-required="param.required">
+                   placeholder="{{param.required?'(required)':''}}" ng-required="param.required">
 
             <select ng-switch-when="enum" ng-model="form[sum.sop.id][param.name]">
                 <option ng-repeat="value in param.enum" value="{{value}}"
-                        ng-bind="value+(param.default==value?' [default]':'')"
-                        ng-selected="param.default==value"></option>
+                        ng-bind="value + (param.default == value ? ' (default)' : '')"
+                        ng-selected="param.default == value"></option>
             </select>
 
             <input ng-switch-default type="text" ng-model="form[sum.sop.id][param.name]"
@@ -27,7 +27,8 @@
         </div>
 
         <div ng-if="param.in == 'body'">
-            <textarea id="param{{param.id}}" ng-model="form[sum.sop.id][param.name]" ng-required="param.required"></textarea>
+            <textarea id="param{{param.id}}" ng-model="form[sum.sop.id][param.name]"
+                      ng-required="param.required"></textarea>
         </div>
     </md-input-container>
 
@@ -57,10 +58,10 @@
 
 <div ng-if="!apiExplorer">
     <div ng-if="param.in!='body'">
-        <div ng-if="param.default"><span ng-bind="param.default"></span> [default]</div>
+        <div ng-if="param.default"><span ng-bind="param.default"></span> (default)</div>
         <div ng-if="param.enum">
             <span ng-repeat="value in param.enum track by $index">{{value}}<span ng-if="!$last"> or </span></span>
         </div>
-        <div ng-if="param.required">[required]</div>
+        <div ng-if="param.required">(required)</div>
     </div>
 </div>

@@ -1,6 +1,8 @@
 <div ng-if="sum.sop.description">
     <md-subheader class="md-warn">Description</md-subheader>
-    <div layout-padding><div class="md-body-1" ng-bind-html="sum.sop.description"></div></div>
+    <div layout-padding>
+        <div class="md-body-1" ng-bind-html="sum.sop.description"></div>
+    </div>
 </div>
 
 <form role="form" name="explorerForm" ng-submit="submit(sum.sop)">
@@ -26,22 +28,22 @@
               ng-bind="sum.sop.responseClass.schema.json"></pre>
     </div>
 
-    <div>
-        <md-subheader class="md-warn">Parameters</md-subheader>
-
-        <div layout-padding style="margin-top: 12px; margin-bottom: 16px">
+    <div ng-if="sum.sop.produces">
+        <md-subheader class="md-warn">Response type</md-subheader>
+        <div layout-padding>
             <div layout="row">
-                <md-input-container ng-if="sum.sop.produces" flex>
-                    <label>Response content type</label>
+                <md-input-container flex>
                     <md-select ng-model="form[sum.sop.id].responseType">
-                        <md-option ng-repeat="item in sum.sop.produces track by item" value="{{item}}">
-                            {{item}}
+                        <md-option ng-repeat="item in sum.sop.produces track by item" value="{{item}}" ng-bind="::item">
                         </md-option>
                     </md-select>
                 </md-input-container>
             </div>
         </div>
+    </div>
 
+    <div ng-if="sum.sop.parameters">
+        <md-subheader class="md-warn">Parameters</md-subheader>
         <div layout-padding
              ng-repeat="param in sum.sop.parameters track by $index"
              ng-include="'templates/material/parameter.html'"></div>
@@ -60,10 +62,7 @@
             <md-subheader class="md-warn">Response</md-subheader>
         </div>
         <div class="sum-tools">
-            <md-button class="md-primary"
-                       ng-click="sum.sop.hideExplorerResult = true">
-                Hide response
-            </md-button>
+            <md-button class="md-primary" ng-click="sum.sop.hideExplorerResult = true">Hide response</md-button>
         </div>
     </div>
 </div>
