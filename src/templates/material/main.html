@@ -99,7 +99,7 @@
     <md-toolbar ng-if="sum.sop" class="md-accent" md-whiteframe="2">
         <div class="md-toolbar-tools">
             <span flex><span ng-repeat="t in sum.sop.tags">{{t}}<span ng-if="!$last">, </span></span></span>
-            <md-button ng-click="sum.toggleSidenav()"
+            <md-button hide show-gt-sm ng-click="sum.toggleSidenav()"
                        aria-label="toggle"
                        class="md-icon-button md-accent md-hue-3">
                 <md-icon ng-bind="sum.sidenavLockedOpen ? 'chevron_right' : 'chevron_left'"></md-icon>
