@@ -14,8 +14,10 @@ Material Design template for [angular-swagger-ui](https://github.com/Orange-Open
 
 ## Search
 
-| Filter | Matches |
-| --- | --- |
-| log | POST /user/login <br> POST /user/login|
-| get | GET /user <br> GET /pet|
-| get pet | GET /pet|
+| Filter | Matches | Notes |
+| --- | --- | --- |
+| log | POST /user/login <br> POST /user/login| path |
+| get | GET /user <br> GET /pet | method |
+| ge | - | single word, not full method |
+| get pet | GET /pet | method + path |
+| ge pet | GET /pet | method + path |
