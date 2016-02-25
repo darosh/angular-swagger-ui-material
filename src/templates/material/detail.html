@@ -16,12 +16,9 @@
             <md-subheader class="md-warn">Response class</md-subheader>
         </div>
         <div class="sum-tools" ng-if="sum.sop.responseClass.display != -1">
-            <a class="md-button"
-               ng-click="sum.sop.responseClass.display = 0"
-               ng-class="{'md-primary': sum.sop.responseClass.display == 0}">Model</a>
-            <a class="md-button"
-               ng-click="sum.sop.responseClass.display = 1"
-               ng-class="{'md-primary': sum.sop.responseClass.display == 1}">Example</a>
+            <a class="md-button md-primary"
+               ng-click="sum.sop.responseClass.display = !sum.sop.responseClass.display + 0"
+               ng-bind="sum.sop.responseClass.display ? 'Model' : 'Example'"></a>
         </div>
     </div>
 
