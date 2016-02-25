@@ -53,3 +53,31 @@ Angular-swagger-ui plugin module for markdown.
 * [angular-swagger-ui](https://github.com/Orange-OpenSource/angular-swagger-ui)
 * [Swagger RESTful API documentation specification](http://swagger.io/specification/)
 * [OpenAPI specification](https://github.com/OAI/OpenAPI-Specification)
+
+## Development
+
+### Install
+
+```shell
+npm install -g bower gulp
+bower install
+npm install
+```
+
+### Build dist
+
+```shell
+gulp
+```
+
+### Build demo
+
+```shell
+gulp demo
+```
+
+### Deploy demo
+
+```shell
+gulp deploy
+```
