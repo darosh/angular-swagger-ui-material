@@ -1,0 +1,13 @@
+toolbar-edit input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    margin-top: 4px;
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+}
+
+toolbar-edit input:focus {
+    outline: none;
+}

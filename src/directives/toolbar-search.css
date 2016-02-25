@@ -1,0 +1,30 @@
+toolbar-search input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    width: 100px;
+    margin-top: 4px;
+    vertical-align: middle;
+    margin-left: -6px;
+    margin-right: -12px;
+    position: relative;
+    top: -2px;
+}
+
+toolbar-search input:focus {
+    outline: none;
+}
+
+toolbar-search .input-show-hide {
+    -webkit-transition: all ease-out 0.25s;
+    transition: all ease-out 0.25s;
+}
+
+toolbar-search .input-show-hide.ng-hide {
+    -webkit-transition: all ease-in 0.25s;
+    transition: all ease-in 0.25s;
+    width: 0;
+    opacity: 0;
+    margin-left: 0;
+    margin-right: 0;
+}

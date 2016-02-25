@@ -1,0 +1,5 @@
+<md-button ng-click="toggle()" class="md-icon-button">
+    <md-icon>edit</md-icon>
+</md-button>
+<input flex ng-show="open" ng-model="ngModel" type="text" class="md-input" ng-blur="blur()"/>
+<span ng-click="open = true; focus()" ng-show="!open" ng-bind="displayTitle" tabindex="-1"></span>
