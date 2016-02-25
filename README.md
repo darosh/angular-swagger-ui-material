@@ -27,7 +27,7 @@ Material Design template for [angular-swagger-ui](https://github.com/Orange-Open
 | --- | --- | --- |
 | log | POST /user/login <br> POST /user/login| path |
 | get | GET /user <br> GET /pet | method |
-| ge | - | single word, not full method |
+| ge | N/A | single word, not full method |
 | get pet | GET /pet | method + path |
 | ge pet | GET /pet | method + path |
 
