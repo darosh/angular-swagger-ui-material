@@ -109,7 +109,7 @@
 }
 
 [swagger-ui-material] pre {
-    word-break: break-all;
+    white-space: normal;
 }
 
 [swagger-ui-material] .sum-deprecated {

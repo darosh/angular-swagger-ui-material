@@ -44,8 +44,8 @@
     <span ng-if="param.schema">
     <a ng-click="param.schema.display = 0"
        ng-class="{active:param.schema.display == 0}">model</a>
-    <a ng-click="param.schema.display=1"
-       ng-class="{active:param.schema.display==1}">model schema</a>
+    <a ng-click="param.schema.display = 1"
+       ng-class="{active:param.schema.display == 1}">model schema</a>
     <pre class="model" ng-if="param.schema.display==0&&param.schema.model"
          ng-bind-html="param.schema.model"></pre>
     <div class="model-schema" ng-if="param.schema.display==1&&param.schema.json">
@@ -57,7 +57,7 @@
 </div>
 
 <div ng-if="!apiExplorer">
-    <div ng-if="param.in!='body'">
+    <div ng-if="param.in != 'body'">
         <div ng-if="param.default"><span ng-bind="param.default"></span> (default)</div>
         <div ng-if="param.enum">
             <span ng-repeat="value in param.enum track by $index">{{value}}<span ng-if="!$last"> or </span></span>
