@@ -35,5 +35,6 @@ node_modules
 bower_compoments
 dist
 demo
+!gulp_tasks/demo
 
 .idea
