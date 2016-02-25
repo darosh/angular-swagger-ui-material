@@ -111,7 +111,7 @@
         <div layout-padding>
             <div ng-class="{'sum-deprecated': sum.sop.deprecated}" layout="row">
                 <md-button ng-class="swaggerMethods[sum.sop.httpMethod]"
-                           ng-click="submit(sum.sop)"
+                           ng-click="sum.submit(sum.sop)"
                            aria-label="method"
                            class="sum-http-method md-raised"
                            ng-bind="sum.sop.httpMethod">
@@ -128,7 +128,7 @@
     </div>
     <md-button class="md-fab md-fab-bottom-right md-primary md-raised"
                ng-if="sum.sop && apiExplorer"
-               ng-click="submit(sum.sop)"
+               ng-click="sum.submit(sum.sop)"
                ng-hide="sum.sop.loading"
                aria-label="submit">
         <md-icon>play_arrow</md-icon>
