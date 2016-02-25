@@ -104,6 +104,10 @@
     padding-left: 8px;
 }
 
+[swagger-ui-material] .pad em {
+    opacity: 0.5;
+}
+
 [swagger-ui-material] .sum-wrap {
     white-space: normal;
 }
