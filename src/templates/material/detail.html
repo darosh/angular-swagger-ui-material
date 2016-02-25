@@ -26,7 +26,8 @@
     </div>
 
     <div ng-if="sum.sop.responseClass" layout-padding class="sum-top">
-         <pre ng-if="sum.sop.responseClass.display == 0"
+         <pre class="sum-wrap"
+              ng-if="sum.sop.responseClass.display == 0"
               ng-bind-html="sum.sop.responseClass.schema.model"></pre>
          <pre ng-if="sum.sop.responseClass.display == 1"
               ng-bind="sum.sop.responseClass.schema.json"></pre>
@@ -46,7 +47,7 @@
         </div>
     </div>
 
-    <div ng-if="sum.sop.parameters">
+    <div ng-if="sum.sop.parameters.length">
         <md-subheader class="md-warn">Parameters</md-subheader>
         <div layout-padding
              ng-repeat="param in sum.sop.parameters track by $index"
