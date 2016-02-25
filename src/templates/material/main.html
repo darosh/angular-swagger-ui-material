@@ -7,18 +7,48 @@
                           flex
                           style="padding-left: 0; padding-right: 0"></toolbar-edit>
             <toolbar-search ng-model="sum.searchFilter"></toolbar-search>
-            <md-button aria-label="expand" ng-if="sum.grouped" ng-click="sum.open(true)" class="md-icon-button">
+            <md-button hide show-gt-sm aria-label="expand" ng-if="sum.grouped" ng-click="sum.open(true)"
+                       class="md-icon-button">
                 <md-icon>keyboard_arrow_down</md-icon>
             </md-button>
-            <md-button aria-label="collapse" ng-if="sum.grouped" ng-click="sum.open(false)" class="md-icon-button">
+            <md-button hide show-gt-sm aria-label="collapse" ng-if="sum.grouped" ng-click="sum.open(false)"
+                       class="md-icon-button">
                 <md-icon>keyboard_arrow_up</md-icon>
             </md-button>
-            <md-button aria-label="view" ng-click="sum.grouped = !sum.grouped" class="md-icon-button">
+            <md-button hide show-gt-sm aria-label="view" ng-click="sum.grouped = !sum.grouped" class="md-icon-button">
                 <md-icon ng-bind="sum.grouped ? 'view_comfy' : 'view_column'"></md-icon>
             </md-button>
-            <md-button aria-label="description" ng-click="sum.descriptions = !sum.descriptions" class="md-icon-button">
+            <md-button hide show-gt-sm aria-label="description" ng-click="sum.descriptions = !sum.descriptions"
+                       class="md-icon-button">
                 <md-icon ng-bind="sum.descriptions ? 'speaker_notes_off' : 'speaker_notes'"></md-icon>
             </md-button>
+            <md-menu>
+                <md-button hide-gt-sm aria-label="menu" ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                    <md-icon>more_vert</md-icon>
+                </md-button>
+                <md-menu-content>
+                    <md-menu-item ng-if="sum.grouped">
+                        <md-button ng-click="sum.open(true)">
+                            <md-icon>keyboard_arrow_down</md-icon> Expand
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-if="sum.grouped">
+                        <md-button ng-click="sum.open(false)">
+                            <md-icon>keyboard_arrow_up</md-icon> Collapse
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="sum.grouped = !sum.grouped">
+                            <md-icon ng-bind="sum.grouped ? 'view_comfy' : 'view_column'"></md-icon> Switch view
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="sum.descriptions = !sum.descriptions">
+                            <md-icon ng-bind="sum.descriptions ? 'speaker_notes_off' : 'speaker_notes'"></md-icon> Descriptions
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
         </div>
     </md-toolbar>
     <md-content>
