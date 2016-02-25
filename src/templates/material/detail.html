@@ -6,11 +6,6 @@
 </div>
 
 <form role="form" name="explorerForm" ng-submit="submit(sum.sop)">
-    <div ng-if="sum.sop.responseClass.status">
-        <md-subheader class="md-warn">Response status</md-subheader>
-        <div layout="row" layout-padding><code>{{sum.sop.responseClass.status}}</code></div>
-    </div>
-
     <div ng-if="sum.sop.responseClass.schema" layout="row">
         <div flex>
             <md-subheader class="md-warn">Response class</md-subheader>
@@ -28,6 +23,11 @@
               ng-bind-html="sum.sop.responseClass.schema.model"></pre>
          <pre ng-if="sum.sop.responseClass.display == 1"
               ng-bind="sum.sop.responseClass.schema.json"></pre>
+    </div>
+
+    <div ng-if="sum.sop.responseClass.status">
+        <md-subheader class="md-warn">Response status</md-subheader>
+        <div layout="row" layout-padding><code>{{sum.sop.responseClass.status}}</code></div>
     </div>
 
     <div ng-if="sum.sop.produces">

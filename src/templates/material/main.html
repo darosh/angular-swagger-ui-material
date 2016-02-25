@@ -106,18 +106,20 @@
             </md-button>
         </div>
     </md-toolbar>
-    <div ng-if="sum.sop" layout-padding>
-        <div class="md-body-1" ng-if="sum.sop.deprecated">Deprecated!</div>
-        <div ng-class="{'sum-deprecated': sum.sop.deprecated}" layout="row">
-            <md-button ng-class="swaggerMethods[sum.sop.httpMethod]"
-                       ng-click="submit(sum.sop)"
-                       aria-label="method"
-                       class="sum-http-method md-raised"
-                       ng-bind="sum.sop.httpMethod">
-            </md-button>
-            <span ng-bind="sum.sop.path" class="sum-path-wrap"></span>
+    <div ng-if="sum.sop">
+        <md-subheader class="md-warn" ng-if="sum.sop.deprecated">Deprecated</md-subheader>
+        <div layout-padding>
+            <div ng-class="{'sum-deprecated': sum.sop.deprecated}" layout="row">
+                <md-button ng-class="swaggerMethods[sum.sop.httpMethod]"
+                           ng-click="submit(sum.sop)"
+                           aria-label="method"
+                           class="sum-http-method md-raised"
+                           ng-bind="sum.sop.httpMethod">
+                </md-button>
+                <span ng-bind="sum.sop.path" class="sum-path-wrap"></span>
+            </div>
+            <div ng-if="sum.sop.summary" class="md-body-2" ng-bind="sum.sop.summary"></div>
         </div>
-        <div ng-if="sum.sop.summary" class="md-body-2" ng-bind="sum.sop.summary"></div>
     </div>
     <md-divider ng-if="sum.sop"></md-divider>
     <md-content ng-if="sum.sop" ng-include="'templates/material/detail.html'" flex></md-content>
