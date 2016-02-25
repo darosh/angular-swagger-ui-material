@@ -1,0 +1,23 @@
+<div md-whiteframe="2">
+    <md-toolbar
+        ng-click="sum.toggleApi(api, $event)"
+        tabindex="-1"
+        ng-class="{'md-whiteframe-2dp': api.open}"
+        class="md-accent">
+        <div class="md-toolbar-tools">
+            <span class="md-title" flex ng-bind="::api.name"></span>
+            <md-button ng-click="sum.toggleApi(api, $event)"
+                       aria-label="Open/Close"
+                       class="md-icon-button md-accent md-hue-3">
+                <md-icon ng-bind="api.open ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <div ng-show="api.open && api.description" style="padding-bottom: 0" layout-padding class="md-body-2">
+        <div style="padding-bottom: 0" ng-bind="::api.description"></div>
+    </div>
+    <div ng-show="api.open" style="padding: 13px">
+        <div ng-class="{'sum-selected': sum.sop === op}" ng-repeat="op in api.operations | filter:sum.searchObject:false track by op.id"
+             ng-include="'templates/material/operation.html'"></div>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+<div layout="row">
+    <md-input-container flex ng-if="apiExplorer">
+        <label ng-bind="param.name + (param.required ? ' [required]' : '')"></label>
+
+        <div ng-if="param.in != 'body'" ng-switch="param.subtype">
+            <input ng-switch-when="file" type="file" file-input ng-model="form[sum.sop.id][param.name]"
+                   placeholder="{{param.required?'[required]':''}}" ng-required="param.required">
+
+            <select ng-switch-when="enum" ng-model="form[sum.sop.id][param.name]">
+                <option ng-repeat="value in param.enum" value="{{value}}"
+                        ng-bind="value+(param.default==value?' [default]':'')"
+                        ng-selected="param.default==value"></option>
+            </select>
+
+            <input ng-switch-default type="text" ng-model="form[sum.sop.id][param.name]"
+                   ng-required="param.required">
+
+            <div class="md-caption">
+                <span ng-bind-html="param.description"></span>
+                <span ng-bind-html="param.in"></span>
+
+                <span ng-if="param.type" ng-switch="param.type">
+                    <span ng-switch-when="array" ng-bind="'Array['+param.items.type+']'"></span>
+                    <span ng-switch-default ng-bind="param.type"></span>
+                </span>
+            </div>
+        </div>
+
+        <div ng-if="param.in == 'body'">
+            <textarea id="param{{param.id}}" ng-model="form[sum.sop.id][param.name]" ng-required="param.required"></textarea>
+        </div>
+    </md-input-container>
+
+    <div ng-if="param.in == 'body'">
+        <div ng-if="sum.sop.consumes">
+            <label>Parameter content type</label>
+            <select ng-model="form[sum.sop.id].contentType"
+                    name="bodyContentType{{sum.sop.id}}"
+                    ng-options="item for item in sum.sop.consumes track by item"></select>
+        </div>
+    </div>
+
+    <span ng-if="param.schema">
+    <a ng-click="param.schema.display = 0"
+       ng-class="{active:param.schema.display == 0}">model</a>
+    <a ng-click="param.schema.display=1"
+       ng-class="{active:param.schema.display==1}">model schema</a>
+    <pre class="model" ng-if="param.schema.display==0&&param.schema.model"
+         ng-bind-html="param.schema.model"></pre>
+    <div class="model-schema" ng-if="param.schema.display==1&&param.schema.json">
+    <pre ng-bind="param.schema.json" ng-click="form[sum.sop.id][param.name]=param.schema.json"
+         aria-described-by="help-{{param.id}}"></pre>
+        <div id="help-{{param.id}}">click to set as parameter value</div>
+    </div>
+    </span>
+</div>
+
+<div ng-if="!apiExplorer">
+    <div ng-if="param.in!='body'">
+        <div ng-if="param.default"><span ng-bind="param.default"></span> [default]</div>
+        <div ng-if="param.enum">
+            <span ng-repeat="value in param.enum track by $index">{{value}}<span ng-if="!$last"> or </span></span>
+        </div>
+        <div ng-if="param.required">[required]</div>
+    </div>
+</div>

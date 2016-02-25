@@ -1,0 +1,93 @@
+<div ng-if="sum.sop.description">
+    <md-subheader class="md-warn">Implementation notes</md-subheader>
+    <div layout-padding layout-margin class="md-body-2" ng-bind-html="sum.sop.description"></div>
+</div>
+
+<form role="form" name="explorerForm" ng-submit="submit(sum.sop)">
+    <div ng-if="sum.sop.responseClass" layout="row">
+        <div flex>
+            <md-subheader class="md-warn">Response class, Status <code>{{sum.sop.responseClass.status}}</code>
+            </md-subheader>
+        </div>
+        <div class="sum-tools" ng-if="sum.sop.responseClass.display!=-1">
+            <a class="md-button"
+               ng-click="sum.sop.responseClass.display = 0"
+               ng-class="{'md-primary': sum.sop.responseClass.display == 0}">Model</a>
+            <a class="md-button"
+               ng-click="sum.sop.responseClass.display = 1"
+               ng-class="{'md-primary': sum.sop.responseClass.display == 1}">Example</a>
+        </div>
+    </div>
+
+    <div ng-if="sum.sop.responseClass" layout-padding class="sum-top">
+         <pre ng-if="sum.sop.responseClass.display == 0"
+              ng-bind-html="sum.sop.responseClass.schema.model"></pre>
+         <pre ng-if="sum.sop.responseClass.display == 1"
+              ng-bind="sum.sop.responseClass.schema.json"></pre>
+    </div>
+
+    <div>
+        <md-subheader class="md-warn">Parameters</md-subheader>
+
+        <div layout-padding style="margin-top: 12px; margin-bottom: 16px">
+            <div layout="row">
+                <md-input-container ng-if="sum.sop.produces" flex>
+                    <label>Response content type</label>
+                    <md-select ng-model="form[sum.sop.id].responseType">
+                        <md-option ng-repeat="item in sum.sop.produces track by item" value="{{item}}">
+                            {{item}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+        </div>
+
+        <div layout-padding
+             ng-repeat="param in sum.sop.parameters track by $index"
+             ng-include="'templates/material/parameter.html'"></div>
+    </div>
+
+    <div ng-if="sum.sop.hasResponses">
+        <md-subheader class="md-warn">Response messages</md-subheader>
+        <div layout-padding ng-repeat="(code,resp) in sum.sop.responses track by $index"
+             ng-include="'templates/material/response.html'"></div>
+    </div>
+</form>
+
+<div ng-if="sum.sop.explorerResult && !sum.sop.hideExplorerResult">
+    <div layout="row">
+        <div flex>
+            <md-subheader class="md-warn">Response</md-subheader>
+        </div>
+        <div class="sum-tools">
+            <md-button class="md-primary"
+                       ng-click="sum.sop.hideExplorerResult = true">
+                Hide response
+            </md-button>
+        </div>
+    </div>
+</div>
+
+<div ng-if="sum.sop.explorerResult" ng-show="!sum.sop.hideExplorerResult" layout-padding layout="row" layout-wrap>
+    <div layout="column" flex>
+        <md-input-container>
+            <label>Request URL</label>
+            <input type="text" ng-model="sum.sop.explorerResult.url"/>
+        </md-input-container>
+        <md-input-container>
+            <label>Response code</label>
+            <textarea type="text" ng-model="sum.sop.explorerResult.response.status"></textarea>
+        </md-input-container>
+        <md-input-container class="md-input-has-value">
+            <label>Response body</label>
+            <pre
+                style="max-height: 160px; word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 6px; margin-bottom: 6px;"
+                ng-bind="sum.sop.explorerResult.response.body"></pre>
+            <md-divider style="margin-bottom: 24px"></md-divider>
+        </md-input-container>
+        <md-input-container>
+            <label>Response headers</label>
+            <textarea type="text" ng-model="sum.sop.explorerResult.response.headers"></textarea>
+        </md-input-container>
+    </div>
+</div>

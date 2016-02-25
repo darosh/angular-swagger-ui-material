@@ -1,0 +1,18 @@
+<md-divider ng-if="!sum.grouped"></md-divider>
+<div id="{{op.operationId}}"
+     ng-style="{'padding-top': (!sum.grouped || (sum.descriptions && !$first)) ? '6px' : '0', 'padding-bottom': (!sum.grouped || (sum.descriptions && !$last)) ? '6px' : '0'}"
+     ng-class="::{'sum-deprecated': op.deprecated}"
+     ng-click="sum.selectOperation(op, $event)"
+     tabindex="-1">
+    <div layout="row">
+        <md-button ng-class="::swaggerMethods[op.httpMethod]"
+                   ng-click="sum.selectOperation(op, $event);"
+                   aria-label="method"
+                   class="sum-http-method md-raised"
+                   ng-bind="::op.httpMethod"></md-button>
+        <div flex class="sum-path" ng-bind="::op.path"></div>
+    </div>
+    <div style="padding-left: 76px; line-height: 16px" ng-show="sum.descriptions" class="md-body-2"
+         ng-bind="::op.summary"></div>
+</div>
+<md-divider ng-if="sum.grouped && (sum.descriptions && !$last)"></md-divider>

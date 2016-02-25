@@ -1,0 +1,95 @@
+<div flex layout="column">
+    <md-toolbar md-whiteframe="2">
+        <div class="md-toolbar-tools">
+            <toolbar-edit class="md-toolbar-tools"
+                          ng-model="url"
+                          display-title="infos.title"
+                          flex
+                          style="padding-left: 0; padding-right: 0"></toolbar-edit>
+            <toolbar-search ng-model="sum.searchFilter"></toolbar-search>
+            <md-button aria-label="expand" ng-if="sum.grouped" ng-click="sum.open(true)" class="md-icon-button">
+                <md-icon>keyboard_arrow_down</md-icon>
+            </md-button>
+            <md-button aria-label="collapse" ng-if="sum.grouped" ng-click="sum.open(false)" class="md-icon-button">
+                <md-icon>keyboard_arrow_up</md-icon>
+            </md-button>
+            <md-button aria-label="view" ng-click="sum.grouped = !sum.grouped" class="md-icon-button">
+                <md-icon ng-bind="sum.grouped ? 'view_comfy' : 'view_column'"></md-icon>
+            </md-button>
+            <md-button aria-label="description" ng-click="sum.descriptions = !sum.descriptions" class="md-icon-button">
+                <md-icon ng-bind="sum.descriptions ? 'speaker_notes_off' : 'speaker_notes'"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-content>
+        <div layout-padding layout="column" style="padding-bottom: 0">
+            <div ng-if="::infos.description" ng-bind-html="::infos.description"></div>
+            <div style="padding: 4px 4px 0 4px" ng-include="'templates/material/info.html'"></div>
+        </div>
+        <div ng-if="sum.grouped" layout="row" layout-wrap layout-padding>
+            <div flex-xs="100"
+                 flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
+                 flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
+                 flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
+                 flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}"
+                 ng-repeat="api in resources track by $index"
+                 style="padding: 12px"
+                 ng-if="(api.operations | filter:sum.searchObject:false).length"
+                 ng-include="'templates/material/endpoint.html'"></div>
+        </div>
+        <!-- TODO: multi-column layout with top>boottom sort would be better? -->
+        <div ng-if="!sum.grouped" layout="row" layout-wrap layout-padding style="margin-top: 12px;">
+            <div flex-xs="100"
+                 flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
+                 flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
+                 flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
+                 flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}"
+                 ng-repeat="op in infos.operations | filter:sum.searchObject:false track by op.id"
+                 style="padding-top: 0; padding-bottom: 0">
+                <div ng-class="{'sum-selected': sum.sop === op}"
+                     ng-include="'templates/material/operation.html'"></div>
+            </div>
+        </div>
+    </md-content>
+</div>
+<md-sidenav
+    layout="column"
+    class="md-sidenav-right md-whiteframe-z2"
+    md-is-open="sum.sidenavOpen"
+    md-is-locked-open="sum.sidenavLockedOpen">
+    <md-toolbar ng-if="sum.sop" class="md-accent" md-whiteframe="2">
+        <div class="md-toolbar-tools">
+            <span flex><span ng-repeat="t in sum.sop.tags">{{t}}<span ng-if="!$last">, </span></span></span>
+            <md-button ng-click="sum.toggleSidenav()"
+                       aria-label="toggle"
+                       class="md-icon-button md-accent md-hue-3">
+                <md-icon ng-bind="sum.sidenavLockedOpen ? 'chevron_right' : 'chevron_left'"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <div ng-if="sum.sop" layout-padding>
+        <div class="md-body-1" ng-if="sum.sop.deprecated">Deprecated!</div>
+        <div ng-class="{'sum-deprecated': sum.sop.deprecated}">
+            <md-button ng-class="swaggerMethods[sum.sop.httpMethod]"
+                       ng-click="submit(sum.sop)"
+                       aria-label="method"
+                       class="sum-http-method md-raised"
+                       ng-bind="sum.sop.httpMethod">
+            </md-button>
+            <span ng-bind="sum.sop.path" class="sum-path"></span>
+        </div>
+        <div ng-if="sum.sop.summary" class="md-body-2" ng-bind="sum.sop.summary"></div>
+    </div>
+    <md-divider ng-if="sum.sop"></md-divider>
+    <md-content style="padding: 8px" ng-if="sum.sop" ng-include="'templates/material/detail.html'" flex></md-content>
+    <div ng-if="!sum.sop" layout-padding>
+        <div>No endpoint method selected.</div>
+    </div>
+    <md-button class="md-fab md-fab-bottom-right md-primary md-raised"
+               ng-if="sum.sop && apiExplorer"
+               ng-click="submit(sum.sop)"
+               ng-hide="sum.sop.loading"
+               aria-label="submit">
+        <md-icon>play_arrow</md-icon>
+    </md-button>
+</md-sidenav>
