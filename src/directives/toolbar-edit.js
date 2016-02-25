@@ -17,7 +17,7 @@ angular.module('toolbarEdit', [])
                     $timeout.cancel(t);
 
                     $timeout(function () {
-                        element.children()[1].focus();
+                        element.children().eq(1).children()[0].focus();
                     }, 200);
                 };
                 scope.blur = function () {
