@@ -136,3 +136,16 @@
     /* TODO: themed color */
     background-color: rgb(238, 238, 238);
 }
+
+[swagger-ui-material] .sum-delay.ng-enter {
+    transition: 0.016s linear all 0.25s;
+    opacity:0;
+    width:  0;
+}
+[swagger-ui-material]  .sum-delay.ng-enter-stagger {
+    transition-delay: 0.25s;
+    transition-duration: 0s;
+}
+[swagger-ui-material] .sum-delay.ng-enter.ng-enter-active {
+    opacity:1;
+}
