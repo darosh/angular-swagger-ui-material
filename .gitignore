@@ -36,5 +36,6 @@ bower_compoments
 dist
 demo
 !gulp_tasks/demo
+.publish
 
 .idea
