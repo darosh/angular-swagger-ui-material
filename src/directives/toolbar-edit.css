@@ -1,6 +1,7 @@
 toolbar-edit input {
     background: transparent;
     border: none;
+    /* TODO: themed color */
     color: #fff;
     margin-top: 4px;
     vertical-align: middle;

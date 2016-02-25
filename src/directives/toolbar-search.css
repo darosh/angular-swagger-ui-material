@@ -1,6 +1,7 @@
 toolbar-search input {
     background: transparent;
     border: none;
+    /* TODO: themed color */
     color: #fff;
     width: 100px;
     margin-top: 4px;
