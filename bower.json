@@ -1,0 +1,29 @@
+{
+  "name": "angular-swagger-ui-material",
+  "description": "Material Design template for angular-swager-ui",
+  "main": [],
+  "version": "0.1.0",
+  "authors": [
+    "Jan Forst <ensonador@gmail.com>"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "https://github.com/darosh/angular-swagger-ui-material",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "demo",
+    "examples",
+    "gulp_tasks",
+    "src"
+  ],
+  "dependencies": {
+    "angular-swagger-ui": "^0.3.0",
+    "angular-material": "^1.0.5",
+    "angular-markdown-filter": "^1.3.2"
+  }
+}
