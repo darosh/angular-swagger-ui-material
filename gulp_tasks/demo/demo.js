@@ -3,7 +3,7 @@ var gulp = require('gulp');
 gulp.task('demo', ['copy'], function () {
     var inject = require('gulp-inject');
 
-    function transform() {
+    function transform () {
         var args = arguments;
 
         args[0] = args[0].replace('/demo', '.');
