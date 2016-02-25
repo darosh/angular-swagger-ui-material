@@ -139,13 +139,20 @@
 
 [swagger-ui-material] .sum-delay.ng-enter {
     transition: 0.016s linear all 0.25s;
-    opacity:0;
-    width:  0;
+    opacity: 0;
+    width: 0;
 }
+
 [swagger-ui-material]  .sum-delay.ng-enter-stagger {
     transition-delay: 0.25s;
     transition-duration: 0s;
 }
+
 [swagger-ui-material] .sum-delay.ng-enter.ng-enter-active {
-    opacity:1;
+    opacity: 1;
+}
+
+[swagger-ui-material] md-sidenav p {
+    margin-top: 0;
+    margin-bottom: 0;
 }

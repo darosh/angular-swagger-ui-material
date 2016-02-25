@@ -120,7 +120,7 @@
         <div ng-if="sum.sop.summary" class="md-body-2" ng-bind="sum.sop.summary"></div>
     </div>
     <md-divider ng-if="sum.sop"></md-divider>
-    <md-content style="padding: 8px" ng-if="sum.sop" ng-include="'templates/material/detail.html'" flex></md-content>
+    <md-content ng-if="sum.sop" ng-include="'templates/material/detail.html'" flex></md-content>
     <div ng-if="!sum.sop" layout-padding>
         <div>No endpoint method selected.</div>
     </div>
