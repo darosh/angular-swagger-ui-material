@@ -1,9 +1,11 @@
 <div flex layout="column">
+    <md-progress-linear ng-if="loading" md-mode='indeterminate'
+                        style="margin-bottom: -5px !important; z-index: 100"></md-progress-linear>
     <md-toolbar md-whiteframe="2">
         <div class="md-toolbar-tools">
             <!-- TODO: ng-if="!sum.searchOpened" show should be delayed (staggering animation) -->
             <toolbar-edit class="md-toolbar-tools"
-                          ng-model="url"
+                          ng-model="sum.editUrl"
                           display-title="infos.title"
                           ng-if="!sum.searchOpened"
                           flex
@@ -32,22 +34,26 @@
                 <md-menu-content>
                     <md-menu-item ng-if="sum.grouped">
                         <md-button ng-click="sum.open(true)">
-                            <md-icon>keyboard_arrow_down</md-icon> Expand
+                            <md-icon>keyboard_arrow_down</md-icon>
+                            Expand
                         </md-button>
                     </md-menu-item>
                     <md-menu-item ng-if="sum.grouped">
                         <md-button ng-click="sum.open(false)">
-                            <md-icon>keyboard_arrow_up</md-icon> Collapse
+                            <md-icon>keyboard_arrow_up</md-icon>
+                            Collapse
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
                         <md-button ng-click="sum.grouped = !sum.grouped">
-                            <md-icon ng-bind="sum.grouped ? 'view_comfy' : 'view_column'"></md-icon> Switch view
+                            <md-icon ng-bind="sum.grouped ? 'view_comfy' : 'view_column'"></md-icon>
+                            Switch view
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
                         <md-button ng-click="sum.descriptions = !sum.descriptions">
-                            <md-icon ng-bind="sum.descriptions ? 'speaker_notes_off' : 'speaker_notes'"></md-icon> Descriptions
+                            <md-icon ng-bind="sum.descriptions ? 'speaker_notes_off' : 'speaker_notes'"></md-icon>
+                            Descriptions
                         </md-button>
                     </md-menu-item>
                 </md-menu-content>

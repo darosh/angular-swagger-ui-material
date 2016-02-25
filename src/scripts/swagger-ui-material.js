@@ -2,7 +2,7 @@
 
 angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 'toolbarSearch', 'toolbarEdit'])
     // Derived from original swaggerUi directive
-    .directive('swaggerUiMaterial', function () {
+    .directive('swaggerUiMaterial', function ($timeout) {
         return {
             restrict: 'A',
             controller: 'swaggerUiController',
@@ -75,6 +75,7 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
                 sum.searchOpened = false;
                 sum.searchFilter = '';
                 sum.searchObject = {httpMethod: '', path: ''};
+                sum.editUrl = scope.url;
 
                 scope.$watch('sum.searchFilter', function () {
                     if (!sum.searchFilter) {
@@ -88,6 +89,12 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
 
                         sum.searchObject = {httpMethod: method, path: path};
                     }
+                });
+
+                scope.$watch('sum.editUrl', function () {
+                    $timeout(function () {
+                        scope.url = sum.editUrl;
+                    }, 200);
                 });
             }
         };
