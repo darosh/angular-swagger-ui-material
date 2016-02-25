@@ -11,11 +11,11 @@
         <div layout="row" layout-padding><code>{{sum.sop.responseClass.status}}</code></div>
     </div>
 
-    <div ng-if="sum.sop.responseClass && sum.sop.responseClass.schema" layout="row">
+    <div ng-if="sum.sop.responseClass.schema" layout="row">
         <div flex>
             <md-subheader class="md-warn">Response class</md-subheader>
         </div>
-        <div class="sum-tools" ng-if="sum.sop.responseClass.display!=-1">
+        <div class="sum-tools" ng-if="sum.sop.responseClass.display != -1">
             <a class="md-button"
                ng-click="sum.sop.responseClass.display = 0"
                ng-class="{'md-primary': sum.sop.responseClass.display == 0}">Model</a>
@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    <div ng-if="sum.sop.responseClass" layout-padding class="sum-top">
+    <div ng-if="sum.sop.responseClass.schema && (sum.sop.responseClass.display != -1)" layout-padding class="sum-top">
          <pre class="sum-wrap"
               ng-if="sum.sop.responseClass.display == 0"
               ng-bind-html="sum.sop.responseClass.schema.model"></pre>
@@ -35,7 +35,8 @@
 
     <div ng-if="sum.sop.produces">
         <md-subheader class="md-warn">Response type</md-subheader>
-        <div layout-padding>
+        <div layout-padding
+             style="padding-bottom: 0; top: -8px; position: relative">
             <div layout="row">
                 <md-input-container flex>
                     <md-select aria-label="response type" ng-model="form[sum.sop.id].responseType">
@@ -50,6 +51,7 @@
     <div ng-if="sum.sop.parameters.length">
         <md-subheader class="md-warn">Parameters</md-subheader>
         <div layout-padding
+             style="padding-top: 8px"
              ng-repeat="param in sum.sop.parameters track by $index"
              ng-include="'templates/material/parameter.html'"></div>
     </div>

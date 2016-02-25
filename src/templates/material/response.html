@@ -1,10 +1,10 @@
-<div>
-    <div layout="row">
-        <div style="min-width: 56px"><code ng-bind="code"></code></div>
-        <div flex style="padding-left: 8px"><span ng-bind-html="resp.description"></span></div>
+<div style="padding-top: 0; padding-bottom: 4px">
+    <div layout="row" class="md-body-1">
+        <div style="min-width: 24px"><code ng-bind="code"></code></div>
+        <div flex style="padding-left: 8px" ng-bind-html="resp.description"></div>
     </div>
 
-    <div ng-if="resp.schema&&resp.schema.model&&resp.schema.json">
+    <div ng-if="resp.schema && resp.schema.model && resp.schema.json">
         <a ng-click="resp.display=0" ng-class="{active: resp.display == 0}">Model</a>
         <a ng-click="resp.display=1" ng-class="{active: resp.display == 1}">Model schema</a>
     </div>

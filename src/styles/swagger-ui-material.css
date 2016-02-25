@@ -11,20 +11,9 @@
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2);
 }
 
-/*
-[swagger-ui-material] md-sidenav {
-    width: 400px;
-    min-width: 400px;
-    max-width: 400px;
-}
-*/
-
-[swagger-ui-material] md-sidenav .md-subheader + .layout-padding {
+[swagger-ui-material] md-sidenav .md-subheader + .layout-padding,
+[swagger-ui-material] md-sidenav .md-subheader + .layout-padding > *:first-child {
     padding-top: 0;
-}
-
-[swagger-ui-material] md-sidenav .md-subheader + .layout-margin {
-    margin-top: 0;
 }
 
 [swagger-ui-material] .sum-tools .md-button {
