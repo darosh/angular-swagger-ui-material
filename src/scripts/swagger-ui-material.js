@@ -72,6 +72,7 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
                 };
 
                 sum.grouped = true;
+                sum.searchOpened = false;
                 sum.searchFilter = '';
                 sum.searchObject = {httpMethod: '', path: ''};
 

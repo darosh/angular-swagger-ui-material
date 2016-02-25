@@ -4,9 +4,11 @@
             <toolbar-edit class="md-toolbar-tools"
                           ng-model="url"
                           display-title="infos.title"
+                          ng-if="!sum.searchOpened"
                           flex
                           style="padding-left: 0; padding-right: 0"></toolbar-edit>
-            <toolbar-search ng-model="sum.searchFilter"></toolbar-search>
+            <span flex ng-if="sum.searchOpened"></span>
+            <toolbar-search ng-model="sum.searchFilter" open="sum.searchOpened"></toolbar-search>
             <md-button hide show-gt-sm aria-label="expand" ng-if="sum.grouped" ng-click="sum.open(true)"
                        class="md-icon-button">
                 <md-icon>keyboard_arrow_down</md-icon>

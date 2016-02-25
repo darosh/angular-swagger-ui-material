@@ -6,7 +6,8 @@ angular.module('toolbarSearch', [])
             restrict: 'E',
             templateUrl: 'directives/toolbar-search.html',
             scope: {
-                ngModel: '='
+                ngModel: '=',
+                open: '='
             },
             link: function (scope, element) {
                 scope.open = false;
