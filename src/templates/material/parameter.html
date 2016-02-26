@@ -1,25 +1,23 @@
 <div layout="column">
-    <md-input-container ng-if="apiExplorer && (param.subtype != 'enum')">
+    <md-input-container ng-if="apiExplorer && (param.in != 'body') && (param.subtype == 'file')">
         <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
-
-        <input ng-if="(param.in != 'body') && (param.subtype == 'file')" type="file" file-input
-               ng-model="form[sum.sop.id][param.name]"
+        <input type="file" file-input ng-model="form[sum.sop.id][param.name]"
                placeholder="{{param.required?'(required)':''}}" ng-required="param.required"/>
-
-        <input ng-if="(param.in != 'body') && (param.subtype != 'enum') && (param.subtype != 'file')" type="text"
-               ng-model="form[sum.sop.id][param.name]"
-               ng-required="param.required"/>
-
-        <textarea ng-if="param.in == 'body'" ng-model="form[sum.sop.id][param.name]"
-                      ng-required="param.required"></textarea>
+    </md-input-container>
+    <md-input-container
+        ng-if="apiExplorer && (param.in != 'body') && (param.subtype != 'enum') && (param.subtype != 'file')">
+        <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
+        <input type="text" ng-model="form[sum.sop.id][param.name]" ng-required="param.required"/>
+    </md-input-container>
+    <md-input-container ng-if="apiExplorer && (param.in == 'body')">
+        <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
+        <textarea ng-model="form[sum.sop.id][param.name]" ng-required="param.required"></textarea>
     </md-input-container>
     <md-input-container ng-if="apiExplorer && (param.subtype == 'enum')">
         <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
         <md-select class="sum-no-margin"
                    ng-model="form[sum.sop.id][param.name]">
-            <md-option ng-repeat="value in param.enum" value="{{value}}"
-                       ng-if="(param.in != 'body') && (param.subtype == 'enum')"
-                       ng-selected="param.default == value"
+            <md-option ng-repeat="value in param.enum" value="{{value}}" ng-selected="param.default == value"
                        ng-bind="value + (param.default == value ? ' (default)' : '')"></md-option>
         </md-select>
     </md-input-container>
