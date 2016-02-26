@@ -50,7 +50,8 @@
                 .theme('default')
                 .warnPalette('amber')
                 .primaryPalette('teal')
-                .accentPalette('grey');
+                .accentPalette('grey')
+                .foregroundPalette[3] = 'rgba(0, 0, 0, 0.4)';
         })
         .controller('MyCtrl', function ($scope, $location, $mdToast) {
             $scope.isLoading = false;
