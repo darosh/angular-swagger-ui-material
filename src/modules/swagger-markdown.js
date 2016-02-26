@@ -1,5 +1,14 @@
 'use strict';
 
+angular.module('markdown').config(function (markdownProvider) {
+    markdownProvider.config({
+        simplifiedAutoLink: true,
+        tables: true,
+        ghCodeBlocks: true,
+        tasklists: true
+    });
+});
+
 angular.module('swaggerUiMarkdown', ['swaggerUi', 'markdown'])
     .service('markdownToHtml', function ($q, $filter) {
         this.execute = function (parseResult) {
