@@ -14,6 +14,8 @@ angular.module('swaggerUiMarkdown', ['swaggerUi', 'markdown'])
         this.execute = function (parseResult) {
             var deferred = $q.defer();
 
+            // TODO: is there any other GFM field to be transformed?
+
             if (parseResult.infos && parseResult.infos.description) {
                 parseResult.infos.description = $filter('markdown')(parseResult.infos.description);
             }
