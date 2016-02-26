@@ -12,7 +12,7 @@ Material Design template for [angular-swagger-ui](https://github.com/Orange-Open
 | [Uber](http://darosh.github.io/angular-swagger-ui-material/#?url=https://cdn.rawgit.com/OAI/OpenAPI-Specification/master/examples/v2.0/json/uber.json)  | no | Markdown in operation info |
 | [LoopBack Drupal](http://darosh.github.io/angular-swagger-ui-material/#?url=http://darosh.github.io/angular-swagger-ui-material/swagger-drupal.json)  | no  | [Drupal](https://www.drupal.org/) database discovered + [LoopBack](http://loopback.io/) default models, <br> large: 900+ operations |
 | [Minimal Swagger 2.0](http://darosh.github.io/angular-swagger-ui-material/#?url=http://darosh.github.io/angular-swagger-ui-material/swagger-minimal.json)  | no  | |
-| [GiHub Flavored Markdown](http://darosh.github.io/angular-swagger-ui-material/#?url=http://darosh.github.io/angular-swagger-ui-material/swagger-gfm.json)  | no  | |
+| [GiHub Flavored Markdown](http://darosh.github.io/angular-swagger-ui-material/#?url=http://darosh.github.io/angular-swagger-ui-material/swagger-gfm.json)  | no  | generated from [github-flavored-markdown-test](https://github.com/suan/github-flavored-markdown-test) |
 
 ## Features
 
