@@ -28,7 +28,7 @@
 }
 
 /*[swagger-ui-material] pre {*/
-    /*margin: 0;*/
+/*margin: 0;*/
 /*}*/
 
 [swagger-ui-material] md-input-container {
@@ -157,4 +157,8 @@
 
 [swagger-ui-material] .sum-no-margin {
     margin: 0;
+}
+
+[swagger-ui-material] .md-toolbar-tools > .md-button:first-child {
+    margin-right: 8px;
 }
