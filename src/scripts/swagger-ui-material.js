@@ -33,6 +33,8 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
                     $event.stopPropagation();
                     sum.sop = op;
                     sum.sidenavOpen = true;
+                    sum.sop.defaultResponse = {};
+                    sum.sop.defaultResponse[sum.sop.responseClass.status] = {description: sum.sop.responseClass.description};
                 };
 
                 // Toggle

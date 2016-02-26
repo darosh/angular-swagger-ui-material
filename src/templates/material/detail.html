@@ -18,17 +18,17 @@
     </div>
 
     <div ng-if="sum.sop.responseClass.schema && (sum.sop.responseClass.display != -1)" layout-padding class="sum-top">
-         <pre class="sum-wrap"
+         <pre class="sum-wrap sum-no-margin"
               ng-if="sum.sop.responseClass.display == 0"
               ng-bind-html="sum.sop.responseClass.schema.model"></pre>
-         <pre ng-if="sum.sop.responseClass.display == 1"
+         <pre class="sum-no-margin" ng-if="sum.sop.responseClass.display == 1"
               ng-bind="sum.sop.responseClass.schema.json"></pre>
     </div>
 
-    <div ng-if="sum.sop.responseClass.status">
-        <md-subheader class="md-warn">Response status</md-subheader>
-        <div layout="row" layout-padding><code>{{sum.sop.responseClass.status}}</code></div>
-    </div>
+    <!--<div ng-if="sum.sop.responseClass.status">-->
+    <!--<md-subheader class="md-warn">Response status</md-subheader>-->
+    <!--<div layout="row" layout-padding><code>{{sum.sop.responseClass.status}}</code></div>-->
+    <!--</div>-->
 
     <div ng-if="sum.sop.produces">
         <md-subheader class="md-warn">Response type</md-subheader>
@@ -55,6 +55,11 @@
 
     <div ng-if="sum.sop.hasResponses" style="padding-bottom: 8px;">
         <md-subheader class="md-warn">Response messages</md-subheader>
+
+        <div layout="column" layout-padding style="padding-top: 0; padding-bottom: 0"
+             ng-repeat="(code, resp) in sum.sop.defaultResponse track by $index"
+             ng-include="'templates/material/response.html'"></div>
+
         <div layout="column" layout-padding style="padding-top: 0; padding-bottom: 0"
              ng-repeat="(code, resp) in sum.sop.responses track by $index"
              ng-include="'templates/material/response.html'"></div>

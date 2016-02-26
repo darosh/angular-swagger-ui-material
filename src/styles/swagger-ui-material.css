@@ -154,3 +154,7 @@
     font-size: 12px;
     line-height: 14px;
 }
+
+[swagger-ui-material] .sum-no-margin {
+    margin: 0;
+}
