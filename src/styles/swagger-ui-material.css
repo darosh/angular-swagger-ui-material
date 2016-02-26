@@ -176,8 +176,12 @@
 }
 
 @media screen and (min-width: 800px) {
-    md-sidenav {
+    [swagger-ui-material] md-sidenav {
         width: 336px;
         max-width: 336px;
     }
+}
+
+[swagger-ui-material] .md-avatar-icon {
+    opacity: 0.66;
 }
