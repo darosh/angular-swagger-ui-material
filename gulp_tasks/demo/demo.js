@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 
-gulp.task('demo', ['copy'], function () {
+gulp.task('demo', ['copy', 'styles:gfm'], function () {
     var inject = require('gulp-inject');
 
     function transform () {
@@ -11,7 +11,7 @@ gulp.task('demo', ['copy'], function () {
         return inject.transform.apply(inject.transform, args);
     }
 
-    gulp.src('src/index.html')
+    return gulp.src('src/index.html')
         .pipe(inject(gulp.src('demo/*.css', {read: false}), {
             transform: transform
         }))
