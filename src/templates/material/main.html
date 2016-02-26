@@ -1,7 +1,7 @@
 <div flex layout="column">
     <md-toolbar md-whiteframe="2">
         <div class="md-toolbar-tools" ng-show="loading" style="padding-left: 0">
-            <md-progress-circular ng-if="loading" class="md-accent md-hue-1" md-mode='indeterminate'
+            <md-progress-circular ng-if="loading" class="md-accent md-hue-1" md-mode="indeterminate"
                                   md-diameter="56"></md-progress-circular>
             <span>Loading&hellip;</span>
         </div>
@@ -130,10 +130,15 @@
         <div>No endpoint method selected.</div>
     </div>
     <md-button class="md-fab md-fab-bottom-right md-primary md-raised"
+               ng-disabled="sum.sop.loading"
+               ng-style="{padding: sum.sop.loading ? '1px 0 0 0' : null}"
                ng-if="sum.sop && apiExplorer"
                ng-click="sum.submit(sum.sop)"
-               ng-hide="sum.sop.loading"
                aria-label="submit">
-        <md-icon>play_arrow</md-icon>
+        <md-icon ng-if="!sum.sop.loading">play_arrow</md-icon>
+        <md-progress-circular ng-if="sum.sop.loading"
+                              md-diameter="56"
+                              class="md-accent md-hue-1"
+                              md-mode="indeterminate"></md-progress-circular>
     </md-button>
 </md-sidenav>
