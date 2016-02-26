@@ -1,0 +1,17 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "GiHub Flavored Markdown Test",
+    "description": "### This README can be used as a reference for github-flavored-markdown styling (and possibly behavior).\r\n\r\n---\r\n\r\n# H1\r\nfollowed by some text\r\n\r\n## H2\r\nfollowed by some text\r\n\r\n### H3\r\nfollowed by some text\r\n\r\n#### H4\r\nfollowed by some text\r\n\r\n##### H5\r\nfollowed by some text\r\n\r\n###### H6\r\nfollowed by some text\r\n\r\nAuto-detected link: http://www.france.com\r\n\r\nSome Ignored_multiple_underscore_italics here\r\n\r\nA line of normal text with `inline code` and *italics*, **strong font**, and even some μ†ℱ ╋ℯ╳╋. Followed by lots of Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis id sem purus, eu commodo tortor. Donec malesuada ultricies dolor a eleifend. In hac habitasse platea dictumst. Vivamus a faucibus ligula. Nullam molestie tristique arcu, eu elementum metus ultricies sed. Aenean luctus congue lectus, vitae semper erat rhoncus non. Nulla facilisi.\r\n\r\nFollowed by another line of normal text with `inline code` and *italics*, **strong font**, and even some μ†ℱ ╋ℯ╳╋. Followed by lots of Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis id sem purus, eu commodo tortor. Donec malesuada ultricies dolor a eleifend. In hac habitasse platea dictumst. Vivamus a faucibus ligula. Nullam molestie tristique arcu, eu elementum metus ultricies sed. Aenean luctus congue lectus, vitae semper erat rhoncus non. Nulla facilisi.\r\n\r\nThin horizontal rule:\r\n\r\n--\r\n\r\nThick horizontal rule:\r\n\r\n------\r\n\r\n|Table Header 1|Table Header 2           |\r\n|--------------|-------------------------|\r\n|Content       |http://example.org       |\r\n|Content       |http://localhost:\\<port\\>|\r\nText right below table. Follows is a table with an empty cell, and unaligned indenting.\r\n\r\n|Table Header 1|Table Header 2|\r\n|--------------|--------------|\r\n|Content  |  Cntent        |\r\n|Content       |      |\r\n\r\nEmpty line between table and this text\r\n\r\n    def this_is\r\n      puts \"some #{4-space-indent} code\"\r\n    end\r\n\r\n<code>\r\ndef this_is\r\n  puts \"some #{code tag} code\"\r\nend\r\n</code>\r\n\r\n<pre>\r\ndef this_is\r\n  puts \"some #{pre tag} code\"\r\nend\r\n</pre>\r\n\r\n```\r\ndef this_is\r\n  puts \"some #{fenced} code\"\r\nend\r\n```\r\n\r\n```ruby\r\nclass Classy\r\n  def this_is\r\n    puts \"some #{colored} ruby code with ruby syntax highlighting\"\r\n    @someobj.do_it(1, 2)\r\n  end\r\nend\r\n```\r\n\r\n```javascript\r\nvar test = function this_is(){\r\n  console.log(\"some\" + colored + \"javascript code with javascript syntax highlighting really long\");\r\n}\r\n```\r\n\r\n```clojure\r\n(defproject myproject \"0.5.0-SNAPSHOT\"\r\n  :description \"Some clojure code with syntax highlighting.\"\r\n  :dependencies [[org.clojure/clojure \"1.5.1\"]]\r\n  :plugins [[lein-tar \"3.2.0\"]])\r\n```\r\n\r\n```js\r\nvar test = function this_is(){\r\n  console.log(\"language declared as 'js' instead\");\r\n}\r\n```\r\n\r\n```bogus_language\r\nvar test = function this_is(){\r\n  console.log(\"language declared as bogus_language\");\r\n}\r\n```\r\n\r\n> here is blockquote\r\n\r\n[Relative image link](afu.png)\r\n"
+  },
+  "basePath": "/api",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {}
+}
