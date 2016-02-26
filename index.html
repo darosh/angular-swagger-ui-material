@@ -54,6 +54,8 @@
         .controller('MyCtrl', function ($scope, $location, $mdToast) {
             $scope.isLoading = false;
             $scope.swaggerUrl = $location.search()['url'] || 'http://petstore.swagger.io/v2/swagger.json';
+
+            <!-- TODO: swaggerMethods should have deafault values -->
             $scope.swaggerMethods = {
                 'get': 'md-primary',
                 post: 'md-accent',
