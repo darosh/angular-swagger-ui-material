@@ -130,7 +130,7 @@
         <div>No endpoint method selected.</div>
     </div>
     <md-button class="md-fab md-fab-bottom-right md-primary md-raised"
-               ng-disabled="sum.sop.loading"
+               ng-disabled="sum.sop.loading || !sum.explorerForm.$valid"
                ng-style="{padding: sum.sop.loading ? '1px 0 0 0' : null}"
                ng-if="sum.sop && apiExplorer"
                ng-click="sum.submit(sum.sop)"

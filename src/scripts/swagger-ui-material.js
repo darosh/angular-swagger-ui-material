@@ -69,11 +69,14 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
                     sum.sidenavLockedOpen = !sum.sidenavLockedOpen;
                 };
 
+                sum.explorerForm = {};
+
                 sum.submit = function (sop) {
-                    // TODO: what is scope.explorerForm.$valid?
-                    scope.submitExplorer(sop);
-                    scope.explorerResult = false;
-                    scope.hideExplorerResult = false;
+                    if (sum.explorerForm.$valid) {
+                        scope.submitExplorer(sop);
+                        sop.explorerResult = false;
+                        sop.hideExplorerResult = false;
+                    }
                 };
 
                 sum.grouped = true;
