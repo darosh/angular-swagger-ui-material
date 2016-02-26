@@ -1,5 +1,5 @@
 <div layout="column">
-    <md-input-container ng-if="apiExplorer && (param.in != 'body') && (param.subtype != 'enum')">
+    <md-input-container ng-if="apiExplorer && (param.subtype != 'enum')">
         <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
 
         <input ng-if="(param.in != 'body') && (param.subtype == 'file')" type="file" file-input
@@ -10,10 +10,10 @@
                ng-model="form[sum.sop.id][param.name]"
                ng-required="param.required"/>
 
-            <textarea ng-if="param.in == 'body'" ng-model="form[sum.sop.id][param.name]"
+        <textarea ng-if="param.in == 'body'" ng-model="form[sum.sop.id][param.name]"
                       ng-required="param.required"></textarea>
     </md-input-container>
-    <md-input-container ng-if="apiExplorer && (param.in != 'body') && (param.subtype == 'enum')">
+    <md-input-container ng-if="apiExplorer && (param.subtype == 'enum')">
         <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
         <md-select class="sum-no-margin"
                    ng-model="form[sum.sop.id][param.name]">
