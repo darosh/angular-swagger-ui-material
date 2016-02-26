@@ -64,7 +64,7 @@
     </md-toolbar>
     <md-content>
         <div layout-padding layout="column" style="padding-bottom: 0">
-            <div ng-if="infos.description" ng-bind-html="::infos.description"></div>
+            <div ng-if="infos.description" ng-bind-html="::infos.description" class="markdown-body"></div>
             <div style="padding: 4px 4px 0 4px" ng-include="'templates/material/info.html'"></div>
         </div>
         <div ng-if="sum.grouped" layout="row" layout-wrap layout-padding>

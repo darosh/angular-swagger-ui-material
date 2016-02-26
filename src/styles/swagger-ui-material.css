@@ -27,9 +27,9 @@
     margin-right: 16px;
 }
 
-[swagger-ui-material] pre {
-    margin: 0;
-}
+/*[swagger-ui-material] pre {*/
+    /*margin: 0;*/
+/*}*/
 
 [swagger-ui-material] md-input-container {
     margin-top: 0;
@@ -94,7 +94,7 @@
     padding-top: 0;
 }
 
-[swagger-ui-material] pre,
+/*[swagger-ui-material] pre,*/
 [swagger-ui-material] textarea {
     font-family: monospace;
 }
