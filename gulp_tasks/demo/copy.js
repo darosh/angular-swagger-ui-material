@@ -5,6 +5,7 @@ gulp.task('copy', ['build'], function () {
         'dist/modules/swagger-markdown.min.js',
         'dist/modules/swagger-sort.min.js',
         'dist/styles/swagger-ui-material.min.css',
+        'dist/styles/github-markdown.min.css',
         'examples/*.json',
         'bower_components/angular-markdown-filter/markdown.js']).pipe(gulp.dest('demo'));
 });

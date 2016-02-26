@@ -12,3 +12,14 @@ gulp.task('styles', function () {
         .pipe(rename('swagger-ui-material.min.css'))
         .pipe(gulp.dest('dist/styles'));
 });
+
+gulp.task('styles:gfm', function () {
+    var csso = require('gulp-csso');
+    var rename = require('gulp-rename');
+
+    return gulp.src('bower_components/github-markdown-css/github-markdown.css')
+        .pipe(gulp.dest('dist/styles'))
+        .pipe(csso())
+        .pipe(rename('github-markdown.min.css'))
+        .pipe(gulp.dest('dist/styles'));
+});
