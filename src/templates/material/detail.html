@@ -18,17 +18,12 @@
     </div>
 
     <div ng-if="sum.sop.responseClass.schema && (sum.sop.responseClass.display != -1)" layout-padding class="sum-top">
-         <pre class="sum-wrap sum-no-margin"
+         <pre class="sum-pre sum-wrap sum-no-margin"
               ng-if="sum.sop.responseClass.display == 0"
               ng-bind-html="sum.sop.responseClass.schema.model"></pre>
-         <pre class="sum-no-margin" ng-if="sum.sop.responseClass.display == 1"
+         <pre class="sum-pre sum-no-margin" ng-if="sum.sop.responseClass.display == 1"
               ng-bind="sum.sop.responseClass.schema.json"></pre>
     </div>
-
-    <!--<div ng-if="sum.sop.responseClass.status">-->
-    <!--<md-subheader class="md-warn">Response status</md-subheader>-->
-    <!--<div layout="row" layout-padding><code>{{sum.sop.responseClass.status}}</code></div>-->
-    <!--</div>-->
 
     <div ng-if="sum.sop.produces">
         <md-subheader class="md-warn">Response type</md-subheader>
@@ -89,9 +84,9 @@
         </md-input-container>
         <md-input-container class="md-input-has-value">
             <label>Response body</label>
-            <pre
-                style="max-height: 160px; word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 6px; margin-bottom: 6px;"
-                ng-bind="sum.sop.explorerResult.response.body"></pre>
+            <pre class="sum-pre"
+                 style="max-height: 160px; word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 6px; margin-bottom: 6px;"
+                 ng-bind="sum.sop.explorerResult.response.body"></pre>
             <md-divider style="margin-bottom: 24px"></md-divider>
         </md-input-container>
         <md-input-container>

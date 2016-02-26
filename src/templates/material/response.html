@@ -9,6 +9,6 @@
         <a ng-click="resp.display=1" ng-class="{active: resp.display == 1}">Model schema</a>
     </div>
 
-    <pre ng-if="resp.display == 0 && resp.schema&&resp.schema.model" ng-bind-html="resp.schema.model"></pre>
-    <pre ng-if="resp.display == 1 && resp.schema&&resp.schema.json" ng-bind="resp.schema.json"></pre>
+    <pre class="sum-pre" ng-if="resp.display == 0 && resp.schema&&resp.schema.model" ng-bind-html="resp.schema.model"></pre>
+    <pre class="sum-pre" ng-if="resp.display == 1 && resp.schema&&resp.schema.json" ng-bind="resp.schema.json"></pre>
 </div>

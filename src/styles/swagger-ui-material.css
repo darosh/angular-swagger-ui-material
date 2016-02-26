@@ -28,10 +28,6 @@
     margin-right: 16px;
 }
 
-/*[swagger-ui-material] pre {*/
-/*margin: 0;*/
-/*}*/
-
 [swagger-ui-material] md-input-container {
     margin-top: 0;
     margin-bottom: 0;
@@ -95,7 +91,6 @@
     padding-top: 0;
 }
 
-/*[swagger-ui-material] pre,*/
 [swagger-ui-material] textarea {
     font-family: monospace;
 }
@@ -166,4 +161,23 @@
 
 [swagger-ui-material] textarea {
     line-height: 14px;
+}
+
+[swagger-ui-material] pre.sum-pre {
+    white-space: pre-wrap;
+}
+
+[swagger-ui-material] .sum-ind {
+    margin-left: 0;
+}
+
+[swagger-ui-material] md-input-container {
+    margin-left: -2px;
+}
+
+@media screen and (min-width: 800px) {
+    md-sidenav {
+        width: 336px;
+        max-width: 336px;
+    }
 }

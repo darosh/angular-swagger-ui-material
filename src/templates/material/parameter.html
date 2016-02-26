@@ -21,7 +21,7 @@
                        ng-bind="value + (param.default == value ? ' (default)' : '')"></md-option>
         </md-select>
     </md-input-container>
-    <div layout="row" style="padding-left: 4px; padding-right: 4px">
+    <div layout="row" style="padding-right: 4px">
         <div class="md-body-1 sum-param-info" flex ng-bind-html="param.description" style="padding-right: 8px"></div>
         <div class="md-body-2 sum-param-info" layout="column">
             <div layout="row" layout-align="end">
@@ -37,15 +37,13 @@
             </div>
         </div>
     </div>
-    <div ng-if="(param.in == 'body') || param.schema" layout="row">
-        <div flex>
-            <md-input-container ng-if="param.in == 'body'">
-                <md-select aria-label="parameter type" ng-model="form[sum.sop.id].contentType">
-                    <md-option ng-repeat="item in sum.sop.consumes track by item" value="{{item}}" ng-bind="::item">
-                    </md-option>
-                </md-select>
-            </md-input-container>
-        </div>
+    <div ng-if="(param.in == 'body') || param.schema" layout="row" class="sum-ind" style="margin-top: 8px">
+        <md-input-container flex ng-if="param.in == 'body'" style="margin-top: 2px; padding-right: 16px">
+            <md-select aria-label="parameter type" ng-model="form[sum.sop.id].contentType">
+                <md-option ng-repeat="item in sum.sop.consumes track by item" value="{{item}}" ng-bind="::item">
+                </md-option>
+            </md-select>
+        </md-input-container>
         <div class="sum-tools-in" ng-if="param.schema">
             <a class="md-button md-primary"
                ng-click="form[sum.sop.id][param.name] = param.schema.json">Set</a>
@@ -54,10 +52,11 @@
                ng-bind="param.schema.display ? 'Model' : 'Example'"></a>
         </div>
     </div>
-    <pre class="sum-wrap sum-no-margin" ng-if="param.schema.display == 0 && param.schema.model"
+    <pre class="sum-pre sum-wrap sum-no-margin sum-ind" ng-if="param.schema.display == 0 && param.schema.model"
          ng-bind-html="param.schema.model"></pre>
-    <pre class="sum-no-margin" ng-if="param.schema.display == 1 && param.schema.json"
+    <pre class="sum-pre sum-no-margin sum-ind" ng-if="param.schema.display == 1 && param.schema.json"
          ng-bind="param.schema.json"></pre>
+
     <div ng-if="!apiExplorer">
         <div ng-if="param.in != 'body'">
             <div ng-if="param.default"><span ng-bind="param.default"></span> (default)</div>
