@@ -16,6 +16,7 @@
     padding-top: 0;
 }
 
+[swagger-ui-material] .sum-tools-in .md-button,
 [swagger-ui-material] .sum-tools .md-button {
     margin-bottom: 0;
     min-width: 0;
@@ -161,4 +162,8 @@
 
 [swagger-ui-material] .md-toolbar-tools > .md-button:first-child {
     margin-right: 8px;
+}
+
+[swagger-ui-material] textarea {
+    line-height: 14px;
 }
