@@ -51,6 +51,7 @@
     text-decoration: underline;
 }
 
+[swagger-ui-material] .md-body-1,
 [swagger-ui-material] .md-body-2 {
     line-height: 16px;
 }
@@ -120,18 +121,6 @@
     text-decoration: line-through;
 }
 
-[swagger-ui-material] .md-caption {
-    position: absolute;
-    left: 2px;
-    right: auto;
-    top: 36px;
-    font-size: 12px;
-    line-height: 14px;
-    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-    /* TODO: themed color */
-    color: grey;
-}
-
 [swagger-ui-material] .sum-selected {
     /* TODO: themed color */
     background-color: rgb(238, 238, 238);
@@ -155,4 +144,13 @@
 [swagger-ui-material] md-sidenav p {
     margin-top: 0;
     margin-bottom: 0;
+}
+
+[swagger-ui-material] .md-errors-spacer {
+    display: none;
+}
+
+[swagger-ui-material] .sum-param-info {
+    font-size: 12px;
+    line-height: 14px;
 }

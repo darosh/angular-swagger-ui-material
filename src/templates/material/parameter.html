@@ -1,4 +1,4 @@
-<div layout="row">
+<div layout="column">
     <md-input-container flex ng-if="apiExplorer">
         <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
 
@@ -14,16 +14,6 @@
 
             <input ng-switch-default type="text" ng-model="form[sum.sop.id][param.name]"
                    ng-required="param.required">
-
-            <div class="md-caption">
-                <span ng-bind-html="param.description"></span>
-                <span ng-bind-html="param.in"></span>
-
-                <span ng-if="param.type" ng-switch="param.type">
-                    <span ng-switch-when="array" ng-bind="'Array['+param.items.type+']'"></span>
-                    <span ng-switch-default ng-bind="param.type"></span>
-                </span>
-            </div>
         </div>
 
         <div ng-if="param.in == 'body'">
@@ -31,6 +21,23 @@
                       ng-required="param.required"></textarea>
         </div>
     </md-input-container>
+
+    <div layout="row">
+        <div class="md-body-1 sum-param-info" flex ng-bind-html="param.description" style="padding-right: 8px"></div>
+        <div class="md-body-2 sum-param-info" layout="column">
+            <div layout="row" layout-align="end">
+                <div style="padding-right: 4px">in:</div>
+                <div><em ng-bind-html="param.in"></em></div>
+            </div>
+            <div layout="row" ng-if="param.type" layout-align="end">
+                <div style="padding-right: 4px">type:</div>
+                <div ng-switch="param.type">
+                    <code ng-switch-when="array" ng-bind="'Array['+param.items.type+']'"></code>
+                    <code ng-switch-default ng-bind="param.type"></code>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div ng-if="param.in == 'body'">
         <div ng-if="sum.sop.consumes">
@@ -54,14 +61,14 @@
         <div id="help-{{param.id}}">click to set as parameter value</div>
     </div>
     </span>
-</div>
 
-<div ng-if="!apiExplorer">
-    <div ng-if="param.in != 'body'">
-        <div ng-if="param.default"><span ng-bind="param.default"></span> (default)</div>
-        <div ng-if="param.enum">
-            <span ng-repeat="value in param.enum track by $index">{{value}}<span ng-if="!$last"> or </span></span>
+    <div ng-if="!apiExplorer">
+        <div ng-if="param.in != 'body'">
+            <div ng-if="param.default"><span ng-bind="param.default"></span> (default)</div>
+            <div ng-if="param.enum">
+                <span ng-repeat="value in param.enum track by $index">{{value}}<span ng-if="!$last"> or </span></span>
+            </div>
+            <div ng-if="param.required">(required)</div>
         </div>
-        <div ng-if="param.required">(required)</div>
     </div>
 </div>
