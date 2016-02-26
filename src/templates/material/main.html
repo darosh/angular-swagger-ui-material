@@ -1,7 +1,9 @@
 <div flex layout="column">
-    <md-progress-linear ng-if="loading" md-mode='indeterminate'
-                        style="margin-bottom: -5px !important; z-index: 100"></md-progress-linear>
     <md-toolbar md-whiteframe="2">
+        <div class="md-toolbar-tools" ng-show="loading" style="padding-left: 0">
+            <md-progress-circular ng-if="loading" class="md-accent md-hue-1" md-mode='indeterminate'
+                                  md-diameter="64"></md-progress-circular>
+        </div>
         <div class="md-toolbar-tools" ng-hide="loading">
             <toolbar-edit class="sum-delay md-toolbar-tools"
                           ng-model="sum.editUrl"
