@@ -1,7 +1,8 @@
 <md-button ng-click="open = true; focus()" class="md-icon-button">
     <md-icon>search</md-icon>
 </md-button>
-<input ng-show="open" ng-model="ngModel" type="text" class="md-input input-show-hide"/>
+<input ng-show="open" ng-model="ngModel" type="text" class="md-input input-show-hide"
+       ng-model-options="{debounce: {default: 500, blur: 0}}"/>
 <md-button ng-show="open" ng-click="ngModel = ''; open = false" class="md-icon-button input-show-hide">
     <md-icon>close</md-icon>
 </md-button>
