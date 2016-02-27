@@ -119,6 +119,11 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
                 angular.forEach(resource.operations, function (operation) {
                     parseResult.infos.operations.push(operation);
                 });
+
+                // TODO: allow configuration of minimum auto expanded endpoints
+                if (parseResult.resources.length <= 8) {
+                    resource.open = true;
+                }
             });
 
             parseResult.infos.operations.sort(function (a, b) {
