@@ -102,6 +102,19 @@
                   flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
                   flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
                   flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}"
+                  ng-if="!loading"
+                  class="md-2-line">
+        <md-icon class="md-avatar-icon">file_download</md-icon>
+        <div class="md-list-item-text" layout="column">
+            <h3>Download</h3>
+            <p><a download class="md-button md-primary" ng-href="{{url}}">swagger.json</a></p>
+        </div>
+    </md-list-item>
+    <md-list-item flex-xs="100"
+                  flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
+                  flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
+                  flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
+                  flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}"
                   ng-if="(validatorUrl != 'false') && url && !loading"
                   class="md-2-line">
         <md-icon class="md-avatar-icon">code</md-icon>
