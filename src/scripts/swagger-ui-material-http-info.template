@@ -1,0 +1,10 @@
+'use strict';
+
+angular.module('swaggerUiMaterial')
+    .value('httpInfo', {
+        /*eslint-disable */
+        method: {},
+        status: {},
+        header: {}
+        /*eslint-enable */
+    });
