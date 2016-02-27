@@ -16,6 +16,7 @@
     <md-input-container ng-if="apiExplorer && (param.subtype == 'enum')">
         <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
         <md-select class="sum-no-margin"
+                   ng-required="param.required"
                    ng-model="form[sum.sop.id][param.name]">
             <md-option ng-repeat="value in param.enum" value="{{value}}" ng-selected="param.default == value"
                        ng-bind="value + (param.default == value ? ' (default)' : '')"></md-option>
