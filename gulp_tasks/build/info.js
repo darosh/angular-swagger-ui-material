@@ -80,7 +80,7 @@ gulp.task('info', function () {
         return JSON.stringify(obj, null, 4)
             .replace(/^/gm, space)
             .replace(space + '{', '{')
-            .replace(/^( *)"([a-zA-Z]+)": (.*)(,?)$/gm, '$1$2: $3$4')
+            .replace(/^( *)"([a-zA-Z0-9]+)": (.*)(,?)$/gm, '$1$2: $3$4')
             .replace(/^( *)"([^"]+)": (.*)(,?)$/gm, '$1\'$2\': $3$4')
             .replace(/^( *)([^:]+): "(.*)"(,?)$/gm, function (whole, p1, p2, p3, p4) {
                 return p1 + p2 + ': \'' + p3.replace(/'/g, '\\\'') + '\'' + p4;
