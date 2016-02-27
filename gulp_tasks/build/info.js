@@ -1,6 +1,8 @@
 var gulp = require('gulp');
 
 gulp.task('info', function () {
+    var GENERATE_ARRAY = true;
+
     var replace = require('gulp-replace');
     var rename = require('gulp-rename');
     var know = require('know-your-http-well');
@@ -8,23 +10,41 @@ gulp.task('info', function () {
     var header = {};
 
     know.headers.forEach(function (i) {
-        header[i.header.toLowerCase()] = {
-            header: i.header,
-            description: i.description.replace(/^"(.*)"/, '$1'),
-            title: i.spec_title,
-            url: i.spec_href
-        };
+        if (GENERATE_ARRAY) {
+            header[i.header.toLowerCase()] = [
+                i.header,
+                i.description.replace(/^"(.*)"/, '$1'),
+                i.spec_title,
+                i.spec_href
+            ];
+        } else {
+            header[i.header.toLowerCase()] = {
+                header: i.header,
+                description: i.description.replace(/^"(.*)"/, '$1'),
+                title: i.spec_title,
+                url: i.spec_href
+            };
+        }
     });
 
     var status = {};
 
     know.statusCodes.forEach(function (i) {
-        status[i.code.replace('xx', '')] = {
-            phrase: i.phrase,
-            description: i.description.replace(/^"(.*)"/, '$1'),
-            title: i.spec_title,
-            url: i.spec_href
-        };
+        if (GENERATE_ARRAY) {
+            status[i.code.replace('xx', '')] = [
+                i.phrase,
+                i.description.replace(/^"(.*)"/, '$1'),
+                i.spec_title,
+                i.spec_href
+            ];
+        } else {
+            status[i.code.replace('xx', '')] = {
+                phrase: i.phrase,
+                description: i.description.replace(/^"(.*)"/, '$1'),
+                title: i.spec_title,
+                url: i.spec_href
+            };
+        }
     });
 
     var method = {};
@@ -32,14 +52,25 @@ gulp.task('info', function () {
 
     know.methods.forEach(function (i) {
         if (swaggerMethods.indexOf(i.method) > -1) {
-            method[i.method] = {
-                description: i.description.replace(/^"(.*)"/, '$1'),
-                safe: i.safe,
-                idempotent: i.idempotent,
-                cacheable: i.cacheable,
-                title: i.spec_title,
-                url: i.spec_href
-            };
+            if (GENERATE_ARRAY) {
+                method[i.method] = [
+                    i.description.replace(/^"(.*)"/, '$1'),
+                    i.spec_title,
+                    i.spec_href,
+                    i.safe,
+                    i.idempotent,
+                    i.cacheable
+                ];
+            } else {
+                method[i.method] = {
+                    description: i.description.replace(/^"(.*)"/, '$1'),
+                    title: i.spec_title,
+                    url: i.spec_href,
+                    safe: i.safe,
+                    idempotent: i.idempotent,
+                    cacheable: i.cacheable
+                };
+            }
         }
     });
 
@@ -53,6 +84,9 @@ gulp.task('info', function () {
             .replace(/^( *)"([^"]+)": (.*)(,?)$/gm, '$1\'$2\': $3$4')
             .replace(/^( *)([^:]+): "(.*)"(,?)$/gm, function (whole, p1, p2, p3, p4) {
                 return p1 + p2 + ': \'' + p3.replace(/'/g, '\\\'') + '\'' + p4;
+            })
+            .replace(/^( *)"(.*)"(,?)$/gm, function (whole, p1, p2, p3) {
+                return p1 + '\'' + p2.replace(/'/g, '\\\'') + '\'' + p3;
             });
     }
 
