@@ -185,3 +185,15 @@
 [swagger-ui-material] .md-avatar-icon {
     opacity: 0.66;
 }
+
+[swagger-ui-material] .sum-uppercase {
+    text-transform: uppercase;
+}
+
+[swagger-ui-material] .sum-sentence::first-letter {
+    text-transform: uppercase;
+}
+
+[swagger-ui-material] md-dialog {
+    max-width: 360px;
+}

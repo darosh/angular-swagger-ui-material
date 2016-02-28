@@ -1,0 +1,12 @@
+<md-dialog>
+    <md-toolbar ng-class="style">
+        <div class="md-toolbar-tools">
+            <h2><strong class="sum-uppercase" ng-bind="title"></strong> <small>HTTP Method</small></h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content sum-sentence" ng-bind="info[0]"></md-dialog-content>
+    <md-dialog-actions>
+        <md-button ng-href="{{info[2]}}" target="_blank" class="md-primary">{{section}}</md-button>
+        <md-button ng-click="closeDialog()">Close</md-button>
+    </md-dialog-actions>
+</md-dialog>

@@ -2,7 +2,7 @@
 
 angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 'toolbarSearch', 'toolbarEdit'])
     // Derived from original swaggerUi directive
-    .directive('swaggerUiMaterial', function ($timeout) {
+    .directive('swaggerUiMaterial', function ($timeout, $mdDialog, httpInfo) {
         return {
             restrict: 'A',
             controller: 'swaggerUiController',
@@ -18,7 +18,7 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
                 validatorUrl: '@?',
                 swaggerMethods: '='
             },
-            link: function (scope) {
+            link: function (scope, element) {
                 if (scope.validatorUrl === undefined) {
                     scope.validatorUrl = 'http://online.swagger.io/validator';
                 }
@@ -105,6 +105,33 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
                         scope.url = sum.editUrl;
                     }
                 });
+
+                sum.infoMethod = function (sop, $event) {
+                    $mdDialog.show({
+                        templateUrl: 'templates/material/dialog.html',
+                        clickOutsideToClose: true,
+                        parent: element,
+                        targetEvent: $event,
+                        controller: DialogController,
+                        locals: {
+                            info: httpInfo.method[sop.httpMethod],
+                            title: sop.httpMethod,
+                            section: httpInfo.method[sop.httpMethod][1].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
+                            style: scope.swaggerMethods[sop.httpMethod]
+                        }
+                    });
+                };
+
+                function DialogController ($scope, $mdDialog, info, title, section, style) {
+                    $scope.info = info;
+                    $scope.title = title;
+                    $scope.section = section;
+                    $scope.style = style;
+                    console.log(arguments);
+                    $scope.closeDialog = function () {
+                        $mdDialog.hide();
+                    };
+                }
             }
         };
     })
