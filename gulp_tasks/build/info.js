@@ -53,7 +53,7 @@ gulp.task('info', function () {
     know.methods.forEach(function (i) {
         if (swaggerMethods.indexOf(i.method) > -1) {
             if (GENERATE_ARRAY) {
-                method[i.method] = [
+                method[i.method.toLowerCase()] = [
                     i.description.replace(/^"(.*)"/, '$1'),
                     i.spec_title,
                     i.spec_href,
@@ -62,7 +62,7 @@ gulp.task('info', function () {
                     i.cacheable
                 ];
             } else {
-                method[i.method] = {
+                method[i.method.toLowerCase()] = {
                     description: i.description.replace(/^"(.*)"/, '$1'),
                     title: i.spec_title,
                     url: i.spec_href,
