@@ -139,7 +139,8 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
                 };
 
                 sum.infoCode = function (code, $event) {
-                    var status = httpInfo.status[code] || httpInfo.status[code[0] + 'xx'] || [
+                    var status = httpInfo.status[code] || httpInfo.status[code[0] + 'xx'] ||
+                        [
                             '**Undefined**',
                             'no spec found.',
                             '',
