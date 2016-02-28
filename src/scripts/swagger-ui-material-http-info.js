@@ -61,42 +61,6 @@ angular.module('swaggerUiMaterial')
             ]
         },
         status: {
-            1: [
-                '**Informational**',
-                'indicates an interim response for communicating connection status or request progress prior to completing the requested action and sending a final response. ~ [sure](http://www.urbandictionary.com/define.php?term=sure)',
-                'RFC7231#6.2',
-                'http://tools.ietf.org/html/rfc7231#section-6.2'
-            ],
-            2: [
-                '**Successful**',
-                'indicates that the client\'s request was successfully received, understood, and accepted. ~ [cool](https://twitter.com/DanaDanger/status/183316183494311936)',
-                'RFC7231#6.3',
-                'http://tools.ietf.org/html/rfc7231#section-6.3'
-            ],
-            3: [
-                '**Redirection**',
-                'indicates that further action needs to be taken by the user agent in order to fulfill the request. ~ [ask that dude over there](https://twitter.com/DanaDanger/status/183316183494311936)',
-                'RFC7231#6.4',
-                'http://tools.ietf.org/html/rfc7231#section-6.4'
-            ],
-            4: [
-                '**Client Error**',
-                'indicates that the client seems to have erred. ~ [*you* fucked up](https://twitter.com/DanaDanger/status/183316183494311936)',
-                'RFC7231#6.5',
-                'http://tools.ietf.org/html/rfc7231#section-6.5'
-            ],
-            5: [
-                '**Server Error**',
-                'indicates that the server is aware that it has erred or is incapable of performing the requested method. ~ [*we* fucked up](https://twitter.com/DanaDanger/status/183316183494311936)',
-                'RFC7231#6.6',
-                'http://tools.ietf.org/html/rfc7231#section-6.6'
-            ],
-            7: [
-                '**Developer Error**',
-                '[err](http://www.urbandictionary.com/define.php?term=err)',
-                '7xx-rfc',
-                'http://documentup.com/joho/7XX-rfc'
-            ],
             100: [
                 'Continue',
                 'indicates that the initial part of a request has been received and has not yet been rejected by the server.',
@@ -426,6 +390,42 @@ angular.module('swaggerUiMaterial')
                 'indicates that the client needs to authenticate to gain network access.',
                 'RFC6585#6',
                 'http://tools.ietf.org/html/rfc6585#section-6'
+            ],
+            '1xx': [
+                '**Informational**',
+                'indicates an interim response for communicating connection status or request progress prior to completing the requested action and sending a final response. ~ [sure](http://www.urbandictionary.com/define.php?term=sure)',
+                'RFC7231#6.2',
+                'http://tools.ietf.org/html/rfc7231#section-6.2'
+            ],
+            '2xx': [
+                '**Successful**',
+                'indicates that the client\'s request was successfully received, understood, and accepted. ~ [cool](https://twitter.com/DanaDanger/status/183316183494311936)',
+                'RFC7231#6.3',
+                'http://tools.ietf.org/html/rfc7231#section-6.3'
+            ],
+            '3xx': [
+                '**Redirection**',
+                'indicates that further action needs to be taken by the user agent in order to fulfill the request. ~ [ask that dude over there](https://twitter.com/DanaDanger/status/183316183494311936)',
+                'RFC7231#6.4',
+                'http://tools.ietf.org/html/rfc7231#section-6.4'
+            ],
+            '4xx': [
+                '**Client Error**',
+                'indicates that the client seems to have erred. ~ [*you* fucked up](https://twitter.com/DanaDanger/status/183316183494311936)',
+                'RFC7231#6.5',
+                'http://tools.ietf.org/html/rfc7231#section-6.5'
+            ],
+            '5xx': [
+                '**Server Error**',
+                'indicates that the server is aware that it has erred or is incapable of performing the requested method. ~ [*we* fucked up](https://twitter.com/DanaDanger/status/183316183494311936)',
+                'RFC7231#6.6',
+                'http://tools.ietf.org/html/rfc7231#section-6.6'
+            ],
+            '7xx': [
+                '**Developer Error**',
+                '[err](http://www.urbandictionary.com/define.php?term=err)',
+                '7xx-rfc',
+                'http://documentup.com/joho/7XX-rfc'
             ]
         },
         header: {

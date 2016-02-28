@@ -31,14 +31,14 @@ gulp.task('info', function () {
 
     know.statusCodes.forEach(function (i) {
         if (GENERATE_ARRAY) {
-            status[i.code.replace('xx', '')] = [
+            status[i.code] = [
                 i.phrase,
                 i.description.replace(/^"(.*)"/, '$1'),
                 i.spec_title,
                 i.spec_href
             ];
         } else {
-            status[i.code.replace('xx', '')] = {
+            status[i.code] = {
                 phrase: i.phrase,
                 description: i.description.replace(/^"(.*)"/, '$1'),
                 title: i.spec_title,
@@ -80,7 +80,7 @@ gulp.task('info', function () {
         return JSON.stringify(obj, null, 4)
             .replace(/^/gm, space)
             .replace(space + '{', '{')
-            .replace(/^( *)"([a-zA-Z0-9]+)": (.*)(,?)$/gm, '$1$2: $3$4')
+            .replace(/^( *)"(([a-zA-Z]+[0-9]*)|([0-9]+))": (.*)(,?)$/gm, '$1$2: $5$6')
             .replace(/^( *)"([^"]+)": (.*)(,?)$/gm, '$1\'$2\': $3$4')
             .replace(/^( *)([^:]+): "(.*)"(,?)$/gm, function (whole, p1, p2, p3, p4) {
                 return p1 + p2 + ': \'' + p3.replace(/'/g, '\\\'') + '\'' + p4;
