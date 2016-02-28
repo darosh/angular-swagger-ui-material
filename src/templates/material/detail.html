@@ -49,7 +49,7 @@
              ng-include="'templates/material/parameter.html'"></div>
     </div>
 
-    <div ng-if="sum.sop.hasResponses" style="padding-bottom: 8px;">
+    <div ng-if="sum.sop.hasResponses || sum.sop.defaultResponse" style="padding-bottom: 8px;">
         <md-subheader class="md-warn">Response messages</md-subheader>
 
         <div layout="column" layout-padding style="padding-top: 0; padding-bottom: 0"
