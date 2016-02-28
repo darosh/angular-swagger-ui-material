@@ -139,6 +139,13 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
                 };
 
                 sum.infoCode = function (code, $event) {
+                    var status = httpInfo.status[code] || httpInfo.status[code[0] + 'xx'] || [
+                            '**Undefined**',
+                            'no spec found.',
+                            '',
+                            null
+                        ];
+
                     $mdDialog.show({
                         templateUrl: 'templates/material/dialog-code.html',
                         clickOutsideToClose: true,
@@ -153,10 +160,10 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
                             };
                         },
                         locals: {
-                            info: httpInfo.status[code],
+                            info: status,
                             title: code,
-                            section: httpInfo.status[code][2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                            style: sum.codeClass[code[0]]
+                            section: status[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
+                            style: sum.codeClass[code[0]] || sum.codeClass[7]
                         }
                     });
                 };

@@ -11,7 +11,7 @@
         <p class="sum-sentence" ng-bind="info[1]"></p>
     </md-dialog-content>
     <md-dialog-actions>
-        <md-button ng-href="{{info[3]}}" target="_blank" class="md-primary">{{section}}</md-button>
+        <md-button ng-if="info[3]" ng-href="{{info[3]}}" target="_blank" class="md-primary">{{section}}</md-button>
         <md-button ng-click="closeDialog()">Close</md-button>
     </md-dialog-actions>
 </md-dialog>
