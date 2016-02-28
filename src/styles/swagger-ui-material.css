@@ -20,7 +20,8 @@
     top: -4px;
 }
 
-[swagger-ui-material] .sum-http-method.md-button.md-raised:not([disabled]) {
+[swagger-ui-material] .sum-http-method.md-button.md-raised:not([disabled]),
+[swagger-ui-material] .sum-http-code.md-button.md-raised:not([disabled]) {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2);
 }
 
