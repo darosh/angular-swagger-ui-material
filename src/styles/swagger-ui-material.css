@@ -7,6 +7,19 @@
     margin: 2px 6px 2px 2px;
 }
 
+[swagger-ui-material] .sum-http-code.md-button {
+    height: 18px;
+    line-height: 17px;
+    min-height: 18px;
+    min-width: 42px;
+    padding: 1px;
+    margin: 2px 6px 2px 2px;
+    border-radius: 9px;
+    font-family: monospace;
+    position: relative;
+    top: -4px;
+}
+
 [swagger-ui-material] .sum-http-method.md-button.md-raised:not([disabled]) {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2);
 }
@@ -186,14 +199,15 @@
     opacity: 0.66;
 }
 
-[swagger-ui-material] .sum-uppercase {
+.sum-uppercase {
     text-transform: uppercase;
 }
 
-[swagger-ui-material] .sum-sentence::first-letter {
+.sum-sentence::first-letter {
     text-transform: uppercase;
 }
 
-[swagger-ui-material] md-dialog {
+md-dialog.sum-dialog {
     max-width: 360px;
+    min-width: 280px;
 }

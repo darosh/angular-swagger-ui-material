@@ -108,11 +108,18 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
 
                 sum.infoMethod = function (sop, $event) {
                     $mdDialog.show({
-                        templateUrl: 'templates/material/dialog.html',
+                        templateUrl: 'templates/material/dialog-method.html',
                         clickOutsideToClose: true,
-                        parent: element,
                         targetEvent: $event,
-                        controller: DialogController,
+                        controller: function ($scope, $mdDialog, info, title, section, style) {
+                            $scope.info = info;
+                            $scope.title = title;
+                            $scope.section = section;
+                            $scope.style = style;
+                            $scope.closeDialog = function () {
+                                $mdDialog.hide();
+                            };
+                        },
                         locals: {
                             info: httpInfo.method[sop.httpMethod],
                             title: sop.httpMethod,
@@ -122,16 +129,37 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
                     });
                 };
 
-                function DialogController ($scope, $mdDialog, info, title, section, style) {
-                    $scope.info = info;
-                    $scope.title = title;
-                    $scope.section = section;
-                    $scope.style = style;
-                    console.log(arguments);
-                    $scope.closeDialog = function () {
-                        $mdDialog.hide();
-                    };
-                }
+                sum.codeClass = {
+                    1: scope.swaggerMethods.post,
+                    2: scope.swaggerMethods.get,
+                    3: scope.swaggerMethods.put,
+                    4: scope.swaggerMethods.delete,
+                    5: scope.swaggerMethods.delete,
+                    7: scope.swaggerMethods.delete
+                };
+
+                sum.infoCode = function (code, $event) {
+                    $mdDialog.show({
+                        templateUrl: 'templates/material/dialog-code.html',
+                        clickOutsideToClose: true,
+                        targetEvent: $event,
+                        controller: function ($scope, $mdDialog, info, title, section, style) {
+                            $scope.info = info;
+                            $scope.title = title;
+                            $scope.section = section;
+                            $scope.style = style;
+                            $scope.closeDialog = function () {
+                                $mdDialog.hide();
+                            };
+                        },
+                        locals: {
+                            info: httpInfo.status[code],
+                            title: code,
+                            section: httpInfo.status[code][2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
+                            style: sum.codeClass[code[0]]
+                        }
+                    });
+                };
             }
         };
     })
@@ -166,3 +194,4 @@ angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 't
     .run(function (swaggerModules, operations) {
         swaggerModules.add(swaggerModules.BEFORE_DISPLAY, operations);
     });
+
