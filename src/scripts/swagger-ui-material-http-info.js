@@ -3,7 +3,7 @@
 angular.module('swaggerUiMaterial')
     .value('httpInfo', {
         method: {
-            DELETE: [
+            delete: [
                 'requests that the origin server remove the association between the target resource and its current functionality.',
                 'RFC7231#4.3.5',
                 'http://tools.ietf.org/html/rfc7231#section-4.3.5',
@@ -11,7 +11,7 @@ angular.module('swaggerUiMaterial')
                 true,
                 false
             ],
-            GET: [
+            get: [
                 'requests transfer of a current selected representation for the target resource.',
                 'RFC7231#4.3.1',
                 'http://tools.ietf.org/html/rfc7231#section-4.3.1',
@@ -19,7 +19,7 @@ angular.module('swaggerUiMaterial')
                 true,
                 true
             ],
-            HEAD: [
+            head: [
                 'is identical to GET except that the server MUST NOT send a message body in the response (i.e., the response terminates at the end of the header block).',
                 'RFC7231#4.3.2',
                 'http://tools.ietf.org/html/rfc7231#section-4.3.2',
@@ -27,7 +27,7 @@ angular.module('swaggerUiMaterial')
                 true,
                 true
             ],
-            OPTIONS: [
+            options: [
                 'requests information about the communication options available on the request/response chain identified by the effective request URI.',
                 'RFC7231#4.3.7',
                 'http://tools.ietf.org/html/rfc7231#section-4.3.7',
@@ -35,7 +35,7 @@ angular.module('swaggerUiMaterial')
                 true,
                 false
             ],
-            POST: [
+            post: [
                 'requests that the target resource process the representation enclosed in the request according to the resource\'s own specific semantics.',
                 'RFC7231#4.3.3',
                 'http://tools.ietf.org/html/rfc7231#section-4.3.3',
@@ -43,7 +43,7 @@ angular.module('swaggerUiMaterial')
                 false,
                 false
             ],
-            PUT: [
+            put: [
                 'requests that the state of the target resource be created or replaced with the state defined by the representation enclosed in the request message payload.',
                 'RFC7231#4.3.4',
                 'http://tools.ietf.org/html/rfc7231#section-4.3.4',
@@ -51,7 +51,7 @@ angular.module('swaggerUiMaterial')
                 true,
                 false
             ],
-            PATCH: [
+            patch: [
                 'requests that a set of changes described in the request entity be applied to the resource identified by the Request-URI.',
                 'RFC5789',
                 'http://tools.ietf.org/html/rfc5789#section-2',
