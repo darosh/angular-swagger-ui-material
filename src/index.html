@@ -44,6 +44,7 @@
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/showdown/1.3.0/showdown.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/js-yaml/3.5.3/js-yaml.min.js"></script>
+<script src="//cdn.rawgit.com/dibari/angular-ellipsis/master/src/angular-ellipsis.min.js"></script>
 
 <!-- inject:js -->
 <script src="../bower_components/angular-swagger-ui/dist/scripts/swagger-ui.js"></script>
@@ -61,10 +62,18 @@
 <script src="./modules/swagger-split.js"></script>
 <script src="./directives/toolbar-search.js"></script>
 <script src="./directives/toolbar-edit.js"></script>
+<script src="./directives/text-truncate.js"></script>
 <!-- endinject -->
 
 <script type="text/javascript">
-    angular.module('myApp', ['swaggerUiMaterial', 'swaggerUiMarkdown', 'swaggerUiSort', 'swaggerUiSplit', 'swaggerUiYaml'])
+    angular.module('myApp', [
+            'swaggerUiMaterial',
+            'swaggerUiMarkdown',
+            'swaggerUiSort',
+            'swaggerUiSplit',
+            'swaggerUiYaml',
+            'dibari.angular-ellipsis'
+        ])
         .config(function ($mdThemingProvider) {
             var search = {};
             var query = window.location.search.substring(1);

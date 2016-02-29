@@ -1,7 +1,12 @@
 <div ng-if="sum.sop.description">
     <md-subheader class="md-warn">Description</md-subheader>
     <div layout-padding>
-        <div class="md-body-1" ng-bind-html="sum.sop.description"></div>
+        <div class="md-body-1"
+             ng-bind-html="sum.sop.descriptionClicked ? sum.sop.description : sum.sop.description + ' '"
+             ellipsis
+             ellipsis-append-click="sum.sop.descriptionClicked = true"
+             ellipsis-append="<b style='cursor: pointer'>read more</b>"
+             ng-style="{'max-height': !sum.sop.descriptionClicked ? '56px' : null}"></div>
     </div>
 </div>
 
