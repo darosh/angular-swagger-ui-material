@@ -1,11 +1,6 @@
 <div ng-if="sum.sop.description">
     <md-subheader class="md-warn">Description</md-subheader>
     <div layout-padding>
-        <!-- TODO: is there any better ellipsis / read more solution for HTML content? -->
-        <!-- TODO: ellipsis in link bug
-            http://darosh.github.io/angular-swagger-ui-material/#?url=https:%2F%2Fapis-guru.github.io%2Fapi-models%2Fgoogleapis.com%2Fgenomics%2Fv1%2Fswagger.json
-            /v1/referencesets/{referenceSetId} ?
-            -->
         <div class="md-body-1" truncate ng-bind-html="sum.sop.description"></div>
     </div>
 </div>
