@@ -1,12 +1,17 @@
 <div ng-if="sum.sop.description">
     <md-subheader class="md-warn">Description</md-subheader>
     <div layout-padding>
+        <!-- TODO: is there any better ellipsis / read more solution for HTML content? -->
         <div class="md-body-1"
+             ng-if="sum.sop.description.length > 144"
              ng-bind-html="sum.sop.descriptionClicked ? sum.sop.description : sum.sop.description + ' '"
              ellipsis
              ellipsis-append-click="sum.sop.descriptionClicked = true"
              ellipsis-append="<b style='cursor: pointer'>read more</b>"
              ng-style="{'max-height': !sum.sop.descriptionClicked ? '56px' : null}"></div>
+        <div class="md-body-1"
+             ng-if="sum.sop.description.length <= 144"
+             ng-bind-html="sum.sop.descriptionClicked ? sum.sop.description : sum.sop.description + ' '"></div>
     </div>
 </div>
 
