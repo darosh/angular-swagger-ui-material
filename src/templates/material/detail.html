@@ -32,7 +32,7 @@
              style="padding-bottom: 0; top: -8px; position: relative">
             <div layout="row">
                 <md-input-container flex>
-                    <md-select aria-label="response type" ng-model="form[sum.sop.id].responseType">
+                    <md-select aria-label="response type" ng-model="form[sum.sop.id].responseType" ng-disabled="sum.sop.produces.length == 1">
                         <md-option ng-repeat="item in sum.sop.produces track by item" value="{{item}}" ng-bind="::item">
                         </md-option>
                     </md-select>
