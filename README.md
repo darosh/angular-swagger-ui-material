@@ -102,4 +102,5 @@ gulp deploy
 
 ## TODOs
 
-[angular-swagger-ui-material](https://github.com/darosh/angular-swagger-ui-material/search?q=TODO&type=Code&utf8=%E2%9C%93), [angular-swagger-ui](https://github.com/Orange-OpenSource/angular-swagger-ui/search?q=TODO&type=Code&utf8=%E2%9C%93)
+* [angular-swagger-ui-material](https://github.com/darosh/angular-swagger-ui-material/search?q=TODO&type=Code&utf8=%E2%9C%93)
+* [angular-swagger-ui](https://github.com/Orange-OpenSource/angular-swagger-ui/search?q=TODO&type=Code&utf8=%E2%9C%93)
