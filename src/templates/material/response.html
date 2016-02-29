@@ -9,7 +9,7 @@
                        ng-bind="code"></md-button>
             <code ng-if="code == 'default'" ng-bind="code"></code>
         </div>
-        <div flex style="padding-left: 8px" ng-bind-html="resp.description"></div>
+        <div flex style="padding-left: 8px; word-wrap: break-word" ng-bind-html="resp.description"></div>
     </div>
 
     <!-- TODO: needs full sample of http://swagger.io/specification/#responseObject -->
