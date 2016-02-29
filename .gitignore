@@ -32,11 +32,12 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
-bower_compoments
-dist
-demo
+bower_compoments/
+dist/
+demo/
 !demo/hub.html
 !gulp_tasks/demo
 .publish
 
-.idea
+.idea/
+.idea/vcs.xml
