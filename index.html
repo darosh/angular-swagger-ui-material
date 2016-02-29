@@ -47,12 +47,13 @@
 <script src="./markdown.js"></script>
 <script src="./swagger-markdown.min.js"></script>
 <script src="./swagger-sort.min.js"></script>
+<script src="./swagger-split.min.js"></script>
 <script src="./swagger-ui-material.full.min.js"></script>
 <script src="./swagger-yaml.min.js"></script>
 <!-- endinject -->
 
 <script type="text/javascript">
-    angular.module('myApp', ['swaggerUiMaterial', 'swaggerUiMarkdown', 'swaggerUiSort', 'swaggerUiYaml'])
+    angular.module('myApp', ['swaggerUiMaterial', 'swaggerUiMarkdown', 'swaggerUiSort', 'swaggerUiSplit', 'swaggerUiYaml'])
         .config(function ($mdThemingProvider) {
             var search = {};
             var query = window.location.search.substring(1);
@@ -77,11 +78,12 @@
             <!-- TODO: swaggerMethods should have deafault values -->
             $scope.swaggerMethods = {
                 get: 'md-primary',
+                head: 'md-primary md-hue-2',
+                options: 'md-primary md-hue-3',
                 post: 'md-accent',
                 put: 'md-accent md-hue-2',
-                head: 'md-primary md-hue-2',
-                delete: 'md-warn',
-                patch: 'md-accent md-hue-2'
+                patch: 'md-accent md-hue-2',
+                delete: 'md-warn'
             };
 
             // error management
