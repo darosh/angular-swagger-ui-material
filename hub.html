@@ -102,6 +102,10 @@
             $http({method: 'GET', url: 'https://apis-guru.github.io/api-models/apis.json'}).then(function (response) {
                 vm.loading = false;
                 vm.apis = response.data;
+
+                vm.apis.apis.sort(function (a, b) {
+                    return (a.name + a.version).localeCompare(b.name + b.version);
+                });
             });
         });
 </script>
