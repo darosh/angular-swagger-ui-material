@@ -9,8 +9,8 @@ angular.module('swaggerUiSort', ['swaggerUi'])
             post: 4,
             put: 5,
             patch: 6,
-            delete: 7,
-        }
+            delete: 7
+        };
 
         this.execute = function (parseResult) {
             var deferred = $q.defer();
