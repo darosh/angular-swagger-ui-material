@@ -19,7 +19,9 @@ angular.module('truncate', [])
                         ellipsis: more[0]
                     }));
 
-                    more.bind('click', function () {
+                    more.bind('click', function (event) {
+                        event.preventDefault();
+                        event.stopPropagation();
                         element[0].innerHTML = scope.ngBindHtml;
                     });
                 });
@@ -42,7 +44,7 @@ angular.module('truncate', [])
 
             for (var i = root.childNodes.length - 1; i >= 0; i--) {
                 var el = root.childNodes[i];
-                var text = el.textContent;
+                text = el.textContent;
                 var length = text.length;
 
                 if (length <= excess) {
@@ -54,12 +56,12 @@ angular.module('truncate', [])
 
                 if (el.nodeType === 3) {
                     var s = el.splitText(length - excess - 1);
-                    //s.textContent = o.ellipsis;
                     s.parentNode.replaceChild(opts.ellipsis, s);
                     return;
                 }
 
                 truncate(el, angular.extend(opts, {length: length - excess}));
+                return;
             }
         }
 
