@@ -13,19 +13,20 @@ angular.module('swaggerUiMarkdown', ['swaggerUi', 'markdown'])
     .service('markdownToHtml', function ($q, $filter) {
         this.execute = function (parseResult) {
             var deferred = $q.defer();
+            var md = $filter('markdown');
 
             // TODO: is there any other GFM field to be transformed? Find "GFM" in http://swagger.io/specification/ page
 
             if (parseResult.infos && parseResult.infos.description) {
-                parseResult.infos.description = $filter('markdown')(parseResult.infos.description);
+                parseResult.infos.description = md(parseResult.infos.description);
             }
 
             angular.forEach(parseResult.resources, function (resource) {
                 angular.forEach(resource.operations, function (operation) {
-                    operation.description = $filter('markdown')(operation.description);
+                    operation.description = md(operation.description);
 
                     angular.forEach(operation.responses, function (response) {
-                        response.description = $filter('markdown')(response.description);
+                        response.description = md(response.description);
                     });
                 });
             });
