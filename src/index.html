@@ -58,12 +58,13 @@
 <script src="./modules/swagger-sort.js"></script>
 <script src="./modules/swagger-markdown.js"></script>
 <script src="./modules/swagger-yaml.js"></script>
+<script src="./modules/swagger-split.js"></script>
 <script src="./directives/toolbar-search.js"></script>
 <script src="./directives/toolbar-edit.js"></script>
 <!-- endinject -->
 
 <script type="text/javascript">
-    angular.module('myApp', ['swaggerUiMaterial', 'swaggerUiMarkdown', 'swaggerUiSort', 'swaggerUiYaml'])
+    angular.module('myApp', ['swaggerUiMaterial', 'swaggerUiMarkdown', 'swaggerUiSort', 'swaggerUiSplit', 'swaggerUiYaml'])
         .config(function ($mdThemingProvider) {
             var search = {};
             var query = window.location.search.substring(1);
