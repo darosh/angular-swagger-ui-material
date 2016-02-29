@@ -4,10 +4,10 @@ bower_components/
 
 dist/
 
-demo/
-!demo/hub.html
-!gulp_tasks/demo
+/demo/*
+!/demo/hub.html
 
 .publish/
 
 .idea/
+
