@@ -200,6 +200,10 @@
     opacity: 0.66;
 }
 
+[swagger-ui-material] a.truncate {
+    cursor: pointer;
+}
+
 .sum-uppercase {
     text-transform: uppercase;
 }

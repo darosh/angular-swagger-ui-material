@@ -1,6 +1,13 @@
 'use strict';
 
-angular.module('swaggerUiMaterial', ['swaggerUi', 'ngMaterial', 'ngSanitize', 'toolbarSearch', 'toolbarEdit'])
+angular.module('swaggerUiMaterial', [
+        'swaggerUi',
+        'ngMaterial',
+        'ngSanitize',
+        'toolbarSearch',
+        'toolbarEdit',
+        'truncate'
+    ])
     // Derived from original swaggerUi directive
     .directive('swaggerUiMaterial', function ($timeout, $mdDialog, httpInfo) {
         return {
