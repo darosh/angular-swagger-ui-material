@@ -32,7 +32,7 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
-bower_compoments/
+bower_components/
 dist/
 demo/
 !demo/hub.html
