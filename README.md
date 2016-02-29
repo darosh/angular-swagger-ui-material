@@ -48,26 +48,30 @@ Material Design template for [angular-swagger-ui](https://github.com/Orange-Open
 
 ## Additional modules
 
-### [swagger-sort](./src/modules/swagger-sort.js)
+### [sort](./src/modules/swagger-sort.js)
 
 Standalone angular-swagger-ui plugin module for human readable sorting.
 
-### [swagger-markdown](./src/modules/swagger-markdown.js)
+### [markdown](./src/modules/swagger-markdown.js)
 
 Angular-swagger-ui plugin module for markdown.
 
-#### Dependencies
+**Dependencies**
 
 ```html
 <script src="../bower_components/showdown/dist/showdown.js"></script>
 <script src="../bower_components/angular-markdown-filter/markdown.js"></script>
 ```
 
-### [swagger-yaml](./src/modules/swagger-yaml.js)
+### [split](./src/modules/swagger-split.js)
+
+Angular-swagger-ui plugin module splitting creating and adding missing tags to operations based on path URL.
+
+### [yaml](./src/modules/swagger-yaml.js)
 
 Angular-swagger-ui plugin module for YAML.
 
-#### Dependencies
+**Dependencies**
 
 ```html
 <script src="../bower_components/js-yaml/dist/js-yaml.js"></script>
@@ -81,7 +85,7 @@ Angular-swagger-ui plugin module for YAML.
 
 ## Development
 
-### Install
+**Install**
 
 ```shell
 npm install -g bower gulp
