@@ -27,6 +27,7 @@ Material Design template for [angular-swagger-ui](https://github.com/Orange-Open
 * [x] Configurable [angular-material](https://material.angularjs.org) theme colors
 * [x] Highlight deprecated methods
 * [x] Search
+* [x] YAML
 
 ## Search
 
@@ -55,6 +56,16 @@ Angular-swagger-ui plugin module for markdown.
 <script src="../bower_components/angular-markdown-filter/markdown.js"></script>
 ```
 
+### [swagger-yaml](./src/modules/swagger-yaml.js)
+
+Angular-swagger-ui plugin module for YAML.
+
+#### Dependencies
+
+```html
+<script src="../bower_components/js-yaml/dist/js-yaml.js"></script>
+```
+
 ## Reference
 
 * [angular-swagger-ui](https://github.com/Orange-OpenSource/angular-swagger-ui)
@@ -71,19 +82,19 @@ bower install
 npm install
 ```
 
-### Build dist
+**Build dist**
 
 ```shell
 gulp
 ```
 
-### Build demo
+**Build demo**
 
 ```shell
 gulp demo
 ```
 
-### Deploy demo
+**Deploy demo**
 
 ```shell
 gulp deploy
