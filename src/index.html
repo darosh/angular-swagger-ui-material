@@ -16,8 +16,14 @@
     <link rel="stylesheet" href="./directives/toolbar-search.css">
     <link rel="stylesheet" href="./directives/toolbar-edit.css">
     <!-- endinject -->
+
+    <style>
+        .ng-cloak {
+            display: none;
+        }
+    </style>
 </head>
-<body ng-controller="MyCtrl" layout="column">
+<body ng-controller="MyCtrl" layout="column" class="ng-cloak">
 <div layout="row"
      flex
      swagger-ui-material
