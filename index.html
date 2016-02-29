@@ -42,7 +42,6 @@
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/showdown/1.3.0/showdown.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/js-yaml/3.5.3/js-yaml.min.js"></script>
-<script src="//cdn.rawgit.com/dibari/angular-ellipsis/master/src/angular-ellipsis.min.js"></script>
 
 <!-- inject:js -->
 <script src="./markdown.js"></script>
@@ -59,8 +58,7 @@
             'swaggerUiMarkdown',
             'swaggerUiSort',
             'swaggerUiSplit',
-            'swaggerUiYaml',
-            'dibari.angular-ellipsis'
+            'swaggerUiYaml'
         ])
         .config(function ($mdThemingProvider) {
             var search = {};
@@ -83,7 +81,7 @@
             $scope.isLoading = false;
             $scope.swaggerUrl = $location.search()['url'] || 'http://petstore.swagger.io/v2/swagger.json';
 
-            <!-- TODO: swaggerMethods should have deafault values -->
+            <!-- TODO: swaggerMethods should have default values -->
             $scope.swaggerMethods = {
                 get: 'md-primary',
                 head: 'md-primary md-hue-2',
