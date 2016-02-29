@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('swaggerUiMaterial', [
+angular.module('swaggerUiMaterial',
+    [
         'swaggerUi',
         'ngMaterial',
         'ngSanitize',

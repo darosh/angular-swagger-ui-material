@@ -32,7 +32,7 @@ angular.module('truncate', [])
         var chop = /(\s*\S+|\s)$/;
 
         // based on https://github.com/pathable/truncate
-        function truncate(root, opts) {
+        function truncate (root, opts) {
             var text = root.textContent;
             var excess = text.length - opts.length;
 
