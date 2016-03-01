@@ -144,7 +144,7 @@
                ng-if="sum.sop && apiExplorer"
                ng-click="sum.submit(sum.sop)"
                aria-label="submit">
-        <md-icon ng-if="!sum.sop.loading">play_arrow</md-icon>
+        <md-icon ng-if="!sum.sop.loading" ng-bind="sum.sop.explorerResult ? 'replay' : 'play_arrow'"></md-icon>
         <md-progress-circular ng-if="sum.sop.loading"
                               md-diameter="56"
                               class="md-accent md-hue-1"
