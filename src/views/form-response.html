@@ -1,6 +1,13 @@
 <md-subheader class="md-warn">Request URL</md-subheader>
 
-<div>{{sum.sop.explorerResult.url}}</div>
+<div layout-padding>
+    <div>
+        <a class="md-button sum-link md-primary"
+           ng-href="sum.sop.explorerResult.url"
+           ng-bind="sum.sop.explorerResult.url"></a>
+    </div>
+</div>
+
 
 <md-subheader class="md-warn">Response message</md-subheader>
 

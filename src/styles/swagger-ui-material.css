@@ -47,7 +47,8 @@
     margin-bottom: 0;
 }
 
-[swagger-ui-material] md-list-item .md-button {
+[swagger-ui-material] md-list-item .md-button,
+[swagger-ui-material] .sum-link.md-button {
     margin: 0 0 0 -4px;
     padding: 0 4px 0 4px;
     text-transform: none;
@@ -57,7 +58,9 @@
 }
 
 [swagger-ui-material] md-list-item .md-button:hover,
-[swagger-ui-material] md-list-item .md-button:focus {
+[swagger-ui-material] md-list-item .md-button:focus,
+[swagger-ui-material] .sum-link.md-button:hover,
+[swagger-ui-material] .sum-link.md-button:focus {
     background-color: transparent;
     text-decoration: underline;
 }
