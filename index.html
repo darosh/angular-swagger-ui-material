@@ -70,10 +70,15 @@
                 search[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
             }
 
+            $mdThemingProvider.definePalette('accent', $mdThemingProvider.extendPalette(search.accent || 'grey', {
+                // tweaking md-button.md-accent.md-focused background-color
+                '700': 'dadada'
+            }));
+
             $mdThemingProvider
                 .theme('default')
                 .primaryPalette(search.primary || 'teal')
-                .accentPalette(search.accent || 'grey')
+                .accentPalette('accent')
                 .warnPalette(search.warn || 'amber')
                 .foregroundPalette[3] = 'rgba(0, 0, 0, 0.4)';
         })
