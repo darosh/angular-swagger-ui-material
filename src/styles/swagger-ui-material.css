@@ -211,6 +211,10 @@
     transition: none;
 }
 
+[swagger-ui-material] md-tab-content.ng-animate {
+    overflow: hidden;
+}
+
 .sum-uppercase {
     text-transform: uppercase;
 }
