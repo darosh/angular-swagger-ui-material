@@ -42,6 +42,12 @@ angular.module('swaggerUiMaterial',
                     sum.sop = op;
                     sum.sidenavOpen = true;
 
+                    // TODO: this is fixing not selected single "text/html" in produces,
+                    // TODO: angular-swagger-ui probably setting this to "application/json" not present in op.produces
+                    if ((op.produces.indexOf(scope.form[op.id].responseType)) === -1 && (op.produces.length === 1)) {
+                        scope.form[op.id].responseType = op.produces[0];
+                    }
+
                     if (sum.sop.responseClass && sum.sop.responseClass.status) {
                         sum.sop.defaultResponse = {};
                         sum.sop.defaultResponse[sum.sop.responseClass.status] = {description: sum.sop.responseClass.description};
