@@ -10,19 +10,13 @@
 [swagger-ui-material] .sum-http-code.md-button,
 [swagger-ui-material] .sum-http-header.md-button {
     height: 18px;
-    line-height: 17px;
+    line-height: 18px;
     min-height: 18px;
-    min-width: 48px;
-    padding: 1px;
-    margin: 2px 6px 2px 2px;
+    min-width: 18px;
+    margin: 2px;
     border-radius: 9px;
     font-family: monospace;
-    position: relative;
-    top: -4px;
-}
-
-[swagger-ui-material] .sum-http-header.md-button {
-    padding: 1px 9px;
+    padding: 0 9px;
     text-transform: none;
 }
 
@@ -224,6 +218,12 @@
 
 [swagger-ui-material] .sum-tab-result [md-tabs-template] {
     height: 100%;
+}
+
+[swagger-ui-material] .md-select-value :first-child {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: calc(100% - 24px);
 }
 
 .sum-uppercase {

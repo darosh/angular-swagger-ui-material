@@ -1,25 +1,21 @@
-<div style="padding-top: 0; padding-bottom: 4px">
-    <div layout="row" class="md-body-1">
-        <div style="min-width: 24px">
-            <md-button ng-if="code != 'default'"
-                       ng-click="sum.infoCode(code, $event)"
-                       class="sum-http-code md-raised"
-                       ng-class="sum.codeClass[code[0]]"
-                       aria-label="code"
-                       ng-bind="code"></md-button>
-            <code ng-if="code == 'default'" ng-bind="code"></code>
-        </div>
-        <div flex style="padding-left: 8px; word-wrap: break-word" ng-bind-html="resp.description"></div>
-    </div>
-
-    <!-- TODO: needs full sample of http://swagger.io/specification/#responseObject -->
-    <!--
-    <div ng-if="resp.schema && resp.schema.model && resp.schema.json">
-        <a ng-click="resp.display=0" ng-class="{active: resp.display == 0}">Model</a>
-        <a ng-click="resp.display=1" ng-class="{active: resp.display == 1}">Model schema</a>
-    </div>
-
-    <pre class="sum-pre" ng-if="resp.display == 0 && resp.schema&&resp.schema.model" ng-bind-html="resp.schema.model"></pre>
-    <pre class="sum-pre" ng-if="resp.display == 1 && resp.schema&&resp.schema.json" ng-bind="resp.schema.json"></pre>
-    -->
+<div class="md-body-1" layout="row">
+    <md-button ng-click="sum.infoCode(resp.code, $event)"
+               class="sum-http-code md-raised"
+               ng-class="sum.codeClass[resp.code[0]]"
+               ng-disabled="!sum.codeClass[resp.code[0]]"
+               aria-label="code"
+               ng-bind="resp.code"></md-button>
+    <span flex style="padding-left: 8px; padding-top: 4px; word-wrap: break-word" ng-bind-html="resp.description"></span>
 </div>
+<md-divider ng-if="!$last" style="margin: 8px 0 8px 0"></md-divider>
+
+<!-- TODO: needs full sample of http://swagger.io/specification/#responseObject -->
+<!--
+<div ng-if="resp.schema && resp.schema.model && resp.schema.json">
+    <a ng-click="resp.display=0" ng-class="{active: resp.display == 0}">Model</a>
+    <a ng-click="resp.display=1" ng-class="{active: resp.display == 1}">Model schema</a>
+</div>
+
+<pre class="sum-pre" ng-if="resp.display == 0 && resp.schema&&resp.schema.model" ng-bind-html="resp.schema.model"></pre>
+<pre class="sum-pre" ng-if="resp.display == 1 && resp.schema&&resp.schema.json" ng-bind="resp.schema.json"></pre>
+-->

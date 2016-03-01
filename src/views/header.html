@@ -1,11 +1,12 @@
-<div style="padding-top: 0; padding-bottom: 4px">
-    <div layout="row" class="md-body-1">
-        <div style="min-width: 24px">
-            <md-button ng-click="sum.infoHeader(name, $event)"
-                       class="sum-http-header md-raised"
-                       aria-label="header"
-                       ng-bind="name"></md-button>
-        </div>
-        <div flex style="padding-left: 8px; word-wrap: break-word" ng-bind-html="value"></div>
-    </div>
+<div class="md-body-1" style="text-indent: -9px; margin-left: 9px">
+    <md-button ng-click="sum.infoHeader(header.name, $event)"
+               class="sum-http-header md-raised"
+               ng-disabled="!sum.getHeaderClass(header.name)"
+               ng-class="sum.getHeaderClass(header.name)"
+               style="font-weight: bold; top: 0"
+               aria-label="header"
+               ng-bind="header.name"></md-button>
+    <br>
+    <span style="word-wrap: break-word; line-height: 24px;" ng-bind-html="header.value"></span>
 </div>
+<md-divider if="!$last" style="margin: 4px 0 8px 0"></md-divider>

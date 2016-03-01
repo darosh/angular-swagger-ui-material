@@ -49,10 +49,25 @@ angular.module('swaggerUiMaterial',
                         scope.form[op.id].responseType = op.produces[0];
                     }
 
+                    sum.sop.responseArray = [];
+
                     if (sum.sop.responseClass && sum.sop.responseClass.status) {
-                        sum.sop.defaultResponse = {};
-                        sum.sop.defaultResponse[sum.sop.responseClass.status] = {description: sum.sop.responseClass.description};
+                        sum.sop.responseArray.push({
+                            code: sum.sop.responseClass.status,
+                            description: sum.sop.responseClass.description
+                        });
                     }
+
+                    angular.forEach(sum.sop.responses, function (r, c) {
+                        sum.sop.responseArray.push({
+                            code: c,
+                            description: r.description
+                        });
+                    });
+
+                    sum.sop.responseArray.sort(function (a, b) {
+                        a.code.toString().localeCompare(b.code.toString());
+                    });
                 };
 
                 // Toggle
@@ -110,9 +125,27 @@ angular.module('swaggerUiMaterial',
                                     result.response.statusString = result.response.status.toString();
                                 }
 
+                                result.response.headerArray = [];
+
                                 // TODO: result.response.headers is String object
                                 if (result.response && result.response.headers) {
                                     result.response.headers = JSON.parse(result.response.headers);
+
+                                    for (var k in result.response.headers) {
+                                        result.response.headerArray.push({
+                                            name: k,
+                                            value: result.response.headers[k]
+                                        });
+                                    }
+
+                                    result.response.headerArray.sort(function (a, b) {
+                                        a.name.localeCompare(b.name);
+                                    });
+                                }
+
+                                // TODO: model with no content should be null or undefined
+                                if (sum.sop.explorerResult.response.body === 'no content') {
+                                    sum.sop.explorerResult.response.body = null;
                                 }
 
                                 $timeout(function () {
@@ -207,13 +240,24 @@ angular.module('swaggerUiMaterial',
                 };
 
                 sum.headerClass = {
-                    standard: scope.swaggerMethods.get,
+                    standard: scope.swaggerMethods.post,
                     obsoleted: scope.swaggerMethods.delete,
                     undefined: scope.swaggerMethods.post
                 };
 
-                sum.infoHeader = function (title, $event) {
+                sum.getHeaderClass = function (title) {
                     var i = httpInfo.header[title.toLowerCase()];
+
+                    if (i) {
+                        return sum.headerClass[i[1]] || sum.headerClass.undefined;
+                    } else {
+                        return null;
+                    }
+
+                };
+
+                sum.infoHeader = function (title, $event) {
+                    var i = httpInfo.header[title.toLowerCase()] || [title, 'Unknown header.', '', null];
 
                     $mdDialog.show({
                         templateUrl: 'views/dialog.html',
@@ -271,8 +315,27 @@ angular.module('swaggerUiMaterial',
             }
         };
     })
+    /* TODO: DEBUG
+     .factory('$exceptionHandler', function () {
+     return function (exception, cause) {
+     console.log('exception', arguments);
+     };
+     })
+     .factory('httpRequestInterceptor', function ($q) {
+     return {
+     'responseError': function (response) {
+     console.log('http error', response);
+     return response;
+     }
+     };
+     })
+     .config(function ($httpProvider) {
+     //$httpProvider.interceptors.push('httpRequestInterceptor');
+     $httpProvider.defaults.useXDomain = true;
+     delete $httpProvider.defaults.headers.common['X-Requested-With'];
+     })
+     */
     // List ungrouped operations
-    // Add info
     .service('operations', function ($q) {
         this.execute = function (parseResult) {
             var deferred = $q.defer();
