@@ -145,6 +145,7 @@
                ng-style="{padding: sum.sop.loading ? '1px 0 0 0' : null}"
                ng-if="sum.sop && apiExplorer"
                ng-click="sum.submit(sum.sop)"
+               ng-class="(sum.sop.explorerResult.response.status === -1) ? 'md-warn' : 'md-primary'"
                aria-label="submit">
         <md-icon ng-if="!sum.sop.loading" ng-bind="sum.sop.explorerResult ? 'replay' : 'play_arrow'"></md-icon>
         <md-progress-circular ng-if="sum.sop.loading"
