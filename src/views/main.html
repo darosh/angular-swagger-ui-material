@@ -128,11 +128,11 @@
     <md-divider ng-if="sum.sop"></md-divider>
     <md-tabs layout="column" flex md-selected="sum.sop.tab" ng-class="{'sum-slide-disabled': !sum.sop.explorerResult}">
         <!-- TODO: better tab names? -->
-        <md-tab label="Request" layout="column" flex>
-            <md-content ng-if="sum.sop" ng-include="'views/request.html'" flex></md-content>
+        <md-tab label="Request">
+            <div ng-include="'views/request.html'"></div>
         </md-tab>
-        <md-tab label="Result" flex ng-if="sum.sop.explorerResult">
-            <md-content ng-if="sum.sop" ng-include="'views/result.html'" flex></md-content>
+        <md-tab class="sum-tab-result" label="Result" ng-disabled="!sum.sop.explorerResult">
+            <div ng-show="sum.sop.explorerResult" style="height: 100%" flex ng-include="'views/result.html'" layout="column"></div>
         </md-tab>
     </md-tabs>
     <div ng-if="!sum.sop" layout-padding>

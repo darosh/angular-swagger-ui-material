@@ -222,6 +222,10 @@
     overflow: hidden;
 }
 
+[swagger-ui-material] .sum-tab-result [md-tabs-template] {
+    height: 100%;
+}
+
 .sum-uppercase {
     text-transform: uppercase;
 }
