@@ -131,7 +131,7 @@
         <md-tab label="Request" layout="column" flex>
             <md-content ng-if="sum.sop" ng-include="'views/form-request.html'" flex></md-content>
         </md-tab>
-        <md-tab label="Response" flex>
+        <md-tab label="Response" flex ng-if="sum.sop.explorerResult">
             <md-content ng-if="sum.sop" ng-include="'views/form-response.html'" flex></md-content>
         </md-tab>
     </md-tabs>
