@@ -41,7 +41,7 @@ angular.module('swaggerUiMaterial',
                     $event.stopPropagation();
                     sum.sop = op;
                     sum.sidenavOpen = true;
-                    sum.sop.tab = sum.sop.tab || 0;
+                    op.tab = op.tab || 0;
 
                     // TODO: this is fixing not selected single "text/html" in produces,
                     // TODO: angular-swagger-ui probably setting this to "application/json" not present in op.produces
@@ -49,23 +49,23 @@ angular.module('swaggerUiMaterial',
                         scope.form[op.id].responseType = op.produces[0];
                     }
 
-                    sum.sop.responseArray = [];
+                    op.responseArray = [];
 
-                    if (sum.sop.responseClass && sum.sop.responseClass.status) {
-                        sum.sop.responseArray.push({
-                            code: sum.sop.responseClass.status,
-                            description: sum.sop.responseClass.description
+                    if (op.responseClass && op.responseClass.status) {
+                        op.responseArray.push({
+                            code: op.responseClass.status,
+                            description: op.responseClass.description
                         });
                     }
 
-                    angular.forEach(sum.sop.responses, function (r, c) {
-                        sum.sop.responseArray.push({
+                    angular.forEach(op.responses, function (r, c) {
+                        op.responseArray.push({
                             code: c,
                             description: r.description
                         });
                     });
 
-                    sum.sop.responseArray.sort(function (a, b) {
+                    op.responseArray.sort(function (a, b) {
                         a.code.toString().localeCompare(b.code.toString());
                     });
                 };
