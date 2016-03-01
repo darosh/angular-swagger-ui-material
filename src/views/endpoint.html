@@ -18,6 +18,6 @@
     </div>
     <div ng-show="api.open" style="padding: 13px">
         <div ng-class="{'sum-selected': sum.sop === op}" ng-repeat="op in api.operations | filter:sum.searchObject:false track by op.id"
-             ng-include="'templates/material/operation.html'"></div>
+             ng-include="'views/operation.html'"></div>
     </div>
 </div>

@@ -46,7 +46,7 @@
         <div layout-padding
              style="padding-top: 8px"
              ng-repeat="param in sum.sop.parameters track by $index"
-             ng-include="'templates/material/parameter.html'"></div>
+             ng-include="'views/parameter.html'"></div>
     </div>
 
     <div ng-if="sum.sop.hasResponses || sum.sop.defaultResponse" style="padding-bottom: 8px;">
@@ -54,11 +54,11 @@
 
         <div layout="column" layout-padding style="padding-top: 0; padding-bottom: 0"
              ng-repeat="(code, resp) in sum.sop.defaultResponse track by $index"
-             ng-include="'templates/material/response.html'"></div>
+             ng-include="'views/response.html'"></div>
 
         <div layout="column" layout-padding style="padding-top: 0; padding-bottom: 0"
              ng-repeat="(code, resp) in sum.sop.responses track by $index"
-             ng-include="'templates/material/response.html'"></div>
+             ng-include="'views/response.html'"></div>
     </div>
 </form>
 

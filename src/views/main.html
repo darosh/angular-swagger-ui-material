@@ -66,7 +66,7 @@
     <md-content>
         <div layout-padding layout="column" style="padding-bottom: 0">
             <div ng-if="infos.description" ng-bind-html="::infos.description" class="markdown-body"></div>
-            <div style="padding: 4px 4px 0 4px" ng-include="'templates/material/info.html'"></div>
+            <div style="padding: 4px 4px 0 4px" ng-include="'views/info.html'"></div>
             <div ng-if="!loading && (resources.length == 0)">No API found.</div>
         </div>
         <div ng-if="sum.grouped" layout="row" layout-wrap layout-padding>
@@ -78,7 +78,7 @@
                  ng-repeat="api in resources track by $index"
                  style="padding: 12px"
                  ng-if="(api.operations | filter:sum.searchObject:false).length"
-                 ng-include="'templates/material/endpoint.html'"></div>
+                 ng-include="'views/endpoint.html'"></div>
         </div>
         <!-- TODO: multi-column layout with top>boottom sort would be better? -->
         <div ng-if="!sum.grouped" layout="row" layout-wrap layout-padding style="margin-top: 12px;">
@@ -90,7 +90,7 @@
                  ng-repeat="op in infos.operations | filter:sum.searchObject:false track by op.id"
                  style="padding-top: 0; padding-bottom: 0">
                 <div ng-class="{'sum-selected': sum.sop === op}"
-                     ng-include="'templates/material/operation.html'"></div>
+                     ng-include="'views/operation.html'"></div>
             </div>
         </div>
     </md-content>
@@ -129,10 +129,10 @@
     <md-tabs layout="column" flex>
         <!-- TODO: better tab names? -->
         <md-tab label="Request" layout="column" flex>
-            <md-content ng-if="sum.sop" ng-include="'templates/material/form-request.html'" flex></md-content>
+            <md-content ng-if="sum.sop" ng-include="'views/form-request.html'" flex></md-content>
         </md-tab>
         <md-tab label="Response" flex>
-            <md-content ng-if="sum.sop" ng-include="'templates/material/form-response.html'" flex></md-content>
+            <md-content ng-if="sum.sop" ng-include="'views/form-response.html'" flex></md-content>
         </md-tab>
     </md-tabs>
     <div ng-if="!sum.sop" layout-padding>

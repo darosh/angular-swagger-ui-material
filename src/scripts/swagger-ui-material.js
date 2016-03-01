@@ -14,7 +14,7 @@ angular.module('swaggerUiMaterial',
         return {
             restrict: 'A',
             controller: 'swaggerUiController',
-            templateUrl: 'templates/material/main.html',
+            templateUrl: 'views/main.html',
             scope: {
                 url: '=',
                 parser: '@?',
@@ -122,7 +122,7 @@ angular.module('swaggerUiMaterial',
 
                 sum.infoMethod = function (sop, $event) {
                     $mdDialog.show({
-                        templateUrl: 'templates/material/dialog-method.html',
+                        templateUrl: 'views/dialog-method.html',
                         clickOutsideToClose: true,
                         targetEvent: $event,
                         controller: function ($scope, $mdDialog, info, title, section, style) {
@@ -162,7 +162,7 @@ angular.module('swaggerUiMaterial',
                         ];
 
                     $mdDialog.show({
-                        templateUrl: 'templates/material/dialog-code.html',
+                        templateUrl: 'views/dialog-code.html',
                         clickOutsideToClose: true,
                         targetEvent: $event,
                         controller: function ($scope, $mdDialog, info, title, section, style) {
