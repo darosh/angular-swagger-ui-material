@@ -17,10 +17,13 @@
     </div>
 </div>
 <md-subheader class="md-warn">Response body</md-subheader>
+<div layout-padding>
 <pre class="sum-pre"
-     style="max-height: 160px; word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 6px; margin-bottom: 6px;"
+     style="max-height: 50%; word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 6px; margin-bottom: 6px;"
      ng-bind="sum.sop.explorerResult.response.body"></pre>
+</div>
 <md-subheader class="md-warn">Response headers</md-subheader>
 <div layout-padding>
-    <div ng-repeat="(name, value) in sum.sop.explorerResult.response.headers track by name" ng-include="'views/header.html'"></div>
+    <div ng-repeat="(name, value) in sum.sop.explorerResult.response.headers track by name"
+         ng-include="'views/header.html'"></div>
 </div>
