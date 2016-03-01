@@ -17,13 +17,14 @@
             <md-icon ng-bind="meta[2] ? 'check_box' : 'check_box_outline_blank'"></md-icon>
         </div>
     </div>
-    <md-divider ng-if="meta" ></md-divider>
-    <md-dialog-content class="md-dialog-content">
+    <md-divider ng-if="meta"></md-divider>
+    <md-dialog-content ng-if="header || description" class="md-dialog-content">
         <h3 ng-if="header" class="md-title" ng-bind="header"></h3>
         <p ng-if="description" class="sum-sentence" ng-bind="description"></p>
     </md-dialog-content>
     <md-dialog-actions>
-        <md-button ng-if="link" ng-href="{{link}}" target="_blank" class="md-primary" ng-bind="section" aria-label="spec"></md-button>
+        <md-button ng-if="link" ng-href="{{link}}" target="_blank" class="md-primary" ng-bind="section"
+                   aria-label="spec"></md-button>
         <md-button ng-click="closeDialog()">Close</md-button>
     </md-dialog-actions>
 </md-dialog>
