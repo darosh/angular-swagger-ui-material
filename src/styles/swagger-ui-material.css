@@ -7,7 +7,8 @@
     margin: 2px 6px 2px 2px;
 }
 
-[swagger-ui-material] .sum-http-code.md-button {
+[swagger-ui-material] .sum-http-code.md-button,
+[swagger-ui-material] .sum-http-header.md-button {
     height: 18px;
     line-height: 17px;
     min-height: 18px;
@@ -20,8 +21,14 @@
     top: -4px;
 }
 
+[swagger-ui-material] .sum-http-header.md-button {
+    padding: 1px 9px;
+    text-transform: none;
+}
+
 [swagger-ui-material] .sum-http-method.md-button.md-raised:not([disabled]),
-[swagger-ui-material] .sum-http-code.md-button.md-raised:not([disabled]) {
+[swagger-ui-material] .sum-http-code.md-button.md-raised:not([disabled]),
+[swagger-ui-material] .sum-http-header.md-button.md-raised:not([disabled]) {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2);
 }
 

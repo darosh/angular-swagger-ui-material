@@ -110,6 +110,11 @@ angular.module('swaggerUiMaterial',
                                     result.response.statusString = result.response.status.toString();
                                 }
 
+                                // TODO: result.response.headers is String object
+                                if (result.response && result.response.headers) {
+                                    result.response.headers = JSON.parse(result.response.headers);
+                                }
+
                                 $timeout(function () {
                                     operation.tab = 1;
                                 }, 50);
@@ -203,6 +208,39 @@ angular.module('swaggerUiMaterial',
                             title: code,
                             section: status[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
                             style: sum.codeClass[code[0]] || sum.codeClass[7]
+                        }
+                    });
+                };
+
+                // TODO: merge all HTTP dialog templates and conrollers
+
+                sum.headerClass = {
+                    standard: scope.swaggerMethods.get,
+                    obsoleted: scope.swaggerMethods.delete,
+                    undefined: scope.swaggerMethods.post
+                };
+
+                sum.infoHeader = function (title, $event) {
+                    var info = httpInfo.header[title.toLowerCase()];
+
+                    $mdDialog.show({
+                        templateUrl: 'views/dialog-header.html',
+                        clickOutsideToClose: true,
+                        targetEvent: $event,
+                        controller: function ($scope, $mdDialog, info, title, section, style) {
+                            $scope.info = info;
+                            $scope.title = title;
+                            $scope.section = section;
+                            $scope.style = style;
+                            $scope.closeDialog = function () {
+                                $mdDialog.hide();
+                            };
+                        },
+                        locals: {
+                            info: info,
+                            title: info[0],
+                            section: info[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
+                            style: sum.headerClass[info[1]] || sum.headerClass.undefined
                         }
                     });
                 };
