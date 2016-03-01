@@ -255,7 +255,7 @@ angular.module('swaggerUiMaterial',
                     ];
                 });
 
-                function DialogCtrl($scope, $mdDialog, title, subtitle, header, description, link, section, style, meta) {
+                function DialogCtrl ($scope, $mdDialog, title, subtitle, header, description, link, section, style, meta) {
                     $scope.title = title;
                     $scope.subtitle = subtitle;
                     $scope.header = header;
