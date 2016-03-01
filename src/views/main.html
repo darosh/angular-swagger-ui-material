@@ -129,10 +129,10 @@
     <md-tabs layout="column" flex md-selected="sum.sop.tab" ng-class="{'sum-slide-disabled': !sum.sop.explorerResult}">
         <!-- TODO: better tab names? -->
         <md-tab label="Request" layout="column" flex>
-            <md-content ng-if="sum.sop" ng-include="'views/form-request.html'" flex></md-content>
+            <md-content ng-if="sum.sop" ng-include="'views/request.html'" flex></md-content>
         </md-tab>
-        <md-tab label="Response" flex ng-if="sum.sop.explorerResult">
-            <md-content ng-if="sum.sop" ng-include="'views/form-response.html'" flex></md-content>
+        <md-tab label="Result" flex ng-if="sum.sop.explorerResult">
+            <md-content ng-if="sum.sop" ng-include="'views/result.html'" flex></md-content>
         </md-tab>
     </md-tabs>
     <div ng-if="!sum.sop" layout-padding>
