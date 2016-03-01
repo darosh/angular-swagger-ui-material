@@ -5,6 +5,7 @@
     min-width: 64px;
     padding: 1px;
     margin: 2px 6px 2px 2px;
+    transition: none;
 }
 
 [swagger-ui-material] .sum-http-code.md-button,
@@ -210,10 +211,6 @@
 
 [swagger-ui-material] .sum-slide-disabled [role="tabpanel"] {
     transition: none;
-}
-
-[swagger-ui-material] md-tab-content.ng-animate {
-    overflow: hidden;
 }
 
 [swagger-ui-material] .md-select-value :first-child {
