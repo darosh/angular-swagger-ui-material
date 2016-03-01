@@ -233,7 +233,29 @@ angular.module('swaggerUiMaterial',
                     });
                 };
 
-                function DialogCtrl ($scope, $mdDialog, title, subtitle, header, description, link, section, style, meta) {
+                scope.$watch('infos', function () {
+                    if (!scope.infos || !Object.keys(scope.infos).length) {
+                        scope.metas = [];
+
+                        return;
+                    }
+
+                    var infos = scope.infos;
+
+                    scope.metas = [
+                        ['Contact', 'person', (infos.contact.name && !infos.contact.email) ? infos.contact.name : null, null],
+                        ['Email', 'email', infos.contact.email ? (infos.contact.name || infos.contact.email) : null, 'mailto:' + infos.contact.email + '?subject=' + infos.title],
+                        ['License', 'vpn_key', infos.license.name || infos.license.url, infos.license.url],
+                        ['Terms of service', 'work', infos.termsOfService, infos.termsOfService],
+                        ['Host', 'home', infos.scheme + '://' + infos.host, infos.scheme + '://' + infos.host],
+                        ['Base URL', 'link', infos.basePath, (infos.sheme ? (infos.sheme + '://') : '') + infos.host + infos.basePath],
+                        ['API version', 'developer_board', infos.version, null],
+                        ['Download', 'file_download', 'swagger.json', scope.url],
+                        [null, 'code', ((scope.validatorUrl !== 'false') && scope.url) ? (scope.validatorUrl + '/debug?url=' + scope.url) : null, scope.validatorUrl + '?url=' + scope.url]
+                    ];
+                });
+
+                function DialogCtrl($scope, $mdDialog, title, subtitle, header, description, link, section, style, meta) {
                     $scope.title = title;
                     $scope.subtitle = subtitle;
                     $scope.header = header;
@@ -250,6 +272,7 @@ angular.module('swaggerUiMaterial',
         };
     })
     // List ungrouped operations
+    // Add info
     .service('operations', function ($q) {
         this.execute = function (parseResult) {
             var deferred = $q.defer();

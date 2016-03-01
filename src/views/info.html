@@ -1,129 +1,34 @@
-<!-- TODO: fix list text overflow bug -->
-<md-list layout="row" layout-wrap>
-    <md-list-item flex-xs="100"
-                  flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
-                  flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
-                  flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
-                  flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}"
-                  ng-if="infos.contact.name && !infos.contact.email"
-                  class="md-2-line">
-        <md-icon class="md-avatar-icon">person</md-icon>
-        <div class="md-list-item-text" layout="column">
-            <span>Contact</span>
-            <p ng-bind="::infos.contact.name"></p>
-        </div>
-    </md-list-item>
-    <md-list-item flex-xs="100" flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
-                  flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
-                  flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
-                  flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}"
-                  ng-if="infos.contact.email"
-                  class="md-2-line">
-        <md-icon class="md-avatar-icon">email</md-icon>
-        <div class="md-list-item-text" layout="column">
-            <h3>Email</h3>
-            <p><a class="md-button md-primary" ng-href="mailto:{{::infos.contact.email}}?subject={{::infos.title}}"
-                  ng-bind="::(infos.contact.name || infos.contact.email)"></a></p>
-        </div>
-    </md-list-item>
-    <md-list-item flex-xs="100"
-                  flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
-                  flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
-                  flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
-                  flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}"
-                  ng-if="infos.license.name"
-                  class="md-2-line">
-        <md-icon class="md-avatar-icon">vpn_key</md-icon>
-        <div class="md-list-item-text" layout="column">
-            <h3>License</h3>
-            <p><a class="md-button md-primary" ng-href="{{::infos.license.url}}" ng-bind="::infos.license.name"></a></p>
-        </div>
-    </md-list-item>
-    <md-list-item flex-xs="100"
-                  flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
-                  flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
-                  flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
-                  flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}"
-                  ng-if="infos.termsOfService"
-                  class="md-2-line">
-        <md-icon class="md-avatar-icon">work</md-icon>
-        <div class="md-list-item-text" layout="column">
-            <h3>Terms of service</h3>
-            <p><a class="md-button md-primary" ng-href="{{::infos.termsOfService}}"
-                  ng-bind="::infos.termsOfService"></a></p>
-        </div>
-    </md-list-item>
-    <md-list-item flex-xs="100"
-                  flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
-                  flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
-                  flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
-                  flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}"
-                  ng-if="infos.host"
-                  class="md-2-line">
-        <md-icon class="md-avatar-icon">home</md-icon>
-        <div class="md-list-item-text" layout="column">
-            <h3>Host</h3>
-            <p><a class="md-button md-primary" ng-href="{{infos.scheme + '://' + infos.host}}">
-                <span ng-bind="::infos.scheme"></span>://<span ng-bind="::infos.host"></span></a></p>
-        </div>
-    </md-list-item>
-    <md-list-item flex-xs="100"
-                  flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
-                  flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
-                  flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
-                  flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}"
-                  ng-if="infos.basePath"
-                  class="md-2-line">
-        <md-icon class="md-avatar-icon">link</md-icon>
-        <div class="md-list-item-text" layout="column">
-            <h3>Base URL</h3>
-            <p>
-                <a class="md-button md-primary"
-                   ng-href="{{(infos.sheme ? (infos.sheme + '://') : '') + infos.host + infos.basePath}}">
-                    {{infos.basePath}}
-                </a>
-            </p>
-        </div>
-    </md-list-item>
-    <md-list-item flex-xs="100"
-                  flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
-                  flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
-                  flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
-                  flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}"
-                  ng-if="infos.version"
-                  class="md-2-line">
-        <md-icon class="md-avatar-icon">developer_board</md-icon>
-        <div class="md-list-item-text" layout="column">
-            <h3>API version</h3>
-            <p ng-bind="::infos.version"></p>
-        </div>
-    </md-list-item>
-    <md-list-item flex-xs="100"
-                  flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
-                  flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
-                  flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
-                  flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}"
-                  ng-if="!loading"
-                  class="md-2-line">
-        <md-icon class="md-avatar-icon">file_download</md-icon>
-        <div class="md-list-item-text" layout="column">
-            <h3>Download</h3>
-            <p><a download="swagger.json" class="md-button md-primary" ng-href="{{url}}">swagger.json</a></p>
-        </div>
-    </md-list-item>
-    <md-list-item flex-xs="100"
-                  flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
-                  flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
-                  flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
-                  flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}"
-                  ng-if="(validatorUrl != 'false') && url && !loading"
-                  class="md-2-line">
-        <md-icon class="md-avatar-icon">code</md-icon>
-        <div class="md-list-item-text" layout="column">
-            <p><a style="margin-top: 4px; display: inline-flex; height: 30px"
-                  target="_blank" ng-href="{{validatorUrl}}/debug?url={{url}}">
-                <img ng-src="{{validatorUrl}}?url={{url}}" style="width: 97px; height: 30px;"/>
-            </a></p>
-        </div>
-    </md-list-item>
-</md-list>
+<div layout="row" layout-wrap ng-if="!loading">
+    <div ng-repeat="meta in metas"
+         ng-if="meta[2]"
+         flex-xs="100"
+         layout="row"
+         flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
+         flex-md="{{sum.sidenavLockedOpen ? 50 : 33}}"
+         flex-lg="{{sum.sidenavLockedOpen ? 33 : 25}}"
+         flex-xl="{{sum.sidenavLockedOpen ? 25 : 20}}">
+        <md-list flex>
+            <md-list-item class="md-2-line" style="overflow: hidden" layout="row">
+                <md-icon class="md-avatar-icon" ng-bind="meta[1]"></md-icon>
+                <div class="md-list-item-text" flex layout="column">
+                    <span ng-if="meta[0]" ng-bind="meta[0]">Contact</span>
+                    <p style="overflow: hidden; text-overflow: ellipsis; line-height: 14px"
+                       ng-if="meta[0] && !meta[3]" ng-bind="meta[2]" flex></p>
+                    <p ng-if="meta[0] && meta[3]" flex>
+                        <a style="display: block; text-overflow: ellipsis; padding-left: 5px; text-align: left"
+                           class="md-button md-primary"
+                           ng-bind="meta[2]"
+                           ng-href="{{meta[3]}}"
+                           target="_blank"></a>
+                    </p>
+                    <p ng-if="!meta[0]">
+                        <a style="margin-top: 4px; display: inline-flex; height: 30px"
+                           target="_blank" ng-href="{{meta[2]}}">
+                            <img ng-src="{{meta[3]}}" style="width: 97px; height: 30px;"/>
+                        </a>
+                    </p>
+                </div>
+            </md-list-item>
+        </md-list>
+    </div>
+</div>
