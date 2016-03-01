@@ -33,7 +33,8 @@
     <div layout="column" layout-padding flex>
     <pre class="sum-pre"
          style="word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 6px; margin-bottom: 6px;"
-         ng-bind="sum.sop.explorerResult.response.body"
+         truncate="1728"
+         ng-bind-html="sum.sop.explorerResult.response.body"
          flex></pre>
     </div>
 </div>

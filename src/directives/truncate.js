@@ -7,14 +7,14 @@ angular.module('truncate', [])
             scope: {
                 ngBindHtml: '='
             },
-            link: function (scope, element) {
+            link: function (scope, element, attr) {
                 scope.$watch('ngBindHtml', function () {
                     var more = angular.element('<a class="truncate">\u2026</a>');
 
                     element.empty();
 
                     element.append(truncation(scope.ngBindHtml, {
-                        length: 144,
+                        length: attr.truncate || 144,
                         words: true,
                         ellipsis: more[0]
                     }));
