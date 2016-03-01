@@ -1,0 +1,34 @@
+<div ng-if="sum.sop.explorerResult && !sum.sop.hideExplorerResult">
+    <div layout="row">
+        <div flex>
+            <md-subheader class="md-warn">Response</md-subheader>
+        </div>
+        <div class="sum-tools">
+            <md-button class="md-primary" ng-click="sum.sop.hideExplorerResult = true">Hide</md-button>
+        </div>
+    </div>
+</div>
+
+<div ng-if="sum.sop.explorerResult" ng-show="!sum.sop.hideExplorerResult" layout-padding layout="row" layout-wrap>
+    <div layout="column" flex>
+        <md-input-container>
+            <label>Request URL</label>
+            <input type="text" ng-model="sum.sop.explorerResult.url"/>
+        </md-input-container>
+        <md-input-container>
+            <label>Response code</label>
+            <textarea type="text" ng-model="sum.sop.explorerResult.response.status"></textarea>
+        </md-input-container>
+        <md-input-container class="md-input-has-value">
+            <label>Response body</label>
+            <pre class="sum-pre"
+                 style="max-height: 160px; word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 6px; margin-bottom: 6px;"
+                 ng-bind="sum.sop.explorerResult.response.body"></pre>
+            <md-divider style="margin-bottom: 24px"></md-divider>
+        </md-input-container>
+        <md-input-container>
+            <label>Response headers</label>
+            <textarea type="text" ng-model="sum.sop.explorerResult.response.headers"></textarea>
+        </md-input-container>
+    </div>
+</div>
