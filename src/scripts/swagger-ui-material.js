@@ -42,6 +42,11 @@ angular.module('swaggerUiMaterial',
                     sum.sop = op;
                     sum.sidenavOpen = true;
                     op.tab = op.tab || 0;
+                    sum.omg = true;
+
+                    $timeout(function(){
+                        sum.omg = false;
+                    }, 50);
 
                     // TODO: this is fixing not selected single "text/html" in produces,
                     // TODO: angular-swagger-ui probably setting this to "application/json" not present in op.produces

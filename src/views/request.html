@@ -1,5 +1,5 @@
 <div ng-if="sum.sop.description">
-    <md-subheader class="md-warn">Description</md-subheader>
+    <md-subheader class="md-warn md-no-sticky">Description</md-subheader>
     <div layout-padding>
         <div class="md-body-1" truncate ng-bind-html="sum.sop.description"></div>
     </div>
@@ -8,7 +8,7 @@
 <form role="form" name="sum.explorerForm" ng-submit="submit(sum.sop)">
     <div ng-if="sum.sop.responseClass.schema" layout="row">
         <div flex>
-            <md-subheader class="md-warn">Response class</md-subheader>
+            <md-subheader class="md-warn md-no-sticky">Response class</md-subheader>
         </div>
         <div class="sum-tools" ng-if="sum.sop.responseClass.display != -1">
             <a class="md-button md-primary"
@@ -27,7 +27,7 @@
     </div>
 
     <div ng-if="sum.sop.produces.length">
-        <md-subheader class="md-warn">Response type</md-subheader>
+        <md-subheader class="md-warn md-no-sticky">Response type</md-subheader>
         <div layout-padding
              style="padding-bottom: 0; top: -8px; position: relative">
             <div layout="row">
@@ -44,7 +44,7 @@
     </div>
 
     <div ng-if="sum.sop.parameters.length">
-        <md-subheader class="md-warn">Parameters</md-subheader>
+        <md-subheader class="md-warn md-no-sticky">Parameters</md-subheader>
         <div layout-padding
              style="padding-top: 8px"
              ng-repeat="param in sum.sop.parameters track by $index"
@@ -52,7 +52,7 @@
     </div>
 
     <div ng-if="sum.sop.hasResponses || sum.sop.defaultResponse" style="padding-bottom: 8px;">
-        <md-subheader class="md-warn">Response messages</md-subheader>
+        <md-subheader class="md-warn md-no-sticky">Response messages</md-subheader>
         <div layout-padding>
             <div>
                 <div ng-repeat="resp in sum.sop.responseArray track by $index"

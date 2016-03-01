@@ -1,4 +1,4 @@
-<md-subheader class="md-warn">Request URL</md-subheader>
+<md-subheader class="md-warn md-no-sticky">Request URL</md-subheader>
 <div layout-padding>
     <div>
         <a class="md-button sum-link md-primary"
@@ -7,7 +7,7 @@
            ng-bind="sum.sop.explorerResult.url"></a>
     </div>
 </div>
-<md-subheader class="md-warn">Response status</md-subheader>
+<md-subheader class="md-warn md-no-sticky">Response status</md-subheader>
 <div layout-padding>
     <div>
         <md-button ng-click="sum.infoCode(sum.sop.explorerResult.response.status, $event)"
@@ -18,7 +18,7 @@
     </div>
 </div>
 <div ng-if="sum.sop.explorerResult.response.headerArray.length">
-    <md-subheader class="md-warn">Response headers</md-subheader>
+    <md-subheader class="md-warn md-no-sticky">Response headers</md-subheader>
     <div layout-padding>
         <div>
             <div ng-repeat="header in sum.sop.explorerResult.response.headerArray"
@@ -27,7 +27,7 @@
     </div>
 </div>
 <div ng-if="sum.sop.explorerResult.response.body">
-    <md-subheader class="md-warn">Response body</md-subheader>
+    <md-subheader class="md-warn md-no-sticky">Response body</md-subheader>
     <div layout="column" layout-padding flex>
     <pre class="sum-pre"
          style="word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 6px; margin-bottom: 6px;"

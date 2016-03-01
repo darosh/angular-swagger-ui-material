@@ -111,7 +111,7 @@
         </div>
     </md-toolbar>
     <div ng-if="sum.sop">
-        <md-subheader class="md-warn" ng-if="sum.sop.deprecated">Deprecated</md-subheader>
+        <md-subheader class="md-warn md-no-sticky" ng-if="sum.sop.deprecated">Deprecated</md-subheader>
         <div layout-padding>
             <div ng-class="{'sum-deprecated': sum.sop.deprecated}" layout="row" style="word-break: break-all">
                 <md-button ng-class="swaggerMethods[sum.sop.httpMethod]"
@@ -125,18 +125,16 @@
             <div ng-if="sum.sop.summary" class="md-body-2" ng-bind="sum.sop.summary"></div>
         </div>
     </div>
-    <!--<md-divider ng-if="sum.sop"></md-divider>-->
-    <md-tabs layout="column" class="md-hue-2"
+    <md-tabs class="md-hue-2"
              flex
              md-selected="sum.sop.tab"
              ng-class="{'sum-slide-disabled': !sum.sop.explorerResult}">
         <!-- TODO: better tab names? -->
-        <md-tab label="Info">
-            <div ng-include="'views/request.html'"></div>
+        <md-tab label="Info" layout="column">
+            <div ng-hide="sum.omg" ng-include="'views/request.html'"></div>
         </md-tab>
         <md-tab class="sum-tab-result" label="Result" ng-disabled="!sum.sop.explorerResult">
-            <div ng-show="sum.sop.explorerResult" style="height: 100%" flex ng-include="'views/result.html'"
-                 layout="column"></div>
+            <div ng-hide="sum.omg" ng-show="sum.sop.explorerResult" ng-include="'views/result.html'"></div>
         </md-tab>
     </md-tabs>
     <div ng-if="!sum.sop" layout-padding>

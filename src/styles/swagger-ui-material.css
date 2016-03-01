@@ -216,10 +216,6 @@
     overflow: hidden;
 }
 
-[swagger-ui-material] .sum-tab-result [md-tabs-template] {
-    height: 100%;
-}
-
 [swagger-ui-material] .md-select-value :first-child {
     text-overflow: ellipsis;
     overflow: hidden;
