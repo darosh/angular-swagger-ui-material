@@ -253,7 +253,6 @@ angular.module('swaggerUiMaterial',
                     } else {
                         return null;
                     }
-
                 };
 
                 sum.infoHeader = function (title, $event) {
