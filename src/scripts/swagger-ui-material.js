@@ -106,6 +106,10 @@ angular.module('swaggerUiMaterial',
                                 operation.loading = false;
                                 operation.explorerResult = result;
 
+                                if (result.response && result.response.status) {
+                                    result.response.statusString = result.response.status.toString();
+                                }
+
                                 $timeout(function () {
                                     operation.tab = 1;
                                 }, 50);

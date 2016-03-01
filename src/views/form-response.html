@@ -1,5 +1,4 @@
 <md-subheader class="md-warn">Request URL</md-subheader>
-
 <div layout-padding>
     <div>
         <a class="md-button sum-link md-primary"
@@ -7,26 +6,19 @@
            ng-bind="sum.sop.explorerResult.url"></a>
     </div>
 </div>
-
-
 <md-subheader class="md-warn">Response message</md-subheader>
-
-
-{{sum.sop.explorerResult.response.status}}
-<md-button ng-click="sum.infoCode(sum.sop.explorerResult.response.status, $event)"
-           class="sum-http-code md-raised"
-           ng-class="sum.codeClass[sum.sop.explorerResult.response.status[0]]"
-           aria-label="code"
-           ng-bind="sum.sop.explorerResult.response.status"></md-button>
-
-
+<div layout-padding>
+    <div>
+        <md-button ng-click="sum.infoCode(sum.sop.explorerResult.response.status, $event)"
+                   class="sum-http-code md-raised"
+                   ng-class="sum.codeClass[sum.sop.explorerResult.response.statusString[0]]"
+                   aria-label="code"
+                   ng-bind="sum.sop.explorerResult.response.status"></md-button>
+    </div>
+</div>
 <md-subheader class="md-warn">Response body</md-subheader>
-
 <pre class="sum-pre"
      style="max-height: 160px; word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 6px; margin-bottom: 6px;"
      ng-bind="sum.sop.explorerResult.response.body"></pre>
-
-
 <md-subheader class="md-warn">Response headers</md-subheader>
-
 <div>{{sum.sop.explorerResult.response.headers}}</div>
