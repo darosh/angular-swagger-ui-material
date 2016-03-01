@@ -88,7 +88,7 @@ angular.module('swaggerUiMaterial',
 
                 sum.submit = function (operation) {
                     if (sum.explorerForm.$valid) {
-                        //operation.explorerResult = false;
+                        // Commented for tab UI: operation.explorerResult = false;
                         operation.loading = true;
 
                         // TODO: this is replacing original scope.submitExplorer call,
