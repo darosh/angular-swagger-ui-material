@@ -126,7 +126,15 @@
         </div>
     </div>
     <md-divider ng-if="sum.sop"></md-divider>
-    <md-content ng-if="sum.sop" ng-include="'templates/material/detail.html'" flex></md-content>
+    <md-tabs layout="column" flex>
+        <!-- TODO: better tab names? -->
+        <md-tab label="Request" layout="column" flex>
+            <md-content ng-if="sum.sop" ng-include="'templates/material/form-request.html'" flex></md-content>
+        </md-tab>
+        <md-tab label="Response" flex>
+            <md-content ng-if="sum.sop" ng-include="'templates/material/form-response.html'" flex></md-content>
+        </md-tab>
+    </md-tabs>
     <div ng-if="!sum.sop" layout-padding>
         <div>No endpoint method selected.</div>
     </div>
