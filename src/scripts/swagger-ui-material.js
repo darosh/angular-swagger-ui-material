@@ -283,16 +283,18 @@ angular.module('swaggerUiMaterial',
                         return;
                     }
 
-                    var infos = scope.infos;
+                    var i = scope.infos;
+                    i.contact = i.contact || {};
+                    i.license = i.license || {};
 
                     scope.metas = [
-                        ['Contact', 'person', (infos.contact.name && !infos.contact.email) ? infos.contact.name : null, null],
-                        ['Email', 'email', infos.contact.email ? (infos.contact.name || infos.contact.email) : null, 'mailto:' + infos.contact.email + '?subject=' + infos.title],
-                        ['License', 'vpn_key', infos.license.name || infos.license.url, infos.license.url],
-                        ['Terms of service', 'work', infos.termsOfService, infos.termsOfService],
-                        ['Host', 'home', infos.scheme + '://' + infos.host, infos.scheme + '://' + infos.host],
-                        ['Base URL', 'link', infos.basePath, (infos.sheme ? (infos.sheme + '://') : '') + infos.host + infos.basePath],
-                        ['API version', 'developer_board', infos.version, null],
+                        ['Contact', 'person', (i.contact.name && !i.contact.email) ? i.contact.name : null, null],
+                        ['Email', 'email', i.contact.email ? (i.contact.name || i.contact.email) : null, 'mailto:' + i.contact.email + '?subject=' + i.title],
+                        ['License', 'vpn_key', i.license.name || i.license.url, i.license.url],
+                        ['Terms of service', 'work', i.termsOfService, i.termsOfService],
+                        ['Host', 'home', i.scheme + '://' + i.host, i.scheme + '://' + i.host],
+                        ['Base URL', 'link', i.basePath, (i.sheme ? (i.sheme + '://') : '') + i.host + i.basePath],
+                        ['API version', 'developer_board', i.version, null],
                         ['Download', 'file_download', 'swagger.json', scope.url],
                         [null, 'code', ((scope.validatorUrl !== 'false') && scope.url) ? (scope.validatorUrl + '/debug?url=' + scope.url) : null, scope.validatorUrl + '?url=' + scope.url]
                     ];
@@ -314,26 +316,6 @@ angular.module('swaggerUiMaterial',
             }
         };
     })
-    /* TODO: DEBUG
-     .factory('$exceptionHandler', function () {
-     return function (exception, cause) {
-     console.log('exception', arguments);
-     };
-     })
-     .factory('httpRequestInterceptor', function ($q) {
-     return {
-     'responseError': function (response) {
-     console.log('http error', response);
-     return response;
-     }
-     };
-     })
-     .config(function ($httpProvider) {
-     //$httpProvider.interceptors.push('httpRequestInterceptor');
-     $httpProvider.defaults.useXDomain = true;
-     delete $httpProvider.defaults.headers.common['X-Requested-With'];
-     })
-     */
     // List ungrouped operations
     .service('operations', function ($q) {
         this.execute = function (parseResult) {
