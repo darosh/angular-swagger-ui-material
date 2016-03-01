@@ -150,24 +150,22 @@ angular.module('swaggerUiMaterial',
                 });
 
                 sum.infoMethod = function (sop, $event) {
+                    var i = httpInfo.method[sop.httpMethod];
+
                     $mdDialog.show({
-                        templateUrl: 'views/dialog-method.html',
+                        templateUrl: 'views/dialog.html',
                         clickOutsideToClose: true,
                         targetEvent: $event,
-                        controller: function ($scope, $mdDialog, info, title, section, style) {
-                            $scope.info = info;
-                            $scope.title = title;
-                            $scope.section = section;
-                            $scope.style = style;
-                            $scope.closeDialog = function () {
-                                $mdDialog.hide();
-                            };
-                        },
+                        controller: DialogCtrl,
                         locals: {
-                            info: httpInfo.method[sop.httpMethod],
-                            title: sop.httpMethod,
-                            section: httpInfo.method[sop.httpMethod][1].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                            style: scope.swaggerMethods[sop.httpMethod]
+                            title: sop.httpMethod.toUpperCase(),
+                            subtitle: 'HTTP Method',
+                            header: null,
+                            description: i[0],
+                            link: i[2],
+                            section: i[1].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
+                            style: scope.swaggerMethods[sop.httpMethod],
+                            meta: [i[3], i[4], i[5]]
                         }
                     });
                 };
@@ -182,7 +180,7 @@ angular.module('swaggerUiMaterial',
                 };
 
                 sum.infoCode = function (code, $event) {
-                    var status = httpInfo.status[code] || httpInfo.status[code[0] + 'xx'] ||
+                    var i = httpInfo.status[code] || httpInfo.status[code[0] + 'xx'] ||
                         [
                             '**Undefined**',
                             'no spec found.',
@@ -191,28 +189,22 @@ angular.module('swaggerUiMaterial',
                         ];
 
                     $mdDialog.show({
-                        templateUrl: 'views/dialog-code.html',
+                        templateUrl: 'views/dialog.html',
                         clickOutsideToClose: true,
                         targetEvent: $event,
-                        controller: function ($scope, $mdDialog, info, title, section, style) {
-                            $scope.info = info;
-                            $scope.title = title;
-                            $scope.section = section;
-                            $scope.style = style;
-                            $scope.closeDialog = function () {
-                                $mdDialog.hide();
-                            };
-                        },
+                        controller: DialogCtrl,
                         locals: {
-                            info: status,
                             title: code,
-                            section: status[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                            style: sum.codeClass[code[0]] || sum.codeClass[7]
+                            subtitle: 'HTTP Status',
+                            header: i[0],
+                            description: i[1],
+                            link: i[3],
+                            section: i[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
+                            style: sum.codeClass[code[0]] || sum.codeClass[7],
+                            meta: null
                         }
                     });
                 };
-
-                // TODO: merge all HTTP dialog templates and conrollers
 
                 sum.headerClass = {
                     standard: scope.swaggerMethods.get,
@@ -221,29 +213,39 @@ angular.module('swaggerUiMaterial',
                 };
 
                 sum.infoHeader = function (title, $event) {
-                    var info = httpInfo.header[title.toLowerCase()];
+                    var i = httpInfo.header[title.toLowerCase()];
 
                     $mdDialog.show({
-                        templateUrl: 'views/dialog-header.html',
+                        templateUrl: 'views/dialog.html',
                         clickOutsideToClose: true,
                         targetEvent: $event,
-                        controller: function ($scope, $mdDialog, info, title, section, style) {
-                            $scope.info = info;
-                            $scope.title = title;
-                            $scope.section = section;
-                            $scope.style = style;
-                            $scope.closeDialog = function () {
-                                $mdDialog.hide();
-                            };
-                        },
+                        controller: DialogCtrl,
                         locals: {
-                            info: info,
-                            title: info[0],
-                            section: info[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                            style: sum.headerClass[info[1]] || sum.headerClass.undefined
+                            title: i[0],
+                            subtitle: 'HTTP Header',
+                            header: null,
+                            description: i[1],
+                            link: i[3],
+                            section: i[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
+                            style: sum.headerClass[i[1]] || sum.headerClass.undefined,
+                            meta: null
                         }
                     });
                 };
+
+                function DialogCtrl ($scope, $mdDialog, title, subtitle, header, description, link, section, style, meta) {
+                    $scope.title = title;
+                    $scope.subtitle = subtitle;
+                    $scope.header = header;
+                    $scope.description = description;
+                    $scope.link = link;
+                    $scope.section = section;
+                    $scope.style = style;
+                    $scope.meta = meta;
+                    $scope.closeDialog = function () {
+                        $mdDialog.hide();
+                    };
+                }
             }
         };
     })
@@ -278,4 +280,3 @@ angular.module('swaggerUiMaterial',
     .run(function (swaggerModules, operations) {
         swaggerModules.add(swaggerModules.BEFORE_DISPLAY, operations);
     });
-
