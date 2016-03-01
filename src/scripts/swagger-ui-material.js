@@ -89,7 +89,6 @@ angular.module('swaggerUiMaterial',
                     if (sum.explorerForm.$valid) {
                         scope.submitExplorer(sop);
                         sop.explorerResult = false;
-                        sop.hideExplorerResult = false;
                     }
                 };
 
