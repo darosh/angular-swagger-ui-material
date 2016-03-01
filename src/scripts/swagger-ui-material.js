@@ -10,7 +10,7 @@ angular.module('swaggerUiMaterial',
         'truncate'
     ])
     // Derived from original swaggerUi directive
-    .directive('swaggerUiMaterial', function ($timeout, $mdDialog, httpInfo) {
+    .directive('swaggerUiMaterial', function ($timeout, $mdDialog, swaggerClient, httpInfo) {
         return {
             restrict: 'A',
             controller: 'swaggerUiController',
@@ -41,6 +41,7 @@ angular.module('swaggerUiMaterial',
                     $event.stopPropagation();
                     sum.sop = op;
                     sum.sidenavOpen = true;
+                    sum.sop.tab = sum.sop.tab || 0;
 
                     // TODO: this is fixing not selected single "text/html" in produces,
                     // TODO: angular-swagger-ui probably setting this to "application/json" not present in op.produces
@@ -85,10 +86,30 @@ angular.module('swaggerUiMaterial',
 
                 sum.explorerForm = {};
 
-                sum.submit = function (sop) {
+                sum.submit = function (operation) {
                     if (sum.explorerForm.$valid) {
-                        scope.submitExplorer(sop);
-                        sop.explorerResult = false;
+                        //operation.explorerResult = false;
+                        operation.loading = true;
+
+                        // TODO: this is replacing original scope.submitExplorer call,
+                        // we need the send promise and the var swagger is inaccesible
+
+                        var swagger = {
+                            schemes: [scope.infos.scheme],
+                            host: scope.infos.host,
+                            basePath: scope.infos.basePath
+                        };
+
+                        swaggerClient
+                            .send(swagger, operation, scope.form[operation.id])
+                            .then(function (result) {
+                                operation.loading = false;
+                                operation.explorerResult = result;
+
+                                $timeout(function () {
+                                    operation.tab = 1;
+                                }, 50);
+                            });
                     }
                 };
 

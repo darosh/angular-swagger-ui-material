@@ -204,6 +204,10 @@
     cursor: pointer;
 }
 
+[swagger-ui-material] .sum-slide-disabled [role="tabpanel"] {
+    transition: none;
+}
+
 .sum-uppercase {
     text-transform: uppercase;
 }
