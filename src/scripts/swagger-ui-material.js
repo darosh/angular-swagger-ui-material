@@ -46,7 +46,7 @@ angular.module('swaggerUiMaterial',
                     // TODO: fixes tab content width flickering (might be angular-material issue)
                     sum.omg = true;
 
-                    $timeout(function(){
+                    $timeout(function () {
                         sum.omg = false;
                     }, 50);
 
