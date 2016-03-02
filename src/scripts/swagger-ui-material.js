@@ -155,9 +155,13 @@ angular.module('swaggerUiMaterial',
                                     sum.sop.explorerResult.response.body = null;
                                 }
 
+                                var knownStatus = sum.sop.responseArray.find(function (i) {
+                                        return i.code === sum.sop.explorerResult.response.status.toString();
+                                    }) || {};
+
                                 sum.sop.explorerResult.response.statusArray = [{
                                     code: sum.sop.explorerResult.response.status.toString(),
-                                    description: sum.getCodeInfo(sum.sop.explorerResult.response.status)[0]
+                                    description: knownStatus.description || sum.getCodeInfo(sum.sop.explorerResult.response.status)[0]
                                 }];
 
                                 $timeout(function () {
