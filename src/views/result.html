@@ -11,13 +11,10 @@
 <md-subheader class="md-warn md-no-sticky">Response status</md-subheader>
 <div layout-padding>
     <div>
-        <md-button ng-click="sum.infoCode(sum.sop.explorerResult.response.status, $event)"
-                   class="sum-http-code md-raised"
-                   ng-class="sum.codeClass[sum.sop.explorerResult.response.statusString[0]]"
-                   aria-label="code"
-                   ng-bind="sum.sop.explorerResult.response.status"></md-button>
-        <!-- TODO: add status message -->
+        <div ng-repeat="resp in sum.sop.explorerResult.response.statusArray track by $index"
+             ng-include="'views/response.html'"></div>
     </div>
+</div>
 </div>
 <div ng-if="sum.sop.explorerResult.response.headerArray.length">
     <md-subheader class="md-warn md-no-sticky">Response headers</md-subheader>
