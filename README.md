@@ -6,6 +6,8 @@ Material Design template for [angular-swagger-ui](https://github.com/Orange-Open
 
 ## Demo
 
+*Chrome should work.*
+
 ### Main demos
 
 | Demo  | Server | Notes |
@@ -122,5 +124,5 @@ gulp deploy
 * [ ] Operation permalinks
 * [ ] Hot keys (search, submit)
 * [ ] E2E tests
-* [ ] Cross-browser compatibility (unknown, Chrome should be fine)
+* [ ] Cross-browser compatibility (unknown)
 * [ ] Optimization (one-time binding, &hellip;)
