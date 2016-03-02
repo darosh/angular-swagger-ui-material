@@ -26,7 +26,15 @@
     </div>
 </div>
 <div ng-if="sum.sop.explorerResult.response.body">
-    <md-subheader class="md-warn md-no-sticky">Response body</md-subheader>
+    <div layout="row">
+        <div flex>
+            <md-subheader class="md-warn md-no-sticky">Response body</md-subheader>
+        </div>
+        <div class="sum-tools">
+            <a class="md-button md-primary" ng-click="sum.openFile()">Open</a>
+        </div>
+    </div>
+
     <div layout="column" layout-padding flex>
     <pre class="sum-pre"
          style="word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 6px; margin-bottom: 6px;"

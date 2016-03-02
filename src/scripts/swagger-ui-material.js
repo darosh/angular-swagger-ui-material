@@ -10,7 +10,7 @@ angular.module('swaggerUiMaterial',
         'truncate'
     ])
     // Derived from original swaggerUi directive
-    .directive('swaggerUiMaterial', function ($timeout, $mdDialog, swaggerClient, httpInfo) {
+    .directive('swaggerUiMaterial', function ($timeout, $window, $mdDialog, swaggerClient, httpInfo) {
         return {
             restrict: 'A',
             controller: 'swaggerUiController',
@@ -171,6 +171,22 @@ angular.module('swaggerUiMaterial',
                                 }, 50);
                             });
                     }
+                };
+
+                sum.openFile = function () {
+                    var text = sum.sop.explorerResult.response.body;
+                    var type = sum.sop.explorerResult.response.headers['content-type'] || 'text/plain';
+
+                    var reader = new $window.FileReader();
+                    var out = new $window.Blob([text], {type: type});
+
+                    reader.onload = function (e) {
+                        var bdata = $window.btoa(reader.result);
+                        var datauri = 'data:' + type + ';base64,' + bdata;
+                        $window.open(datauri);
+                    };
+
+                    reader.readAsBinaryString(out);
                 };
 
                 sum.grouped = true;
