@@ -5,7 +5,7 @@
     </div>
 </div>
 
-<form role="form" name="sum.explorerForm" ng-submit="submit(sum.sop)">
+<form role="form" name="sum.explorerForm" ng-submit="sum.submit(sum.sop)">
     <div ng-if="sum.sop.responseClass.schema" layout="row">
         <div flex>
             <md-subheader class="md-warn md-no-sticky">Response class</md-subheader>
@@ -60,4 +60,7 @@
             </div>
         </div>
     </div>
+
+    <!-- TODO: this is fixing ng-submit bug, probably from angular-material -->
+    <button hide type="submit">Submit</button>
 </form>
