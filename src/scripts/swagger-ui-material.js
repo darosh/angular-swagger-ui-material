@@ -189,100 +189,6 @@ angular.module('swaggerUiMaterial',
                     }
                 });
 
-                sum.infoMethod = function (sop, $event) {
-                    var i = httpInfo.method[sop.httpMethod];
-
-                    $mdDialog.show({
-                        templateUrl: 'views/dialog.html',
-                        clickOutsideToClose: true,
-                        targetEvent: $event,
-                        controller: DialogCtrl,
-                        locals: {
-                            title: sop.httpMethod.toUpperCase(),
-                            subtitle: 'HTTP Method',
-                            header: null,
-                            description: i[0],
-                            link: i[2],
-                            section: i[1].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                            style: scope.swaggerMethods[sop.httpMethod],
-                            meta: [i[3], i[4], i[5]]
-                        }
-                    });
-                };
-
-                sum.codeClass = {
-                    1: scope.swaggerMethods.post,
-                    2: scope.swaggerMethods.get,
-                    3: scope.swaggerMethods.put,
-                    4: scope.swaggerMethods.delete,
-                    5: scope.swaggerMethods.delete,
-                    7: scope.swaggerMethods.delete
-                };
-
-                sum.infoCode = function (code, $event) {
-                    var i = httpInfo.status[code] || httpInfo.status[code[0] + 'xx'] ||
-                        [
-                            '**Undefined**',
-                            'no spec found.',
-                            '',
-                            null
-                        ];
-
-                    $mdDialog.show({
-                        templateUrl: 'views/dialog.html',
-                        clickOutsideToClose: true,
-                        targetEvent: $event,
-                        controller: DialogCtrl,
-                        locals: {
-                            title: code,
-                            subtitle: 'HTTP Status',
-                            header: i[0],
-                            description: i[1],
-                            link: i[3],
-                            section: i[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                            style: sum.codeClass[code[0]] || sum.codeClass[7],
-                            meta: null
-                        }
-                    });
-                };
-
-                sum.headerClass = {
-                    standard: scope.swaggerMethods.post,
-                    obsoleted: scope.swaggerMethods.delete,
-                    undefined: scope.swaggerMethods.post
-                };
-
-                sum.getHeaderClass = function (title) {
-                    var i = httpInfo.header[title.toLowerCase()];
-
-                    if (i) {
-                        return sum.headerClass[i[1]] || sum.headerClass.undefined;
-                    } else {
-                        return null;
-                    }
-                };
-
-                sum.infoHeader = function (title, $event) {
-                    var i = httpInfo.header[title.toLowerCase()] || [title, 'Unknown header.', '', null];
-
-                    $mdDialog.show({
-                        templateUrl: 'views/dialog.html',
-                        clickOutsideToClose: true,
-                        targetEvent: $event,
-                        controller: DialogCtrl,
-                        locals: {
-                            title: i[0],
-                            subtitle: 'HTTP Header',
-                            header: null,
-                            description: i[1],
-                            link: i[3],
-                            section: i[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                            style: sum.headerClass[i[1]] || sum.headerClass.undefined,
-                            meta: null
-                        }
-                    });
-                };
-
                 scope.$watch('infos', function () {
                     if (!scope.infos || !Object.keys(scope.infos).length) {
                         scope.metas = [];
@@ -306,6 +212,87 @@ angular.module('swaggerUiMaterial',
                         [null, 'code', ((scope.validatorUrl !== 'false') && scope.url) ? (scope.validatorUrl + '/debug?url=' + scope.url) : null, scope.validatorUrl + '?url=' + scope.url]
                     ];
                 });
+
+                sum.infoMethod = function (sop, $event) {
+                    var i = httpInfo.method[sop.httpMethod];
+
+                    dialog($event, {
+                        title: sop.httpMethod.toUpperCase(),
+                        subtitle: 'HTTP Method',
+                        header: null,
+                        description: i[0],
+                        link: i[2],
+                        section: i[1].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
+                        style: scope.swaggerMethods[sop.httpMethod],
+                        meta: [i[3], i[4], i[5]]
+                    });
+                };
+
+                sum.codeClass = {
+                    1: scope.swaggerMethods.post,
+                    2: scope.swaggerMethods.get,
+                    3: scope.swaggerMethods.put,
+                    4: scope.swaggerMethods.delete,
+                    5: scope.swaggerMethods.delete,
+                    7: scope.swaggerMethods.delete
+                };
+
+                sum.infoCode = function (code, $event) {
+                    var i = httpInfo.status[code] || httpInfo.status[code[0] + 'xx'] ||
+                        ['**Undefined**', 'no spec found.', '', null];
+
+                    dialog($event, {
+                        title: code,
+                        subtitle: 'HTTP Status',
+                        header: i[0],
+                        description: i[1],
+                        link: i[3],
+                        section: i[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
+                        style: sum.codeClass[code[0]] || sum.codeClass[7],
+                        meta: null
+                    });
+                };
+
+                sum.headerClass = {
+                    standard: scope.swaggerMethods.post,
+                    obsoleted: scope.swaggerMethods.delete,
+                    undefined: scope.swaggerMethods.post
+                };
+
+                sum.getHeaderClass = function (title) {
+                    var i = httpInfo.header[title.toLowerCase()];
+
+                    if (i) {
+                        return sum.headerClass[i[1]] || sum.headerClass.undefined;
+                    } else {
+                        return null;
+                    }
+                };
+
+                sum.infoHeader = function (title, $event) {
+                    var i = httpInfo.header[title.toLowerCase()] || [title, 'Unknown header.', '', null];
+
+                    dialog($event, {
+                        title: i[0],
+                        subtitle: 'HTTP Header',
+                        header: null,
+                        description: i[1],
+                        link: i[3],
+                        section: i[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
+                        style: sum.headerClass[i[1]] || sum.headerClass.undefined,
+                        meta: null
+                    });
+                };
+
+                function dialog ($event, locals) {
+                    $mdDialog.show({
+                        templateUrl: 'views/dialog.html',
+                        clickOutsideToClose: true,
+                        targetEvent: $event,
+                        controller: DialogCtrl,
+                        locals: locals
+                    });
+                }
 
                 function DialogCtrl ($scope, $mdDialog, title, subtitle, header, description, link, section, style, meta) {
                     $scope.title = title;
@@ -354,7 +341,7 @@ angular.module('swaggerUiMaterial',
     .run(function (swaggerModules, operations) {
         swaggerModules.add(swaggerModules.BEFORE_DISPLAY, operations);
     })
-    // Fix default transform
+    // Catch default transform invalid JSON parse
     .service('transform', function ($q, $http) {
         this.execute = function (config) {
             var deferred = $q.defer();
