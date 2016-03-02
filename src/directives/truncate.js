@@ -5,15 +5,19 @@ angular.module('truncate', [])
         return {
             restrict: 'A',
             scope: {
-                ngBindHtml: '='
+                ngBindHtml: '=',
+                ngBind: '='
             },
             link: function (scope, element, attr) {
-                scope.$watch('ngBindHtml', function () {
+                scope.$watch('ngBind', update);
+                scope.$watch('ngBindHtml', update);
+
+                function update () {
                     var more = angular.element('<a class="truncate">\u2026</a>');
 
                     element.empty();
 
-                    element.append(truncation(scope.ngBindHtml, {
+                    element.append(truncation(scope.ngBind || scope.ngBindHtml, {
                         length: attr.truncate || 144,
                         words: true,
                         ellipsis: more[0]
@@ -22,9 +26,9 @@ angular.module('truncate', [])
                     more.bind('click', function (event) {
                         event.preventDefault();
                         event.stopPropagation();
-                        element[0].innerHTML = scope.ngBindHtml;
+                        element[0].innerHTML = scope.ngBind || scope.ngBindHtml;
                     });
-                });
+                }
             }
         };
     })
