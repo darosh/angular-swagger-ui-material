@@ -173,20 +173,14 @@ angular.module('swaggerUiMaterial',
                     }
                 };
 
-                sum.openFile = function () {
+                sum.openFile = function ($event) {
                     var text = sum.sop.explorerResult.response.body;
                     var type = sum.sop.explorerResult.response.headers['content-type'] || 'text/plain';
 
-                    var reader = new $window.FileReader();
                     var out = new $window.Blob([text], {type: type});
+                    var url = $window.URL.createObjectURL(out);
 
-                    reader.onload = function (e) {
-                        var bdata = $window.btoa(reader.result);
-                        var datauri = 'data:' + type + ';base64,' + bdata;
-                        $window.open(datauri);
-                    };
-
-                    reader.readAsBinaryString(out);
+                    $event.target.href = url;
                 };
 
                 sum.grouped = true;
