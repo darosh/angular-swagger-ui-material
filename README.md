@@ -35,6 +35,7 @@ Material Design template for [angular-swagger-ui](https://github.com/Orange-Open
 * [x] Responsible layout
 * [x] Configurable [angular-material](https://material.angularjs.org) theme colors
 * [x] Highlight deprecated methods
+* [x] Render [GFM](https://help.github.com/articles/working-with-advanced-formatting/) descriptions
 * [x] Search
 * [x] YAML Swagger format support
 * [x] Standard HTTP *methods*, *status codes* and *headers* reference thanks to [know-your-http-well](https://github.com/for-GET/know-your-http-well)
