@@ -34,7 +34,10 @@ Material Design template for [angular-swagger-ui](https://github.com/Orange-Open
 * [x] Configurable [angular-material](https://material.angularjs.org) theme colors
 * [x] Highlight deprecated methods
 * [x] Search
-* [x] YAML
+* [x] YAML Swagger format support
+* [x] Standard HTTP methods, status codes and headers reference thanks to [know-your-http-well](https://github.com/for-GET/know-your-http-well)
+* [*] Grouped/Un-grouped view
+
 
 ## Search
 
@@ -115,4 +118,9 @@ gulp deploy
 
 * [angular-swagger-ui-material](https://github.com/darosh/angular-swagger-ui-material/search?q=TODO&type=Code&utf8=%E2%9C%93)
 * [angular-swagger-ui](https://github.com/Orange-OpenSource/angular-swagger-ui/search?q=TODO&type=Code&utf8=%E2%9C%93)
-* [ ] Alternative documentation layout
+* [ ] Alternative layout in "documentation" style
+* [ ] Operation permalinks
+* [ ] Hot keys (search, submit)
+* [ ] E2E tests
+* [ ] Cross-browser compatibility (unknown, Chrome should be fine)
+* [ ] Optimization (one-time binding, &hellip;)
