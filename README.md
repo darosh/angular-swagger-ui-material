@@ -6,7 +6,7 @@ Material Design template for [angular-swagger-ui](https://github.com/Orange-Open
 
 ## Demo
 
-*Chrome should work.*
+*Chrome browser should work.*
 
 ### Main demos
 
