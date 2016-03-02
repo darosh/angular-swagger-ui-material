@@ -124,9 +124,9 @@ gulp deploy
 * [angular-swagger-ui](https://github.com/Orange-OpenSource/angular-swagger-ui/search?q=TODO&type=Code&utf8=%E2%9C%93)
 * [ ] Alternative layout in "documentation" style
 * [ ] Operation permalinks
-* [ ] Hot keys (search, submit)
-* [ ] E2E tests
 * [ ] Cross-browser compatibility (unknown)
 * [ ] Optimization (one-time binding, &hellip;)
+* [ ] Hot keys (search, submit)
 * [ ] XML example support
+* [ ] E2E tests
 * [ ] [Security Requirement Object](http://swagger.io/specification/#securityRequirementObject) support
