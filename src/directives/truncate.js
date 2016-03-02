@@ -17,16 +17,23 @@ angular.module('truncate', [])
 
                     element.empty();
 
-                    element.append(truncation(scope.ngBind || scope.ngBindHtml, {
-                        length: attr.truncate || 144,
-                        words: true,
-                        ellipsis: more[0]
-                    }));
+                    element.append(truncation(
+                        (scope.ngBind ? angular.element('<div></div>').text(scope.ngBind).html() : null) || scope.ngBindHtml,
+                        {
+                            length: attr.truncate || 144,
+                            words: true,
+                            ellipsis: more[0]
+                        }
+                    ));
 
                     more.bind('click', function (event) {
                         event.preventDefault();
                         event.stopPropagation();
-                        element[0].innerHTML = scope.ngBind || scope.ngBindHtml;
+                        if (scope.ngBind) {
+                            element[0].textContent = scope.ngBind;
+                        } else if (scope.ngBindHtml) {
+                            element[0].innerHTML = scope.ngBindHtml;
+                        }
                     });
                 }
             }
