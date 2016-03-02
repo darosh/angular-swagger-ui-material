@@ -37,9 +37,10 @@ Material Design template for [angular-swagger-ui](https://github.com/Orange-Open
 * [x] Highlight deprecated methods
 * [x] Search
 * [x] YAML Swagger format support
-* [x] Standard HTTP methods, status codes and headers reference thanks to [know-your-http-well](https://github.com/for-GET/know-your-http-well)
-* [*] Grouped/Un-grouped view
-
+* [x] Standard HTTP *methods*, *status codes* and *headers* reference thanks to [know-your-http-well](https://github.com/for-GET/know-your-http-well)
+* [x] Grouped and ungrouped views
+* [x] Open response in new window
+* [x] Search
 
 ## Search
 
@@ -126,3 +127,4 @@ gulp deploy
 * [ ] E2E tests
 * [ ] Cross-browser compatibility (unknown)
 * [ ] Optimization (one-time binding, &hellip;)
+* [ ] XML example support
