@@ -353,4 +353,25 @@ angular.module('swaggerUiMaterial',
     })
     .run(function (swaggerModules, operations) {
         swaggerModules.add(swaggerModules.BEFORE_DISPLAY, operations);
+    })
+    // Fix default transform
+    .service('transform', function ($q, $http) {
+        this.execute = function (config) {
+            var deferred = $q.defer();
+
+            config.transformResponse = function (data, headersGetter, status) {
+                try {
+                    return $http.defaults.transformResponse[0](data, headersGetter, status);
+                } catch (ing) {
+                    return data;
+                }
+            };
+
+            deferred.resolve(true);
+
+            return deferred.promise;
+        };
+    })
+    .run(function (swaggerModules, transform) {
+        swaggerModules.add(swaggerModules.BEFORE_EXPLORER_LOAD, transform);
     });
