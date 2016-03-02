@@ -219,6 +219,15 @@
     max-width: calc(100% - 24px);
 }
 
+[swagger-ui-material] .sum-fade.ng-hide {
+    opacity: 0;
+}
+
+[swagger-ui-material] .sum-fade.ng-hide-remove {
+    transition: all ease-in-out 150ms;
+    transition-delay: 15ms;
+}
+
 .sum-uppercase {
     text-transform: uppercase;
 }

@@ -131,10 +131,10 @@
              ng-class="{'sum-slide-disabled': sum.omg}">
         <!-- TODO: better tab names? -->
         <md-tab label="Info" layout="column">
-            <div ng-hide="sum.omg" ng-include="'views/request.html'"></div>
+            <div class="sum-fade" ng-hide="sum.omg" ng-include="'views/request.html'"></div>
         </md-tab>
         <md-tab class="sum-tab-result" label="Result" ng-disabled="!sum.sop.explorerResult">
-            <div ng-hide="sum.omg" ng-show="sum.sop.explorerResult" ng-include="'views/result.html'"></div>
+            <div class="sum-fade" ng-hide="sum.omg" ng-show="sum.sop.explorerResult" ng-include="'views/result.html'"></div>
         </md-tab>
     </md-tabs>
     <div ng-if="!sum.sop" layout-padding>

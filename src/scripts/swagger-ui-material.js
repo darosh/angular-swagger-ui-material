@@ -39,7 +39,6 @@ angular.module('swaggerUiMaterial',
 
                 sum.selectOperation = function (op, $event) {
                     $event.stopPropagation();
-                    sum.sop = op;
                     sum.sidenavOpen = true;
                     op.tab = op.tab || 0;
 
@@ -47,7 +46,11 @@ angular.module('swaggerUiMaterial',
                     sum.omg = true;
 
                     $timeout(function () {
-                        sum.omg = false;
+                        sum.sop = op;
+
+                        $timeout(function () {
+                            sum.omg = false;
+                        }, 15);
                     }, 15);
 
                     // TODO: this is fixing not selected single "text/html" in produces,
