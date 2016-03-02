@@ -155,9 +155,11 @@ angular.module('swaggerUiMaterial',
                                     sum.sop.explorerResult.response.body = null;
                                 }
 
-                                var knownStatus = sum.sop.responseArray.find(function (i) {
-                                        return i.code === sum.sop.explorerResult.response.status.toString();
-                                    }) || {};
+                                var knownStatus = sum.sop.responseArray.find(
+                                        function (i) {
+                                            return i.code === sum.sop.explorerResult.response.status.toString();
+                                        }
+                                    ) || {};
 
                                 sum.sop.explorerResult.response.statusArray = [{
                                     code: sum.sop.explorerResult.response.status.toString(),
@@ -249,7 +251,7 @@ angular.module('swaggerUiMaterial',
                 sum.getCodeInfo = function (code) {
                     return httpInfo.status[code] || httpInfo.status[code[0] + 'xx'] ||
                         ['**Undefined**', 'no spec found.', '', null];
-                }
+                };
 
                 sum.infoCode = function (code, $event) {
                     var i = sum.getCodeInfo(code);
