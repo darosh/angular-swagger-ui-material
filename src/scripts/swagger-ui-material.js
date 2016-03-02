@@ -39,11 +39,13 @@ angular.module('swaggerUiMaterial',
 
                 sum.selectOperation = function (op, $event) {
                     $event.stopPropagation();
+
+                    var opening = !sum.sidenavOpen;
                     sum.sidenavOpen = true;
                     op.tab = op.tab || 0;
 
                     // TODO: fixes tab content width flickering (might be angular-material issue)
-                    sum.omg = true;
+                    sum.omg = !opening;
 
                     $timeout(function () {
                         sum.sop = op;
