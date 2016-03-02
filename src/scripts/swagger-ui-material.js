@@ -44,7 +44,8 @@ angular.module('swaggerUiMaterial',
                     sum.sidenavOpen = true;
                     op.tab = op.tab || 0;
 
-                    // TODO: fixes tab content width flickering (might be angular-material issue)
+                    // fixes tab content width flickering (might be angular-material issue)
+                    // and triggers .sum-fade animation
                     sum.omg = !opening;
 
                     $timeout(function () {
