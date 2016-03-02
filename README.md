@@ -14,7 +14,7 @@ Material Design template for [angular-swagger-ui](https://github.com/Orange-Open
 | [Hub](http://darosh.github.io/angular-swagger-ui-material/hub.html) | | powered by [APIs.guru](http://APIs.guru) |
 | [Theming Demo](http://darosh.github.io/angular-swagger-ui-material/?primary=blue-grey&accent=grey&warn=pink) | [petstore.swagger.io](http://petstore.swagger.io) | *primary:* blue-grey, *accent:* grey, *warn:* pink |
 
-### Testing demos
+### Development demos
 
 | Demo  | Server | Notes |
 | --- | --- | --- |
