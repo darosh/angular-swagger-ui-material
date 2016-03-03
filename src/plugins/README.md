@@ -21,7 +21,9 @@ Arguments: **swagger** object
 ## [parse](./parse)
 
 Arguments: **parserType**, **url**, **contentType**, **data**, **isTrustedSources**, **parseResult**
+
 Output: **parseResult**
+
 Promise resolve: **false** or **true**
 
 * [parser](./parse/parser.js)
