@@ -141,7 +141,7 @@
         <div>No endpoint method selected.</div>
     </div>
     <md-button class="md-fab md-fab-bottom-right md-primary md-raised"
-               ng-disabled="sop.loading || !explorerForm.$valid"
+               ng-disabled="sop.loading || !ngForm.explorerForm.$valid"
                ng-style="{padding: sop.loading ? '1px 0 0 0' : null}"
                ng-if="sop && apiExplorer"
                ng-click="submit(sop)"

@@ -54,7 +54,7 @@ angular.module('swaggerUiMaterial',
                 scope.searchObject = {httpMethod: '', path: ''};
                 scope.editOpen = false;
                 scope.editUrl = scope.url;
-                scope.explorerForm = {};
+                scope.ngForm = {explorerForm: {}};
 
                 // Original properties
 
@@ -217,7 +217,7 @@ angular.module('swaggerUiMaterial',
                  * sends a sample API request
                  */
                 scope.submit = function (operation) {
-                    if (scope.explorerForm.$valid) {
+                    if (scope.ngForm.explorerForm.$valid) {
                         // Commented for tab UI: operation.explorerResult = false;
                         operation.loading = true;
 
