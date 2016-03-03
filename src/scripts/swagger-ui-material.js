@@ -107,12 +107,6 @@ angular.module('swaggerUiMaterial',
                             scope.form = parseResult.form;
                             scope.resources = parseResult.resources;
                             scope.meta = display.meta(scope.infos, scope.url, scope.validatorUrl, scope.openFile);
-
-                            if (scope.permalinks) {
-                                $timeout(function () {
-                                    $anchorScroll();
-                                }, 100);
-                            }
                         })
                         .catch(onError);
                 }
@@ -133,15 +127,6 @@ angular.module('swaggerUiMaterial',
                     resource.open = true;
                     for (var i = 0, op = resource.operations, l = op.length; i < l; i++) {
                         op[i].open = expandOperations;
-                    }
-                };
-
-                scope.permalink = function (name) {
-                    if (scope.permalinks) {
-                        $location.hash(name);
-                        $timeout(function () {
-                            $anchorScroll();
-                        }, 50);
                     }
                 };
 
