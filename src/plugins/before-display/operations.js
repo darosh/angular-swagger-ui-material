@@ -23,7 +23,7 @@ angular.module('swaggerUiMaterial')
                         .localeCompare(b.path.toLowerCase().replace(/[^a-z]+/gi, '') + '-' + b.httpMethod);
                 });
 
-                deferred.resolve(true);
+                deferred.resolve();
 
                 return deferred.promise;
             }

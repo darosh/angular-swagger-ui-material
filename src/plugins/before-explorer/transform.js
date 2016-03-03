@@ -13,7 +13,7 @@ angular.module('swaggerUiMaterial')
                     }
                 };
 
-                deferred.resolve(true);
+                deferred.resolve();
 
                 return deferred.promise;
             }

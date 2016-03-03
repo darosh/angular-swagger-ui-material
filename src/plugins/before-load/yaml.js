@@ -8,13 +8,14 @@ angular.module('swaggerUiYaml', ['swaggerUi'])
 
                 options.transformResponse = function (data, headersGetter) {
                     if (headersGetter('content-type').indexOf('text/yaml') > -1) {
+                        headersGetter()['content-type'] = 'application/json';
                         return $window.jsyaml.load(data);
                     } else {
                         return angular.fromJson(data);
                     }
                 };
 
-                deferred.resolve(true);
+                deferred.resolve();
 
                 return deferred.promise;
             }
@@ -22,23 +23,4 @@ angular.module('swaggerUiYaml', ['swaggerUi'])
     })
     .run(function (swaggerPlugins, loadYaml) {
         swaggerPlugins.add(swaggerPlugins.BEFORE_LOAD, loadYaml);
-    })
-    .factory('parseYaml', function ($q, $window, swaggerParser) {
-        return {
-            execute: function (parserType, url, contentType, data, isTrustedSources, parseResult) {
-                var deferred = $q.defer();
-
-                if (contentType === 'text/yaml') {
-                    swaggerParser.execute('json', url, contentType, data, isTrustedSources, parseResult);
-                    deferred.resolve(true);
-                } else {
-                    deferred.resolve(false);
-                }
-
-                return deferred.promise;
-            }
-        };
-    })
-    .run(function (swaggerPlugins, parseYaml) {
-        swaggerPlugins.add(swaggerPlugins.PARSE, parseYaml);
     });

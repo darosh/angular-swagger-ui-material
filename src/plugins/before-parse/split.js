@@ -26,7 +26,7 @@ angular.module('swaggerUiSplit', [])
                     });
                 }
 
-                deferred.resolve(false);
+                deferred.resolve(true);
 
                 return deferred.promise;
             }

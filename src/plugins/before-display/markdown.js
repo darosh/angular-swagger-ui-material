@@ -29,7 +29,7 @@ angular.module('swaggerUiMarkdown', ['swaggerUi'])
                     });
                 });
 
-                deferred.resolve(true);
+                deferred.resolve();
 
                 return deferred.promise;
             }
