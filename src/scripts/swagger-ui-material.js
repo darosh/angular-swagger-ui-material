@@ -281,8 +281,8 @@ angular.module('swaggerUiMaterial',
                 };
 
                 scope.openFile = function ($event) {
-                    var text = scope.sop.explorerResult.response.body;
-                    var type = scope.sop.explorerResult.response.headers['content-type'] || 'text/plain';
+                    var text = scope.sop.explorerResult.body;
+                    var type = scope.sop.explorerResult.headers('content-type') || 'text/plain';
                     var out = new $window.Blob([text], {type: type});
 
                     $event.target.href = $window.URL.createObjectURL(out);
