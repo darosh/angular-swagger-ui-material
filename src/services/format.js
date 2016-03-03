@@ -7,7 +7,7 @@
 'use strict';
 
 angular.module('swaggerUi')
-    .factory('swaggerClient', function () {
+    .factory('swaggerFormat', function () {
         return {
             fullUrl: fullUrl
         };

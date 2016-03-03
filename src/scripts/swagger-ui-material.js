@@ -17,7 +17,7 @@ angular.module('swaggerUiMaterial',
     ])
     // Derived from original swaggerUi directive
     .directive('swaggerUiMaterial', function ($location, $q, $log, $anchorScroll, $timeout, $window,
-                                              loader, swaggerClient, swaggerPlugins,
+                                              loader, swaggerClient, swaggerPlugins, swaggerFormat,
                                               theme, style, httpInfoUtils) {
         return {
             restrict: 'A',
@@ -232,46 +232,43 @@ angular.module('swaggerUiMaterial',
 
                         swaggerClient
                             .send(swagger, operation, scope.form[operation.id])
-                            .then(function (result) {
+                            .then(function (response) {
                                 operation.loading = false;
-                                operation.explorerResult = result;
+                                operation.explorerResult = response;
 
-                                if (result.response && result.response.status) {
-                                    result.response.statusString = result.response.status.toString();
+                                if (response && response.status) {
+                                    response.statusString = response.status.toString();
                                 }
 
-                                result.response.headerArray = [];
+                                response.fullUrl = swaggerFormat.fullUrl(response);
+                                response.body = angular.isString(response.data) ? response.data : angular.toJson(response.data, true);
 
-                                // TODO: result.response.headers is String object
-                                if (result.response && result.response.headers) {
-                                    result.response.headers = angular.fromJson(result.response.headers);
+                                response.headerArray = [];
 
-                                    for (var k in result.response.headers) {
-                                        result.response.headerArray.push({
+                                if (response && response.headers) {
+                                    angular.forEach(response.headers(), function (v, k) {
+                                        response.headerArray.push({
                                             name: k,
-                                            value: result.response.headers[k]
+                                            value: v
                                         });
-                                    }
+                                    });
 
-                                    result.response.headerArray.sort(function (a, b) {
+                                    response.headerArray.sort(function (a, b) {
                                         a.name.localeCompare(b.name);
                                     });
                                 }
 
-                                // TODO: model with no content should be null or undefined
-                                if (scope.sop.explorerResult.response.body === 'no content') {
-                                    scope.sop.explorerResult.response.body = null;
-                                }
+                                var knownStatus = response.statusText && {description: response.statusText};
 
-                                var knownStatus = scope.sop.responseArray.find(
+                                knownStatus = knownStatus || scope.sop.responseArray.find(
                                         function (i) {
-                                            return i.code === scope.sop.explorerResult.response.status.toString();
+                                            return i.code === response.status.toString();
                                         }
                                     ) || {};
 
-                                scope.sop.explorerResult.response.statusArray = [{
-                                    code: scope.sop.explorerResult.response.status.toString(),
-                                    description: knownStatus.description || scope.getCodeInfo(scope.sop.explorerResult.response.status)[0]
+                                response.statusArray = [{
+                                    code: response.status.toString(),
+                                    description: knownStatus.description || httpInfoUtils.statusInfo(response.status)[0]
                                 }];
 
                                 $timeout(function () {
