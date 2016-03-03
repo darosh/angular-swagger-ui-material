@@ -319,7 +319,7 @@ angular.module('swaggerUiMaterial',
                 scope.editUrl = scope.url;
                 scope.editOpen = false;
 
-                scope.$watch('scope.searchFilter', function () {
+                scope.$watch('searchFilter', function () {
                     if (!scope.searchFilter) {
                         scope.searchObject = {httpMethod: '', path: ''};
                     } else {
@@ -333,7 +333,7 @@ angular.module('swaggerUiMaterial',
                     }
                 });
 
-                scope.$watch('scope.editOpen', function () {
+                scope.$watch('editOpen', function () {
                     if (!scope.editOpen) {
                         scope.url = scope.editUrl;
                     }
