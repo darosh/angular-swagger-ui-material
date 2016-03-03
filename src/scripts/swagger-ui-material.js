@@ -10,7 +10,7 @@ angular.module('swaggerUiMaterial',
         'truncate'
     ])
     // Derived from original swaggerUi directive
-    .directive('swaggerUiMaterial', function ($timeout, $window, $mdDialog, swaggerClient, httpInfo) {
+    .directive('swaggerUiMaterial', function ($timeout, $window, swaggerClient, httpInfo, dialog) {
         return {
             restrict: 'A',
             controller: 'swaggerUiController',
@@ -241,7 +241,7 @@ angular.module('swaggerUiMaterial',
                 sum.infoMethod = function (sop, $event) {
                     var i = httpInfo.method[sop.httpMethod];
 
-                    dialog($event, {
+                    dialog.show($event, {
                         title: sop.httpMethod.toUpperCase(),
                         subtitle: 'HTTP Method',
                         header: null,
@@ -270,7 +270,7 @@ angular.module('swaggerUiMaterial',
                 sum.infoCode = function (code, $event) {
                     var i = sum.getCodeInfo(code);
 
-                    dialog($event, {
+                    dialog.show($event, {
                         title: code,
                         subtitle: 'HTTP Status',
                         header: i[0],
@@ -301,7 +301,7 @@ angular.module('swaggerUiMaterial',
                 sum.infoHeader = function (title, $event) {
                     var i = httpInfo.header[title.toLowerCase()] || [title, 'Unknown header.', '', null];
 
-                    dialog($event, {
+                    dialog.show($event, {
                         title: i[0],
                         subtitle: 'HTTP Header',
                         header: null,
@@ -312,30 +312,6 @@ angular.module('swaggerUiMaterial',
                         meta: null
                     });
                 };
-
-                function dialog ($event, locals) {
-                    $mdDialog.show({
-                        templateUrl: 'views/dialog.html',
-                        clickOutsideToClose: true,
-                        targetEvent: $event,
-                        controller: DialogCtrl,
-                        locals: locals
-                    });
-                }
-
-                function DialogCtrl ($scope, $mdDialog, title, subtitle, header, description, link, section, style, meta) {
-                    $scope.title = title;
-                    $scope.subtitle = subtitle;
-                    $scope.header = header;
-                    $scope.description = description;
-                    $scope.link = link;
-                    $scope.section = section;
-                    $scope.style = style;
-                    $scope.meta = meta;
-                    $scope.closeDialog = function () {
-                        $mdDialog.hide();
-                    };
-                }
             }
         };
     });
