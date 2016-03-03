@@ -100,14 +100,8 @@ angular
                     data: body,
                     params: query
                 };
-                var callback = function (data, status, headers, config) {
+                var callback = function (response) {
                     // execute modules
-                    var response = {
-                        data: data,
-                        status: status,
-                        headers: headers,
-                        config: config
-                    };
                     swaggerPlugins
                         .execute(swaggerPlugins.AFTER_EXPLORER_LOAD, response)
                         .then(function () {
