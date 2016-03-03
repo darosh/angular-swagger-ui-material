@@ -8,7 +8,9 @@
 
 angular
     .module('swaggerUi')
-    .controller('swaggerUiController', function ($scope, $location, $q, $log, $anchorScroll, $timeout, loader, swaggerClient, swaggerModules) {
+    .controller('swaggerUiController', function ($scope, $location, $q, $log, $anchorScroll, $timeout, $window,
+                                                 loader, swaggerClient, swaggerModules,
+                                                 httpInfo, dialog) {
         var swagger;
 
         // WARNING authentication is not implemented, please use 'api-explorer-transform' directive's param to customize API calls

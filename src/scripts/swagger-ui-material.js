@@ -10,7 +10,7 @@ angular.module('swaggerUiMaterial',
         'truncate'
     ])
     // Derived from original swaggerUi directive
-    .directive('swaggerUiMaterial', function ($timeout, $window, swaggerClient, httpInfo, dialog) {
+    .directive('swaggerUiMaterial', function () {
         return {
             restrict: 'A',
             controller: 'swaggerUiController',
