@@ -24,13 +24,11 @@
     "gulp-replace": "^0.5.4",
     "gulp-uglifyjs": "^0.6.2",
     "know-your-http-well": "^0.2.0",
-    "napa": "^2.3.0",
     "require-dir": "^0.3.0"
   },
   "license": "MIT",
   "private": true,
   "scripts": {
-    "install": "napa suan/github-flavored-markdown-test",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
