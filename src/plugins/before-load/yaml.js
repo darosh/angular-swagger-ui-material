@@ -7,11 +7,20 @@ angular.module('swaggerUiYaml', ['swaggerUi'])
                 var deferred = $q.defer();
 
                 options.transformResponse = function (data, headersGetter) {
-                    if (headersGetter('content-type').indexOf('text/yaml') > -1) {
-                        headersGetter()['content-type'] = 'application/json';
-                        return $window.jsyaml.load(data);
-                    } else {
+
+                    try {
                         return angular.fromJson(data);
+                    } catch (ign) {
+                        try {
+                            var obj = $window.jsyaml.safeLoad(data);
+
+                            headersGetter()['content-type'] = 'application/json';
+
+                            return obj;
+
+                        } catch (ign) {
+                            return data;
+                        }
                     }
                 };
 
