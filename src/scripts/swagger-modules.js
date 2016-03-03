@@ -8,26 +8,40 @@
 
 angular
     .module('swaggerUi')
-    .service('swaggerModules', function ($q) {
+    .factory('swaggerModules', function ($q) {
 
         var modules = {};
 
-        this.BEFORE_LOAD = 'BEFORE_LOAD';
-        this.BEFORE_PARSE = 'BEFORE_PARSE';
-        this.PARSE = 'PARSE';
-        this.BEFORE_DISPLAY = 'BEFORE_DISPLAY';
-        this.BEFORE_EXPLORER_LOAD = 'BEFORE_EXPLORER_LOAD';
-        this.AFTER_EXPLORER_LOAD = 'AFTER_EXPLORER_LOAD';
+        return {
+            BEFORE_LOAD: 'BEFORE_LOAD',
+            BEFORE_PARSE: 'BEFORE_PARSE',
+            PARSE: 'PARSE',
+            BEFORE_DISPLAY: 'BEFORE_DISPLAY',
+            BEFORE_EXPLORER_LOAD: 'BEFORE_EXPLORER_LOAD',
+            AFTER_EXPLORER_LOAD: 'AFTER_EXPLORER_LOAD',
 
-        /**
-         * Adds a new module to swagger-ui
-         */
-        this.add = function (phase, module) {
-            if (!modules[phase]) {
-                modules[phase] = [];
-            }
-            if (modules[phase].indexOf(module) < 0) {
-                modules[phase].push(module);
+            /**
+             * Adds a new module to swagger-ui
+             */
+            add: function (phase, module) {
+                if (!modules[phase]) {
+                    modules[phase] = [];
+                }
+                if (modules[phase].indexOf(module) < 0) {
+                    modules[phase].push(module);
+                }
+            },
+            /**
+             * Executes modules' phase
+             */
+            execute: function () {
+                var args = Array.prototype.slice.call(arguments), // get an Array from arguments
+                    phase = args.splice(0, 1),
+                    deferred = $q.defer(),
+                    phaseModules = modules[phase] || [];
+
+                executeAll(deferred, [].concat(phaseModules), args);
+                return deferred.promise;
             }
         };
 
@@ -48,18 +62,4 @@ angular
                 deferred.resolve(phaseExecuted);
             }
         }
-
-        /**
-         * Executes modules' phase
-         */
-        this.execute = function () {
-            var args = Array.prototype.slice.call(arguments), // get an Array from arguments
-                phase = args.splice(0, 1),
-                deferred = $q.defer(),
-                phaseModules = modules[phase] || [];
-
-            executeAll(deferred, [].concat(phaseModules), args);
-            return deferred.promise;
-        };
-
     });

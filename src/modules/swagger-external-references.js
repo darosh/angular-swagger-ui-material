@@ -8,21 +8,23 @@
 
 angular
     .module('swaggerUi')
-    .service('swaggerUiExternalReferences', function ($http, $q, swaggerModules) {
+    .factory('swaggerUiExternalReferences', function ($http, $q, swaggerModules) {
 
         var url,
             deferred,
             swagger;
 
-        /**
-         * Module entry point
-         */
-        this.execute = function (swaggerUrl, swaggerData) {
-            url = swaggerUrl;
-            swagger = swaggerData;
-            deferred = $q.defer();
-            loadExternalReferences();
-            return deferred.promise;
+        return {
+            /**
+             * Module entry point
+             */
+            execute: function (swaggerUrl, swaggerData) {
+                url = swaggerUrl;
+                swagger = swaggerData;
+                deferred = $q.defer();
+                loadExternalReferences();
+                return deferred.promise;
+            }
         };
 
         function onError (error) {

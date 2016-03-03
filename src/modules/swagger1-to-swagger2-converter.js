@@ -8,21 +8,22 @@
 
 angular
     .module('swaggerUi')
-    .service('swagger1ToSwagger2Converter', function ($q, $http, swaggerModules) {
+    .factory('swagger1ToSwagger2Converter', function ($q, $http, swaggerModules) {
+        return {
+            /**
+             * Module entry point
+             */
+            execute: function (swaggerUrl, swaggerData) {
+                var deferred = $q.defer(),
+                    version = swaggerData.swaggerVersion;
 
-        /**
-         * Module entry point
-         */
-        this.execute = function (swaggerUrl, swaggerData) {
-            var deferred = $q.defer(),
-                version = swaggerData.swaggerVersion;
-
-            if (version && version.indexOf('1.') === 0) {
-                convert(deferred, swaggerUrl, swaggerData);
-            } else {
-                deferred.resolve(false);
+                if (version && version.indexOf('1.') === 0) {
+                    convert(deferred, swaggerUrl, swaggerData);
+                } else {
+                    deferred.resolve(false);
+                }
+                return deferred.promise;
             }
-            return deferred.promise;
         };
 
         /**

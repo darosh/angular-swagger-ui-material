@@ -54,10 +54,11 @@
 <!--<script src="../bower_components/angular-swagger-ui/dist/scripts/modules/swagger-external-references.min.js"></script>-->
 
 <script src="./scripts/swagger-ui.js"></script>
+<script src="./scripts/swagger-ui-ctrl.js"></script>
 <script src="./scripts/swagger-client.js"></script>
 <script src="./scripts/swagger-model.js"></script>
 <script src="./scripts/swagger-modules.js"></script>
-<script src="./scripts/swagger-parser.js"></script>
+<script src="./modules/swagger-parser.js"></script>
 
 <script src="./scripts/swagger-ui-material.js"></script>
 <script src="./scripts/swagger-ui-material-http-info.js"></script>
@@ -67,6 +68,8 @@
 <script src="./modules/swagger-markdown.js"></script>
 <script src="./modules/swagger-yaml.js"></script>
 <script src="./modules/swagger-split.js"></script>
+<script src="./modules/swagger-transform.js"></script>
+<script src="./modules/swagger-operations.js"></script>
 <script src="./directives/toolbar-search.js"></script>
 <script src="./directives/toolbar-edit.js"></script>
 <script src="./directives/truncate.js"></script>
@@ -104,6 +107,7 @@
         })
         .controller('MyCtrl', function ($scope, $location, $mdToast) {
             $scope.isLoading = false;
+            //noinspection JSCheckFunctionSignatures
             $scope.swaggerUrl = $location.search()['url'] || 'http://petstore.swagger.io/v2/swagger.json';
 
             <!-- TODO: swaggerMethods should have default values -->

@@ -27,7 +27,7 @@ angular.module('swaggerUiMaterial',
                 swaggerMethods: '='
             },
             link: function (scope, element) {
-                if (scope.validatorUrl === undefined) {
+                if (angular.isUndefined(scope.validatorUrl)) {
                     scope.validatorUrl = 'http://online.swagger.io/validator';
                 }
 
@@ -142,7 +142,7 @@ angular.module('swaggerUiMaterial',
 
                                 // TODO: result.response.headers is String object
                                 if (result.response && result.response.headers) {
-                                    result.response.headers = JSON.parse(result.response.headers);
+                                    result.response.headers = angular.fromJson(result.response.headers);
 
                                     for (var k in result.response.headers) {
                                         result.response.headerArray.push({
@@ -182,11 +182,9 @@ angular.module('swaggerUiMaterial',
                 sum.openFile = function ($event) {
                     var text = sum.sop.explorerResult.response.body;
                     var type = sum.sop.explorerResult.response.headers['content-type'] || 'text/plain';
-
                     var out = new $window.Blob([text], {type: type});
-                    var url = $window.URL.createObjectURL(out);
 
-                    $event.target.href = url;
+                    $event.target.href = $window.URL.createObjectURL(out);
                 };
 
                 sum.grouped = true;
@@ -340,56 +338,4 @@ angular.module('swaggerUiMaterial',
                 }
             }
         };
-    })
-    // List ungrouped operations
-    .service('operations', function ($q) {
-        this.execute = function (parseResult) {
-            var deferred = $q.defer();
-
-            parseResult.infos.operations = [];
-
-            angular.forEach(parseResult.resources, function (resource) {
-                angular.forEach(resource.operations, function (operation) {
-                    parseResult.infos.operations.push(operation);
-                });
-
-                // TODO: allow configuration of minimum auto expanded endpoints
-                if (parseResult.resources.length <= 8) {
-                    resource.open = true;
-                }
-            });
-
-            parseResult.infos.operations.sort(function (a, b) {
-                return (a.path.toLowerCase().replace(/[^a-z]+/gi, '') + '-' + a.httpMethod)
-                    .localeCompare(b.path.toLowerCase().replace(/[^a-z]+/gi, '') + '-' + b.httpMethod);
-            });
-
-            deferred.resolve(true);
-
-            return deferred.promise;
-        };
-    })
-    .run(function (swaggerModules, operations) {
-        swaggerModules.add(swaggerModules.BEFORE_DISPLAY, operations);
-    })
-    // Catch default transform invalid JSON parse
-    .service('transform', function ($q, $http) {
-        this.execute = function (config) {
-            var deferred = $q.defer();
-
-            config.transformResponse = function (data, headersGetter, status) {
-                try {
-                    return $http.defaults.transformResponse[0](data, headersGetter, status);
-                } catch (ing) {
-                    return data;
-                }
-            };
-
-            deferred.resolve(true);
-
-            return deferred.promise;
-        };
-    })
-    .run(function (swaggerModules, transform) {
-        swaggerModules.add(swaggerModules.BEFORE_EXPLORER_LOAD, transform);
     });

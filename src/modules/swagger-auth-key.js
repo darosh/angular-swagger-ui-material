@@ -12,19 +12,20 @@ angular
         $httpProvider.defaults.useXDomain = true;
         //delete $httpProvider.defaults.headers.common['X-Requested-With'];
     })
-    .service('swaggerAuthKey', function ($q) {
+    .factory('swaggerAuthKey', function ($q) {
+        return {
+            /**
+             * Module entry point
+             */
+            execute: function (options) {
+                var deferred = $q.defer();
 
-        /**
-         * Module entry point
-         */
-        this.execute = function (options) {
-            var deferred = $q.defer();
+                options.params.auth_key = '31tR64EKJfZVdWZ1YzK5M7diY9t4BTUVHTwOmbDSxZcT9BhTNoLZilSrJhr7mAlm';
 
-            options.params.auth_key = '31tR64EKJfZVdWZ1YzK5M7diY9t4BTUVHTwOmbDSxZcT9BhTNoLZilSrJhr7mAlm';
+                deferred.resolve();
 
-            deferred.resolve();
-
-            return deferred.promise;
+                return deferred.promise;
+            }
         };
     })
     .run(function (swaggerModules, swaggerAuthKey) {

@@ -8,22 +8,23 @@
 
 angular
     .module('swaggerUi')
-    .service('swaggerUiXmlFormatter', function ($q) {
+    .factory('swaggerUiXmlFormatter', function ($q) {
+        return {
+            /**
+             * Module entry point
+             */
+            execute: function (response) {
+                var executed = false,
+                    deferred = $q.defer(),
+                    contentType = response.headers && response.headers()['content-type'];
 
-        /**
-         * Module entry point
-         */
-        this.execute = function (response) {
-            var executed = false,
-                deferred = $q.defer(),
-                contentType = response.headers && response.headers()['content-type'];
-
-            if (contentType && contentType.toLowerCase().indexOf('/xml') > 0) {
-                response.data = formatXml(response.data);
-                executed = true;
+                if (contentType && contentType.toLowerCase().indexOf('/xml') > 0) {
+                    response.data = formatXml(response.data);
+                    executed = true;
+                }
+                deferred.resolve(executed);
+                return deferred.promise;
             }
-            deferred.resolve(executed);
-            return deferred.promise;
         };
 
         function formatXml (xml) {

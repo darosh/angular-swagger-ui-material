@@ -8,7 +8,7 @@
 
 angular
     .module('swaggerUi')
-    .service('swaggerModel', function () {
+    .factory('swaggerModel', function ($log) {
 
         /**
          * sample object cache to avoid generating the same one multiple times
@@ -23,7 +23,7 @@ angular
         /**
          * retrieves object definition
          */
-        var resolveReference = this.resolveReference = function (swagger, object) {
+        var resolveReference = function (swagger, object) {
             if (object.$ref) {
                 var parts = object.$ref.replace('#/', '').split('/');
                 object = swagger;
@@ -37,7 +37,7 @@ angular
         /**
          * determines a property type
          */
-        var getType = this.getType = function (item) {
+        var getType = function (item) {
             var format = item.format;
             switch (format) {
                 case 'int32':
@@ -82,7 +82,7 @@ angular
                     }
                     sample = objCache[schema.$ref] || {};
                 } else {
-                    console.warn('schema not found', schema.$ref);
+                    $log.warn('schema not found', schema.$ref);
                 }
             } else if (schema.type === 'array') {
                 sample = [getSampleObj(swagger, schema.items, currentGenerated)];
@@ -128,7 +128,7 @@ angular
         /**
          * generates a sample JSON string (request body or response body)
          */
-        this.generateSampleJson = function (swagger, schema) {
+        function generateSampleJson(swagger, schema) {
             var json,
                 obj = getSampleObj(swagger, schema);
 
@@ -136,7 +136,7 @@ angular
                 json = angular.toJson(obj, true);
             }
             return json;
-        };
+        }
 
         /**
          * inline model counter
@@ -146,7 +146,7 @@ angular
         /**
          * generates object's model
          */
-        var generateModel = this.generateModel = function (swagger, schema, modelName, currentGenerated) {
+        var generateModel = function (swagger, schema, modelName, currentGenerated) {
             var model = '',
                 buffer,
                 submodels,
@@ -255,12 +255,17 @@ angular
             return model;
         };
 
-        /**
-         * clears generated models cache
-         */
-        this.clearCache = function () {
-            objCache = {};
-            modelCache = {};
+        return {
+            generateModel: generateModel,
+            getType: getType,
+            resolveReference: resolveReference,
+            generateSampleJson: generateSampleJson,
+            /**
+             * clears generated models cache
+             */
+            clearCache: function () {
+                objCache = {};
+                modelCache = {};
+            }
         };
-
     });

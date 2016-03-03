@@ -8,31 +8,33 @@
 
 angular
     .module('swaggerUi')
-    .service('swaggerParser', function ($q, $sce, $location, swaggerModel) {
+    .factory('swaggerParser', function ($q, $sce, $location, swaggerModel) {
 
         var trustedSources,
             operationId,
             paramId;
 
-        /**
-         * Module entry point
-         */
-        this.execute = function (parserType, url, contentType, data, isTrustedSources, parseResult) {
-            var deferred = $q.defer();
-            if (data.swagger === '2.0' && (parserType === 'json' || (parserType === 'auto' && contentType === 'application/json'))) {
-                trustedSources = isTrustedSources;
-                try {
-                    parseSwagger2Json(data, url, deferred, parseResult);
-                } catch (e) {
-                    deferred.reject({
-                        code: 500,
-                        message: 'failed to parse swagger: ' + e.message
-                    });
+        return {
+            /**
+             * Module entry point
+             */
+            execute: function (parserType, url, contentType, data, isTrustedSources, parseResult) {
+                var deferred = $q.defer();
+                if (data.swagger === '2.0' && (parserType === 'json' || (parserType === 'auto' && contentType === 'application/json'))) {
+                    trustedSources = isTrustedSources;
+                    try {
+                        parseSwagger2Json(data, url, deferred, parseResult);
+                    } catch (e) {
+                        deferred.reject({
+                            code: 500,
+                            message: 'failed to parse swagger: ' + e.message
+                        });
+                    }
+                } else {
+                    deferred.resolve(false);
                 }
-            } else {
-                deferred.resolve(false);
+                return deferred.promise;
             }
-            return deferred.promise;
         };
 
         /**
@@ -128,7 +130,7 @@ angular
                     operation.tags = operation.tags || ['default'];
                     // map operation to resource
                     tag = operation.tags[0];
-                    if (typeof map[tag] === 'undefined') {
+                    if (angular.isUndefined(map[tag])) {
                         map[tag] = resources.length;
                         resources.push({
                             name: tag
@@ -213,7 +215,7 @@ angular
         }
 
         /**
-         * parse operatiopn responses
+         * parse operation responses
          */
         function parseResponses (swagger, operation) {
             var code,
@@ -266,7 +268,7 @@ angular
                     resources.splice(i--, 1);
                 }
             }
-            // sort resources alphabeticaly
+            // sort resources alphabetically
             resources.sort(function (a, b) {
                 if (a.name > b.name) {
                     return 1;
@@ -280,7 +282,7 @@ angular
 
         function trustHtml (text) {
             var trusted = text;
-            if (typeof text === 'string' && trustedSources) {
+            if (angular.isString(text) && trustedSources) {
                 trusted = $sce.trustAsHtml(escapeChars(text));
             }
             // else ngSanitize MUST be added to app
