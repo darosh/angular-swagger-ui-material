@@ -100,6 +100,12 @@ bower install
 npm install
 ```
 
+**Rebuild [swagger-ui-material-http-info.js](./src/scripts/swagger-ui-material-http-info.js)
+
+```
+gulp info
+```
+
 **Build dist**
 
 ```shell
