@@ -34,6 +34,9 @@ angular.module('swaggerUiMaterial',
                 theme: '=?'
             },
             link: function (scope) {
+                // WARNING: Authentication is not implemented,
+                // please use 'api-explorer-transform' directive's param to customize API calls
+
                 // Directive properties
                 scope.theme = theme.$configure(scope.theme);
                 scope.parser = scope.parser || 'auto';
@@ -56,14 +59,28 @@ angular.module('swaggerUiMaterial',
                 scope.editUrl = scope.url;
                 scope.ngForm = {explorerForm: {}};
 
-                // Original properties
-
                 // Selected operation
                 scope.sop = null;
 
+                scope.selectOperation = selectOperation;
+                scope.open = open;
+                scope.toggleApi = toggleApi;
+                scope.toggleSidenav = toggleSidenav;
+                scope.submit = submit;
+                scope.openFile = openFile;
+
+                scope.$watch('url', urlUpdated);
+                scope.$watch('searchFilter', searchFilterUpdated);
+                scope.$watch('editOpen', editOpenUpdated);
+
                 var swagger;
 
-                // WARNING authentication is not implemented, please use 'api-explorer-transform' directive's param to customize API calls
+                function init () {
+                    swagger = null;
+                    scope.info = {};
+                    scope.resources = [];
+                    scope.form = {};
+                }
 
                 /**
                  * Load Swagger descriptor
@@ -94,43 +111,143 @@ angular.module('swaggerUiMaterial',
                         .catch(onError);
                 }
 
-                /**
-                 * Swagger descriptor has parsed, launch display
-                 */
-                function swaggerParsed (parseResult) {
-                    // execute modules
-                    swaggerPlugins
-                        .execute(swaggerPlugins.BEFORE_DISPLAY, parseResult)
-                        .then(function () {
-                            // display swagger UI
-                            scope.info = parseResult.info;
-                            scope.form = parseResult.form;
-                            scope.resources = parseResult.resources;
-                            scope.meta = display.meta(scope.info, scope.url, scope.validatorUrl, scope.openFile);
-                        })
-                        .catch(onError);
+                function urlUpdated (url) {
+                    init();
+
+                    if (url) {
+                        if (scope.loading) {
+                            // TODO cancel current loading swagger
+                        }
+
+                        // load Swagger descriptor
+                        loadSwagger(url, function (response) {
+                            swagger = response.data;
+                            // execute modules
+                            swaggerPlugins
+                                .execute(swaggerPlugins.BEFORE_PARSE, url, swagger)
+                                .then(function () {
+                                    var contentType = response.headers()['content-type'] || 'application/json';
+                                    var swaggerType = contentType.split(';')[0];
+
+                                    swaggerLoaded(url, swaggerType);
+                                })
+                                .catch(onError);
+                        }, onError);
+                    }
                 }
 
-                function onError (error) {
-                    scope.loading = false;
-                    if (angular.isFunction(scope.errorHandler)) {
-                        scope.errorHandler(error.message, error.code);
+                function searchFilterUpdated () {
+                    if (!scope.searchFilter) {
+                        scope.searchObject = {httpMethod: '', path: ''};
                     } else {
-                        $log.error(error.code, 'AngularSwaggerUI: ' + error.message);
+                        var t = scope.searchFilter.toLowerCase().trim();
+                        var s = t.split(' ');
+                        var isMethod = (s.length) === 1 && scope.theme[s[0]];
+                        var method = (s.length > 1) ? s[0] : (isMethod ? s[0] : '');
+                        var path = (s.length > 1) ? s[1] : (isMethod ? '' : s[0]);
+
+                        scope.searchObject = {httpMethod: method, path: path};
+                    }
+                }
+
+                function editOpenUpdated () {
+                    if (!scope.editOpen) {
+                        scope.url = scope.editUrl;
                     }
                 }
 
                 /**
-                 * show all resource's operations as list or as expanded list
+                 * sends a sample API request
                  */
-                scope.expand = function (resource, expandOperations) {
-                    resource.open = true;
-                    for (var i = 0, op = resource.operations, l = op.length; i < l; i++) {
-                        op[i].open = expandOperations;
+                function submit (operation) {
+                    if (!scope.ngForm.explorerForm.$valid) {
+                        return;
                     }
-                };
 
-                scope.selectOperation = function (op, $event) {
+                    operation.loading = true;
+
+                    swaggerClient
+                        .send(swagger, operation, scope.form[operation.id])
+                        .then(function (response) {
+                            clientDone(operation, response);
+                        });
+                }
+
+                function clientDone (operation, response) {
+                    operation.loading = false;
+                    operation.explorerResult = response;
+
+                    if (response && response.status) {
+                        response.statusString = response.status.toString();
+                    }
+
+                    response.fullUrl = swaggerFormat.fullUrl(response);
+                    response.body = angular.isString(response.data) ? response.data : angular.toJson(response.data, true);
+
+                    response.headerArray = [];
+
+                    if (response && response.headers) {
+                        angular.forEach(response.headers(), function (v, k) {
+                            response.headerArray.push({
+                                name: k,
+                                value: v
+                            });
+                        });
+
+                        response.headerArray.sort(function (a, b) {
+                            a.name.localeCompare(b.name);
+                        });
+                    }
+
+                    var knownStatus = response.statusText && {description: response.statusText};
+
+                    knownStatus = knownStatus || scope.sop.responseArray.find(
+                            function (i) {
+                                return i.code === response.status.toString();
+                            }
+                        ) || {};
+
+                    response.statusArray = [{
+                        code: response.status.toString(),
+                        description: knownStatus.description || httpInfoUtils.statusInfo(response.status)[0]
+                    }];
+
+                    $timeout(function () {
+                        operation.tab = 2;
+                    }, 50);
+                }
+
+                function openFile ($event, isSwagger) {
+                    var text = isSwagger ? angular.toJson(swagger, true) : scope.sop.explorerResult.body;
+                    var type = isSwagger ? 'application/json' : (scope.sop.explorerResult.headers('content-type') || 'text/plain');
+                    var out = new $window.Blob([text], {type: type});
+
+                    $event.target.href = $window.URL.createObjectURL(out);
+                }
+
+                function toggleSidenav () {
+                    scope.sidenavLockedOpen = !scope.sidenavLockedOpen;
+                }
+
+                function toggleApi (api, $event) {
+                    $event.preventDefault();
+                    $event.stopPropagation();
+
+                    // Space bar does not stop propagation :-(
+                    if (($event.keyCode || $event.which) === 32) {
+                        return;
+                    }
+
+                    api.open = !api.open;
+                }
+
+                function open (open) {
+                    angular.forEach(scope.resources, function (api) {
+                        api.open = open;
+                    });
+                }
+
+                function selectOperation (op, $event) {
                     $event.stopPropagation();
 
                     var opening = !scope.sidenavOpen;
@@ -174,150 +291,32 @@ angular.module('swaggerUiMaterial',
                     op.responseArray.sort(function (a, b) {
                         a.code.toString().localeCompare(b.code.toString());
                     });
-                };
-
-                // Expand/Collapse
-                scope.open = function (open) {
-                    angular.forEach(scope.resources, function (api) {
-                        api.open = open;
-                    });
-                };
-
-                scope.toggleApi = function (api, $event) {
-                    $event.preventDefault();
-                    $event.stopPropagation();
-
-                    // Space bar does not stop propagation :-(
-                    if (($event.keyCode || $event.which) === 32) {
-                        return;
-                    }
-
-                    api.open = !api.open;
-                };
-
-                scope.toggleSidenav = function () {
-                    scope.sidenavLockedOpen = !scope.sidenavLockedOpen;
-                };
+                }
 
                 /**
-                 * sends a sample API request
+                 * Swagger descriptor has parsed, launch display
                  */
-                scope.submit = function (operation) {
-                    if (scope.ngForm.explorerForm.$valid) {
-                        // Commented for tab UI: operation.explorerResult = false;
-                        operation.loading = true;
+                function swaggerParsed (parseResult) {
+                    // execute modules
+                    swaggerPlugins
+                        .execute(swaggerPlugins.BEFORE_DISPLAY, parseResult)
+                        .then(function () {
+                            // display swagger UI
+                            scope.info = parseResult.info;
+                            scope.form = parseResult.form;
+                            scope.resources = parseResult.resources;
+                            scope.meta = display.meta(scope.info, scope.url, scope.validatorUrl, scope.openFile);
+                        })
+                        .catch(onError);
+                }
 
-                        // TODO: this is replacing original scope.submitExplorer call,
-                        // we need the send promise and the var swagger is inaccessible
+                function onError (error) {
+                    scope.loading = false;
 
-                        var swagger = {
-                            schemes: [scope.info.scheme],
-                            host: scope.info.host,
-                            basePath: scope.info.basePath
-                        };
-
-                        swaggerClient
-                            .send(swagger, operation, scope.form[operation.id])
-                            .then(function (response) {
-                                operation.loading = false;
-                                operation.explorerResult = response;
-
-                                if (response && response.status) {
-                                    response.statusString = response.status.toString();
-                                }
-
-                                response.fullUrl = swaggerFormat.fullUrl(response);
-                                response.body = angular.isString(response.data) ? response.data : angular.toJson(response.data, true);
-
-                                response.headerArray = [];
-
-                                if (response && response.headers) {
-                                    angular.forEach(response.headers(), function (v, k) {
-                                        response.headerArray.push({
-                                            name: k,
-                                            value: v
-                                        });
-                                    });
-
-                                    response.headerArray.sort(function (a, b) {
-                                        a.name.localeCompare(b.name);
-                                    });
-                                }
-
-                                var knownStatus = response.statusText && {description: response.statusText};
-
-                                knownStatus = knownStatus || scope.sop.responseArray.find(
-                                        function (i) {
-                                            return i.code === response.status.toString();
-                                        }
-                                    ) || {};
-
-                                response.statusArray = [{
-                                    code: response.status.toString(),
-                                    description: knownStatus.description || httpInfoUtils.statusInfo(response.status)[0]
-                                }];
-
-                                $timeout(function () {
-                                    operation.tab = 2;
-                                }, 50);
-                            });
+                    if (angular.isFunction(scope.errorHandler)) {
+                        scope.errorHandler(error);
                     }
-                };
-
-                scope.openFile = function ($event, isSwagger) {
-                    var text = isSwagger ? angular.toJson(swagger, true) : scope.sop.explorerResult.body;
-                    var type = isSwagger ? 'application/json' : (scope.sop.explorerResult.headers('content-type') || 'text/plain');
-                    var out = new $window.Blob([text], {type: type});
-
-                    $event.target.href = $window.URL.createObjectURL(out);
-                };
-
-                scope.$watch('url', function (url) {
-                    // reset
-                    scope.info = {};
-                    scope.resources = [];
-                    scope.form = {};
-                    if (url) {
-                        if (scope.loading) {
-                            // TODO cancel current loading swagger
-                        }
-
-                        // load Swagger descriptor
-                        loadSwagger(url, function (response) {
-                            swagger = response.data;
-                            // execute modules
-                            swaggerPlugins
-                                .execute(swaggerPlugins.BEFORE_PARSE, url, swagger)
-                                .then(function () {
-                                    var contentType = response.headers()['content-type'] || 'application/json';
-                                    var swaggerType = contentType.split(';')[0];
-
-                                    swaggerLoaded(url, swaggerType);
-                                })
-                                .catch(onError);
-                        }, onError);
-                    }
-                });
-
-                scope.$watch('searchFilter', function () {
-                    if (!scope.searchFilter) {
-                        scope.searchObject = {httpMethod: '', path: ''};
-                    } else {
-                        var t = scope.searchFilter.toLowerCase().trim();
-                        var s = t.split(' ');
-                        var isMethod = (s.length) === 1 && scope.theme[s[0]];
-                        var method = (s.length > 1) ? s[0] : (isMethod ? s[0] : '');
-                        var path = (s.length > 1) ? s[1] : (isMethod ? '' : s[0]);
-
-                        scope.searchObject = {httpMethod: method, path: path};
-                    }
-                });
-
-                scope.$watch('editOpen', function () {
-                    if (!scope.editOpen) {
-                        scope.url = scope.editUrl;
-                    }
-                });
+                }
             }
         };
     });
