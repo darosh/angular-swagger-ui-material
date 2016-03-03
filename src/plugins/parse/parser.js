@@ -42,7 +42,7 @@ angular
             var map = {};
             var form = {};
             var resources = [];
-            var info = swagger.info;
+            var info = angular.extend({}, swagger.info);
             var openPath = $location.hash();
             var defaultContentType = 'application/json';
 
@@ -74,6 +74,7 @@ angular
             info.basePath = swagger.basePath;
             info.host = swagger.host;
             info.description = trustHtml(info.description);
+            info.externalDocs = swagger.externalDocs;
         }
 
         /**
