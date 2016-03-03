@@ -7,8 +7,8 @@
         </div>
         <div class="md-toolbar-tools" ng-hide="loading">
             <toolbar-edit class="sum-delay md-toolbar-tools"
-                          ng-model="editUrl"
-                          open="editOpen"
+                          ng-model="editUrl.model"
+                          ng-changed="editUrl.changed"
                           display-title="info.title"
                           ng-if="!searchOpened"
                           flex

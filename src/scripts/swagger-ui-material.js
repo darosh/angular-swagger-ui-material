@@ -53,12 +53,16 @@ angular.module('swaggerUiMaterial',
                 scope.searchOpened = false;
                 scope.searchFilter = '';
                 scope.searchObject = {httpMethod: '', path: ''};
-                scope.editOpen = false;
-                scope.editUrl = scope.url;
+
                 scope.ngForm = {explorerForm: {}};
 
                 // Selected operation
                 scope.sop = null;
+
+                scope.editUrl = {
+                    model: scope.url,
+                    changed: editedUrl
+                };
 
                 scope.selectOperation = selectOperation;
                 scope.open = open;
@@ -69,7 +73,6 @@ angular.module('swaggerUiMaterial',
 
                 scope.$watch('url', urlUpdated);
                 scope.$watch('searchFilter', searchFilterUpdated);
-                scope.$watch('editOpen', editOpenUpdated);
 
                 var swagger;
 
@@ -78,6 +81,7 @@ angular.module('swaggerUiMaterial',
                     scope.info = {};
                     scope.resources = [];
                     scope.form = {};
+                    scope.meta = null;
                 }
 
                 /**
@@ -148,10 +152,8 @@ angular.module('swaggerUiMaterial',
                     }
                 }
 
-                function editOpenUpdated () {
-                    if (!scope.editOpen) {
-                        scope.url = scope.editUrl;
-                    }
+                function editedUrl () {
+                    scope.url = scope.editUrl.model;
                 }
 
                 /**

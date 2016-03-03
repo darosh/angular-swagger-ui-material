@@ -7,7 +7,7 @@ angular.module('toolbarEdit', [])
             templateUrl: 'directives/toolbar-edit.html',
             scope: {
                 ngModel: '=',
-                open: '=',
+                ngChanged: '=',
                 displayTitle: '='
             },
             link: function (scope, element) {
@@ -23,11 +23,17 @@ angular.module('toolbarEdit', [])
                 scope.blur = function () {
                     t = $timeout(function () {
                         scope.open = false;
+                        scope.ngChanged();
                     }, 200);
                 };
                 scope.toggle = function () {
                     scope.open = !scope.open;
-                    scope.focus();
+
+                    if(scope.open) {
+                        scope.focus();
+                    } else {
+                        scope.ngChanged();
+                    }
                 };
             }
         };

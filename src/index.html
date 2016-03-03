@@ -105,15 +105,17 @@
                 .warnPalette(search.warn || 'amber')
                 .foregroundPalette[3] = 'rgba(0, 0, 0, 0.4)';
         })
-        .controller('MyCtrl', function ($scope, $location, $mdToast) {
+        .controller('MyCtrl', function ($scope, $location, $mdToast, $log) {
             $scope.isLoading = false;
             //noinspection JSCheckFunctionSignatures
             $scope.swaggerUrl = $location.search()['url'] || 'http://petstore.swagger.io/v2/swagger.json';
 
             // error management
-            $scope.myErrorHandler = function (data, status) {
-                $mdToast.show($mdToast.simple().textContent('Failed to load :-('));
-                console.error(status, data);
+            $scope.myErrorHandler = function (error) {
+                var e = error || {};
+                var m = 'Something is wrong';
+                $mdToast.show($mdToast.simple().textContent(e.statusText || e.message || m));
+                $log.error(error || m);
             };
         });
 </script>
