@@ -97,7 +97,7 @@ angular.module('swaggerUiMaterial',
                     $event.preventDefault();
                     $event.stopPropagation();
 
-                    // Spacebar does not stop propagation :-(
+                    // Space bar does not stop propagation :-(
                     if (($event.keyCode || $event.which) === 32) {
                         return;
                     }
