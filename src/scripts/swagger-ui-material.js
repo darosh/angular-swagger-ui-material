@@ -12,7 +12,7 @@ angular.module('swaggerUiMaterial',
     // Derived from original swaggerUi directive
     .directive('swaggerUiMaterial', function ($location, $q, $log, $anchorScroll, $timeout, $window,
                                               loader, swaggerClient, swaggerModules,
-                                              theme, httpInfo, dialog) {
+                                              theme, style, httpInfoUtils) {
         return {
             restrict: 'A',
             templateUrl: 'views/main.html',
@@ -33,6 +33,8 @@ angular.module('swaggerUiMaterial',
                 }
 
                 scope.theme = theme.$configure(scope.theme);
+                scope.style = style;
+                scope.httpInfoUtils = httpInfoUtils;
 
                 var swagger;
 
@@ -363,66 +365,6 @@ angular.module('swaggerUiMaterial',
                         [null, 'code', ((scope.validatorUrl !== 'false') && scope.url) ? (scope.validatorUrl + '/debug?url=' + scope.url) : null, scope.validatorUrl + '?url=' + scope.url]
                     ];
                 });
-
-                sum.infoMethod = function (sop, $event) {
-                    var i = httpInfo.method[sop.httpMethod];
-
-                    dialog.show($event, {
-                        title: sop.httpMethod.toUpperCase(),
-                        subtitle: 'HTTP Method',
-                        header: null,
-                        description: i[0],
-                        link: i[2],
-                        section: i[1].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                        style: scope.theme[sop.httpMethod],
-                        meta: [i[3], i[4], i[5]]
-                    });
-                };
-
-                sum.getCodeInfo = function (code) {
-                    return httpInfo.status[code] || httpInfo.status[code[0] + 'xx'] ||
-                        ['**Undefined**', 'no spec found.', '', null];
-                };
-
-                sum.infoCode = function (code, $event) {
-                    var i = sum.getCodeInfo(code);
-
-                    dialog.show($event, {
-                        title: code,
-                        subtitle: 'HTTP Status',
-                        header: i[0],
-                        description: i[1],
-                        link: i[3],
-                        section: i[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                        style: scope.theme[code[0]] || scope.theme[7],
-                        meta: null
-                    });
-                };
-
-                sum.gettheme = function (title) {
-                    var i = httpInfo.header[title.toLowerCase()];
-
-                    if (i) {
-                        return scope.theme[i[1]] || scope.theme.undefined;
-                    } else {
-                        return null;
-                    }
-                };
-
-                sum.infoHeader = function (title, $event) {
-                    var i = httpInfo.header[title.toLowerCase()] || [title, 'Unknown header.', '', null];
-
-                    dialog.show($event, {
-                        title: i[0],
-                        subtitle: 'HTTP Header',
-                        header: null,
-                        description: i[1],
-                        link: i[3],
-                        section: i[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                        style: scope.theme[i[1]] || scope.theme.undefined,
-                        meta: null
-                    });
-                };
             }
         };
     });

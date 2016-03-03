@@ -51,7 +51,7 @@
              ng-include="'views/parameter.html'"></div>
     </div>
 
-    <div ng-if="sum.sop.hasResponses || sum.sop.defaultResponse" style="padding-bottom: 8px;">
+    <div ng-if="sum.sop.responseArray.length" style="padding-bottom: 8px;">
         <md-subheader class="md-warn md-no-sticky">Response messages</md-subheader>
         <div layout-padding>
             <div>
