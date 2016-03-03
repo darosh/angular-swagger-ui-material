@@ -120,9 +120,7 @@ angular
                     .execute(swaggerPlugins.BEFORE_EXPLORER_LOAD, options)
                     .then(function () {
                         // send request
-                        $http(options)
-                            .success(callback)
-                            .error(callback);
+                        $http(options).then(callback, callback);
                     });
 
                 return deferred.promise;

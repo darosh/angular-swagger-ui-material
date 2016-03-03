@@ -39,14 +39,7 @@ angular
             swaggerPlugins
                 .execute(swaggerPlugins.BEFORE_LOAD, options)
                 .then(function () {
-                    $http(options)
-                        .success(callback)
-                        .error(function (data, status) {
-                            onError({
-                                message: data,
-                                code: status
-                            });
-                        });
+                    $http(options).then(callback, onError);
                 })
                 .catch(onError);
         }
