@@ -17,7 +17,7 @@ angular.module('swaggerUiMaterial',
     ])
     // Derived from original swaggerUi directive
     .directive('swaggerUiMaterial', function ($location, $q, $log, $anchorScroll, $timeout, $window,
-                                              loader, swaggerClient, swaggerModules,
+                                              loader, swaggerClient, swaggerPlugins,
                                               theme, style, httpInfoUtils) {
         return {
             restrict: 'A',
@@ -80,8 +80,8 @@ angular.module('swaggerUiMaterial',
                     scope.loading = false;
                     var parseResult = {};
                     // execute modules
-                    swaggerModules
-                        .execute(swaggerModules.PARSE, scope.parser, swaggerUrl, swaggerType, swagger, scope.trustedSources, parseResult)
+                    swaggerPlugins
+                        .execute(swaggerPlugins.PARSE, scope.parser, swaggerUrl, swaggerType, swagger, scope.trustedSources, parseResult)
                         .then(function (executed) {
                             if (executed) {
                                 swaggerParsed(parseResult);
@@ -100,8 +100,8 @@ angular.module('swaggerUiMaterial',
                  */
                 function swaggerParsed (parseResult) {
                     // execute modules
-                    swaggerModules
-                        .execute(swaggerModules.BEFORE_DISPLAY, parseResult)
+                    swaggerPlugins
+                        .execute(swaggerPlugins.BEFORE_DISPLAY, parseResult)
                         .then(function () {
                             // display swagger UI
                             scope.infos = parseResult.infos;
@@ -302,8 +302,8 @@ angular.module('swaggerUiMaterial',
                         loadSwagger(url, function (data, status, headers) {
                             swagger = data;
                             // execute modules
-                            swaggerModules
-                                .execute(swaggerModules.BEFORE_PARSE, url, swagger)
+                            swaggerPlugins
+                                .execute(swaggerPlugins.BEFORE_PARSE, url, swagger)
                                 .then(function () {
                                     var contentType = headers()['content-type'] || 'application/json';
                                     var swaggerType = contentType.split(';')[0];

@@ -300,6 +300,6 @@ angular
                 .replace(/'/g, '&#039;');
         }
     })
-    .run(function (swaggerModules, swaggerParser) {
-        swaggerModules.add(swaggerModules.PARSE, swaggerParser);
+    .run(function (swaggerPlugins, swaggerParser) {
+        swaggerPlugins.add(swaggerPlugins.PARSE, swaggerParser);
     });

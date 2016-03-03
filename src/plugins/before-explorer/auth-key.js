@@ -28,6 +28,6 @@ angular
             }
         };
     })
-    .run(function (swaggerModules, swaggerAuthKey) {
-        swaggerModules.add(swaggerModules.BEFORE_EXPLORER_LOAD, swaggerAuthKey);
+    .run(function (swaggerPlugins, swaggerAuthKey) {
+        swaggerPlugins.add(swaggerPlugins.BEFORE_EXPLORER_LOAD, swaggerAuthKey);
     });

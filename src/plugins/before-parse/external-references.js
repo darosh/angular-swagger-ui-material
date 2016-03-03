@@ -8,7 +8,7 @@
 
 angular
     .module('swaggerUi')
-    .factory('swaggerUiExternalReferences', function ($http, $q, $window, swaggerModules) {
+    .factory('swaggerUiExternalReferences', function ($http, $q, $window, swaggerPlugins) {
         var url;
         var deferred;
         var swagger;
@@ -54,8 +54,8 @@ angular
                     return obj;
                 }
             };
-            swaggerModules
-                .execute(swaggerModules.BEFORE_LOAD, options)
+            swaggerPlugins
+                .execute(swaggerPlugins.BEFORE_LOAD, options)
                 .then(function () {
                     $http(options)
                         .success(callback)
@@ -190,6 +190,6 @@ angular
             }
         }
     })
-    .run(function (swaggerModules, swaggerUiExternalReferences) {
-        swaggerModules.add(swaggerModules.BEFORE_PARSE, swaggerUiExternalReferences);
+    .run(function (swaggerPlugins, swaggerUiExternalReferences) {
+        swaggerPlugins.add(swaggerPlugins.BEFORE_PARSE, swaggerUiExternalReferences);
     });

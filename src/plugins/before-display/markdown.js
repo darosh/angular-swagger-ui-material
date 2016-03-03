@@ -39,6 +39,6 @@ angular.module('swaggerUiMarkdown', ['swaggerUi'])
             return showdown.makeHtml(text || '');
         }
     })
-    .run(function (swaggerModules, markdownToHtml) {
-        swaggerModules.add(swaggerModules.BEFORE_DISPLAY, markdownToHtml);
+    .run(function (swaggerPlugins, markdownToHtml) {
+        swaggerPlugins.add(swaggerPlugins.BEFORE_DISPLAY, markdownToHtml);
     });

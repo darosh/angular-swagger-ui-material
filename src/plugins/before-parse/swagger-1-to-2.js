@@ -8,7 +8,7 @@
 
 angular
     .module('swaggerUi')
-    .factory('swagger1ToSwagger2Converter', function ($q, $http, swaggerModules) {
+    .factory('swagger1ToSwagger2Converter', function ($q, $http, swaggerPlugins) {
         return {
             /**
              * Module entry point
@@ -35,8 +35,8 @@ angular
                 method: 'GET',
                 url: url
             };
-            swaggerModules
-                .execute(swaggerModules.BEFORE_LOAD, options)
+            swaggerPlugins
+                .execute(swaggerPlugins.BEFORE_LOAD, options)
                 .then(function () {
                     $http(options)
                         .success(deferred.resolve)
@@ -204,6 +204,6 @@ angular
             });
         }
     })
-    .run(function (swaggerModules, swagger1ToSwagger2Converter) {
-        swaggerModules.add(swaggerModules.BEFORE_PARSE, swagger1ToSwagger2Converter);
+    .run(function (swaggerPlugins, swagger1ToSwagger2Converter) {
+        swaggerPlugins.add(swaggerPlugins.BEFORE_PARSE, swagger1ToSwagger2Converter);
     });

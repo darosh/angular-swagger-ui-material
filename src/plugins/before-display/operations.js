@@ -29,6 +29,6 @@ angular.module('swaggerUiMaterial')
             }
         };
     })
-    .run(function (swaggerModules, operations) {
-        swaggerModules.add(swaggerModules.BEFORE_DISPLAY, operations);
+    .run(function (swaggerPlugins, operations) {
+        swaggerPlugins.add(swaggerPlugins.BEFORE_DISPLAY, operations);
     });

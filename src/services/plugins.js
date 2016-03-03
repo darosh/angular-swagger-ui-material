@@ -8,7 +8,7 @@
 
 angular
     .module('swaggerUi')
-    .factory('swaggerModules', function ($q) {
+    .factory('swaggerPlugins', function ($q) {
         var modules = {};
 
         return {

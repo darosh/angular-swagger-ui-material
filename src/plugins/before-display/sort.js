@@ -29,6 +29,6 @@ angular.module('swaggerUiSort', ['swaggerUi'])
             }
         };
     })
-    .run(function (swaggerModules, sortResult) {
-        swaggerModules.add(swaggerModules.BEFORE_DISPLAY, sortResult);
+    .run(function (swaggerPlugins, sortResult) {
+        swaggerPlugins.add(swaggerPlugins.BEFORE_DISPLAY, sortResult);
     });

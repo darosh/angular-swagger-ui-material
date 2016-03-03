@@ -32,6 +32,6 @@ angular.module('swaggerUiSplit', [])
             }
         };
     })
-    .run(function (swaggerModules, split) {
-        swaggerModules.add(swaggerModules.BEFORE_PARSE, split);
+    .run(function (swaggerPlugins, split) {
+        swaggerPlugins.add(swaggerPlugins.BEFORE_PARSE, split);
     });

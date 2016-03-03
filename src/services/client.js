@@ -8,7 +8,7 @@
 
 angular
     .module('swaggerUi')
-    .factory('swaggerClient', function ($q, $window, $http, swaggerModules) {
+    .factory('swaggerClient', function ($q, $window, $http, swaggerPlugins) {
         /**
          * format API explorer response before display
          */
@@ -108,16 +108,16 @@ angular
                         headers: headers,
                         config: config
                     };
-                    swaggerModules
-                        .execute(swaggerModules.AFTER_EXPLORER_LOAD, response)
+                    swaggerPlugins
+                        .execute(swaggerPlugins.AFTER_EXPLORER_LOAD, response)
                         .then(function () {
                             formatResult(deferred, response);
                         });
                 };
 
                 // execute modules
-                swaggerModules
-                    .execute(swaggerModules.BEFORE_EXPLORER_LOAD, options)
+                swaggerPlugins
+                    .execute(swaggerPlugins.BEFORE_EXPLORER_LOAD, options)
                     .then(function () {
                         // send request
                         $http(options)

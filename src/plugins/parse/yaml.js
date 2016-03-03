@@ -20,8 +20,8 @@ angular.module('swaggerUiYaml', ['swaggerUi'])
             }
         };
     })
-    .run(function (swaggerModules, loadYaml) {
-        swaggerModules.add(swaggerModules.BEFORE_LOAD, loadYaml);
+    .run(function (swaggerPlugins, loadYaml) {
+        swaggerPlugins.add(swaggerPlugins.BEFORE_LOAD, loadYaml);
     })
     .factory('parseYaml', function ($q, $window, swaggerParser) {
         return {
@@ -39,6 +39,6 @@ angular.module('swaggerUiYaml', ['swaggerUi'])
             }
         };
     })
-    .run(function (swaggerModules, parseYaml) {
-        swaggerModules.add(swaggerModules.PARSE, parseYaml);
+    .run(function (swaggerPlugins, parseYaml) {
+        swaggerPlugins.add(swaggerPlugins.PARSE, parseYaml);
     });

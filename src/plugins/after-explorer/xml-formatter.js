@@ -60,6 +60,6 @@ angular
             return formatted;
         }
     })
-    .run(function (swaggerModules, swaggerUiXmlFormatter) {
-        swaggerModules.add(swaggerModules.AFTER_EXPLORER_LOAD, swaggerUiXmlFormatter);
+    .run(function (swaggerPlugins, swaggerUiXmlFormatter) {
+        swaggerPlugins.add(swaggerPlugins.AFTER_EXPLORER_LOAD, swaggerUiXmlFormatter);
     });
