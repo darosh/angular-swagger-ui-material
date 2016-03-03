@@ -350,7 +350,7 @@ angular.module('swaggerUiMaterial',
                         ['License', 'vpn_key', i.license.name || i.license.url, i.license.url],
                         ['Terms of service', 'work', i.termsOfService, i.termsOfService],
                         ['Host', 'home', i.scheme + '://' + i.host, i.scheme + '://' + i.host],
-                        ['Base URL', 'link', i.basePath, (i.sheme ? (i.sheme + '://') : '') + i.host + i.basePath],
+                        ['Base URL', 'link', i.basePath, (i.scheme ? (i.scheme + '://') : '') + i.host + i.basePath],
                         ['API version', 'developer_board', i.version, null],
                         ['Download', 'file_download', 'swagger.json', scope.url],
                         [null, 'code', ((scope.validatorUrl !== 'false') && scope.url) ? (scope.validatorUrl + '/debug?url=' + scope.url) : null, scope.validatorUrl + '?url=' + scope.url]
