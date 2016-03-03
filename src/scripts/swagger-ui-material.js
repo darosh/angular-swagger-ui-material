@@ -18,7 +18,7 @@ angular.module('swaggerUiMaterial',
     // Derived from original swaggerUi directive
     .directive('swaggerUiMaterial', function ($location, $q, $log, $anchorScroll, $timeout, $window,
                                               loader, swaggerClient, swaggerPlugins, swaggerFormat,
-                                              theme, style, httpInfoUtils) {
+                                              theme, style, display, httpInfoUtils) {
         return {
             restrict: 'A',
             templateUrl: 'views/main.html',
@@ -107,6 +107,8 @@ angular.module('swaggerUiMaterial',
                             scope.infos = parseResult.infos;
                             scope.form = parseResult.form;
                             scope.resources = parseResult.resources;
+                            scope.meta = display.meta(scope.infos, scope.url, scope.validatorUrl);
+
                             if (scope.permalinks) {
                                 $timeout(function () {
                                     $anchorScroll();
@@ -331,30 +333,6 @@ angular.module('swaggerUiMaterial',
                     if (!scope.editOpen) {
                         scope.url = scope.editUrl;
                     }
-                });
-
-                scope.$watch('infos', function () {
-                    if (!scope.infos || !Object.keys(scope.infos).length) {
-                        scope.metas = [];
-
-                        return;
-                    }
-
-                    var i = scope.infos;
-                    i.contact = i.contact || {};
-                    i.license = i.license || {};
-
-                    scope.metas = [
-                        ['Contact', 'person', (i.contact.name && !i.contact.email) ? i.contact.name : null, null],
-                        ['Email', 'email', i.contact.email ? (i.contact.name || i.contact.email) : null, 'mailto:' + i.contact.email + '?subject=' + i.title],
-                        ['License', 'vpn_key', i.license.name || i.license.url, i.license.url],
-                        ['Terms of service', 'work', i.termsOfService, i.termsOfService],
-                        ['Host', 'home', i.scheme + '://' + i.host, i.scheme + '://' + i.host],
-                        ['Base URL', 'link', i.basePath, (i.scheme ? (i.scheme + '://') : '') + i.host + i.basePath],
-                        ['API version', 'developer_board', i.version, null],
-                        ['Download', 'file_download', 'swagger.json', scope.url],
-                        [null, 'code', ((scope.validatorUrl !== 'false') && scope.url) ? (scope.validatorUrl + '/debug?url=' + scope.url) : null, scope.validatorUrl + '?url=' + scope.url]
-                    ];
                 });
             }
         };

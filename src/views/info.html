@@ -1,6 +1,6 @@
 <div layout="row" layout-wrap ng-if="!loading">
-    <div ng-repeat="meta in metas"
-         ng-if="meta[2]"
+    <div ng-repeat="m in meta"
+         ng-if="m[2]"
          flex-xs="100"
          layout="row"
          flex-sm="{{sidenavLockedOpen ? 100 : 50}}"
@@ -9,22 +9,22 @@
          flex-xl="{{sidenavLockedOpen ? 25 : 20}}">
         <md-list flex>
             <md-list-item class="md-2-line" style="overflow: hidden" layout="row">
-                <md-icon class="md-avatar-icon" ng-bind="meta[1]"></md-icon>
+                <md-icon class="md-avatar-icon" ng-bind="m[1]"></md-icon>
                 <div class="md-list-item-text" flex layout="column">
-                    <span ng-if="meta[0]" ng-bind="meta[0]">Contact</span>
+                    <span ng-if="m[0]" ng-bind="m[0]">Contact</span>
                     <p style="overflow: hidden; text-overflow: ellipsis; line-height: 14px"
-                       ng-if="meta[0] && !meta[3]" ng-bind="meta[2]" flex></p>
-                    <p ng-if="meta[0] && meta[3]" flex>
+                       ng-if="m[0] && !m[3]" ng-bind="m[2]" flex></p>
+                    <p ng-if="m[0] && m[3]" flex>
                         <a style="display: block; text-overflow: ellipsis; padding-left: 5px; text-align: left"
                            class="md-button md-primary"
-                           ng-bind="meta[2]"
-                           ng-href="{{meta[3]}}"
+                           ng-bind="m[2]"
+                           ng-href="{{m[3]}}"
                            target="_blank"></a>
                     </p>
-                    <p ng-if="!meta[0]">
+                    <p ng-if="!m[0]">
                         <a style="margin-top: 4px; display: inline-flex; height: 30px"
-                           target="_blank" ng-href="{{meta[2]}}">
-                            <img ng-src="{{meta[3]}}" style="width: 97px; height: 30px;"/>
+                           target="_blank" ng-href="{{m[2]}}">
+                            <img ng-src="{{m[3]}}" style="width: 97px; height: 30px;"/>
                         </a>
                     </p>
                 </div>

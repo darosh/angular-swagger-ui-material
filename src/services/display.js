@@ -1,0 +1,25 @@
+'use strict';
+
+angular.module('swaggerUiMaterial')
+    .factory('display', function () {
+        return {
+            meta: meta
+        };
+
+        function meta (i, url, validatorUrl) {
+            i.contact = i.contact || {};
+            i.license = i.license || {};
+
+            return [
+                ['Contact', 'person', (i.contact.name && !i.contact.email) ? i.contact.name : null, null],
+                ['Email', 'email', i.contact.email ? (i.contact.name || i.contact.email) : null, 'mailto:' + i.contact.email + '?subject=' + i.title],
+                ['License', 'vpn_key', i.license.name || i.license.url, i.license.url],
+                ['Terms of service', 'work', i.termsOfService, i.termsOfService],
+                ['Host', 'home', i.scheme + '://' + i.host, i.scheme + '://' + i.host],
+                ['Base URL', 'link', i.basePath, (i.scheme ? (i.scheme + '://') : '') + i.host + i.basePath],
+                ['API version', 'developer_board', i.version, null],
+                ['Download', 'file_download', 'swagger.json', url],
+                [null, 'code', ((validatorUrl !== 'false') && url) ? (validatorUrl + '/debug?url=' + url) : null, validatorUrl + '?url=' + url]
+            ]
+        }
+    });

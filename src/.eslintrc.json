@@ -11,6 +11,10 @@
       {
         "SwitchCase": 1
       }
+    ],
+    "complexity": [
+      2,
+      10
     ]
   },
   "globals": {
