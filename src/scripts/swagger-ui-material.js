@@ -37,8 +37,8 @@ angular.module('swaggerUiMaterial',
                 // Directive properties
                 scope.theme = theme.$configure(scope.theme);
                 scope.parser = scope.parser || 'auto';
-                scope.validatorUrl = angular.isUndefined(scope.validatorUrl) ?
-                    'http://online.swagger.io/validator' : scope.validatorUrl;
+                scope.validatorUrl = angular.isUndefined(scope.validatorUrl)
+                    ? 'http://online.swagger.io/validator' : scope.validatorUrl;
 
                 // Services
                 scope.style = style;
@@ -294,18 +294,19 @@ angular.module('swaggerUiMaterial',
                     scope.infos = {};
                     scope.resources = [];
                     scope.form = {};
-                    if (url && url !== '') {
+                    if (url) {
                         if (scope.loading) {
                             // TODO cancel current loading swagger
                         }
+
                         // load Swagger descriptor
-                        loadSwagger(url, function (data, status, headers) {
-                            swagger = data;
+                        loadSwagger(url, function (response) {
+                            swagger = response.data;
                             // execute modules
                             swaggerPlugins
                                 .execute(swaggerPlugins.BEFORE_PARSE, url, swagger)
                                 .then(function () {
-                                    var contentType = headers()['content-type'] || 'application/json';
+                                    var contentType = response.headers()['content-type'] || 'application/json';
                                     var swaggerType = contentType.split(';')[0];
 
                                     swaggerLoaded(url, swaggerType);

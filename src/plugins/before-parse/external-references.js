@@ -9,19 +9,16 @@
 angular
     .module('swaggerUi')
     .factory('swaggerUiExternalReferences', function ($http, $q, $window, swaggerPlugins) {
-        var url;
         var deferred;
-        var swagger;
 
         return {
             /**
              * Module entry point
              */
-            execute: function (swaggerUrl, swaggerData) {
-                url = swaggerUrl;
-                swagger = swaggerData;
+            execute: function (url, swagger) {
                 deferred = $q.defer();
-                loadExternalReferences();
+                loadExternalReferences(url, swagger);
+
                 return deferred.promise;
             }
         };
@@ -33,27 +30,12 @@ angular
         /**
          * Load external definition
          */
-        function get (externalUrl, callback, prefix) {
+        function getUrl (externalUrl, callback) {
             var options = {
                 method: 'GET',
-                url: externalUrl,
-                transformResponse: function (json) {
-                    if (prefix) {
-                        // rewrite references
-                        json = json.replace(/"\$ref": ?"#\/(.*)\/(.*)"/g, '"$ref": "#/$1/' + prefix + '/$2"');
-                    }
-                    var obj;
-                    try {
-                        obj = angular.fromJson(json);
-                    } catch (e) {
-                        onError({
-                            code: 500,
-                            message: 'failed to parse JSON'
-                        });
-                    }
-                    return obj;
-                }
+                url: externalUrl
             };
+
             swaggerPlugins
                 .execute(swaggerPlugins.BEFORE_LOAD, options)
                 .then(function () {
@@ -72,18 +54,18 @@ angular
         /**
          * Generate external URL
          */
-        function getExternalUrl ($ref) {
+        function getExternalUrl (baseUrl, $ref) {
             var parts = $ref.split('#/');
             var externalUrl = parts[0];
 
             if (externalUrl.indexOf('http') !== 0 && externalUrl.indexOf('https') !== 0) {
                 // relative url
                 if (externalUrl.indexOf('/') === 0) {
-                    var swaggerUrlParts = $window.URL.parse(url);
+                    var swaggerUrlParts = $window.URL.parse(baseUrl);
                     externalUrl = swaggerUrlParts.protocol + '//' + swaggerUrlParts.host + externalUrl;
                 } else {
-                    var pos = url.lastIndexOf('/');
-                    externalUrl = url.substring(0, pos) + '/' + externalUrl;
+                    var pos = baseUrl.lastIndexOf('/');
+                    externalUrl = baseUrl.substring(0, pos) + '/' + externalUrl;
                 }
             }
             return externalUrl;
@@ -92,102 +74,43 @@ angular
         /**
          * Find and resolve external definitions
          */
-        function loadExternalReferences () {
+        function loadExternalReferences (baseUrl, swagger) {
             var loading = 0;
 
-            function loadOperations (path) {
+            function load (url, obj) {
                 loading++;
-                get(getExternalUrl(path.$ref), function (json) {
+
+                getUrl(url, function (json) {
                     loading--;
-                    delete path.$ref;
-                    for (var key in json) {
-                        path[key] = json[key];
-                    }
+
+                    var subPath = obj.$ref.split('#/')[1];
+                    var subJson = subPath ? json[subPath] : json;
+
+                    angular.extend(obj, subJson);
+
+                    delete obj.$ref;
+
                     if (loading === 0) {
-                        loadExternalDefinitions();
+                        deferred.resolve(true);
                     }
                 });
             }
 
-            for (var pathName in swagger.paths) {
-                var path = swagger.paths[pathName];
-                if (isExternal(path)) {
-                    loadOperations(path);
-                }
-            }
-            if (loading === 0) {
-                // may have no external paths
-                loadExternalDefinitions();
-            }
-        }
+            function iterate (obj) {
+                angular.forEach(obj, function (v, k) {
+                    if (k === '$ref') {
+                        var externalUrl = getExternalUrl(baseUrl, v);
 
-        function isExternal (item) {
-            return item && item.$ref && item.$ref.indexOf('#/') !== 0;
-        }
-
-        function loadExternalDefinitions () {
-            var loading = 0;
-            var loadingUrls = {};
-
-            function loadDefinitions (item) {
-                var matches = item.$ref.match(/(.*)#\/(.*)\/(.*)/);
-                var prefix = matches[1];
-                var section = matches[2];
-                var externalUrl = getExternalUrl(item.$ref);
-
-                // rewrite reference
-                item.$ref = item.$ref.replace(/(.*)#\/(.*)\/(.*)/, '#/$2/$1/$3');
-                // load external if needed
-                if (!loadingUrls[externalUrl]) {
-                    loading++;
-                    loadingUrls[externalUrl] = true;
-                    get(externalUrl, function (json) {
-                        for (var key in json) {
-                            swagger[section][prefix] = json[key];
+                        if (externalUrl) {
+                            load(externalUrl, obj);
                         }
-                        loading--;
-                        if (loading === 0) {
-                            deferred.resolve(true);
-                        }
-                    }, prefix);
-                }
-            }
-
-            function checkDefinitions (item) {
-                // check if an item has an external reference
-                if (isExternal(item)) {
-                    loadDefinitions(item);
-                } else if (isExternal(item.items)) {
-                    loadDefinitions(item.items);
-                }
-            }
-
-            function checkOperationDefinitions (operation) {
-                // check if operation params or responses have external references
-                for (var j = 0, params = operation.parameters || [], k = params.length; j < k; j++) {
-                    if (params[j].schema) {
-                        checkDefinitions(params[j].schema);
+                    } else if (angular.isObject(v) || angular.isArray(v)) {
+                        iterate(v);
                     }
-                }
-                for (var code in (operation.responses || {})) {
-                    if (operation.responses[code].schema) {
-                        checkDefinitions(operation.responses[code].schema);
-                    }
-                }
+                });
             }
 
-            for (var path in swagger.paths) {
-                var operations = swagger.paths[path];
-
-                // TODO manage path parameters
-                for (var httpMethod in operations) {
-                    checkOperationDefinitions(operations[httpMethod]);
-                }
-            }
-            if (loading === 0) {
-                // may have no external definitions
-                deferred.resolve(true);
-            }
+            iterate(swagger);
         }
     })
     .run(function (swaggerPlugins, swaggerUiExternalReferences) {
