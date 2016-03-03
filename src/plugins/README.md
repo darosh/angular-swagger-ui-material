@@ -1,10 +1,12 @@
-# Angular Swagger UI Plugins
+# Plugins
 
 ## [before-load](./before-load)
 
-_Before swagger JSON or YAML loaded._
+_Before Swagger JSON or YAML loaded._
 
 Arguments: **options** object for $http(options)
+
+* [yaml](./before-load/yaml.js)
 
 ## [before-parse](./before-parse)
 
@@ -12,9 +14,9 @@ _Before swagger object parsed_
 
 Arguments: **swagger** object
 
-* [external-references.js](./before-parse/external-references.js)
-* [split.js](./before-parse/split.js)
-* [swagger-1-to-2.js](./before-parse/swagger-1-to-2.js)
+* [external-references](./before-parse/external-references.js)
+* [split](./before-parse/split.js)
+* [swagger-1-to-2](./before-parse/swagger-1-to-2.js)
 
 ## [parse](./parse)
 
@@ -22,11 +24,19 @@ Arguments: **parserType**, **url**, **contentType**, **data**, **isTrustedSource
 Output: **parseResult**
 Promise resolve: **false** or **true**
 
-* [parser.js](./parse/parser.js)
-
-
-## [after-explorer](./after-explorer)
+* [parser](./parse/parser.js)
 
 ## [before-display](./before-display)
 
+* [markdown](./before-display/markdown.js)
+* [operations](./before-display/operations.js)
+* [sort](./before-display/sort.js)
+
 ## [before-explorer](./before-explorer)
+
+* [auth-key](./before-explorer/auth-key.js)
+* [transform](./before-explorer/transform.js)
+
+## [after-explorer](./after-explorer)
+
+* [xml-formatter](./after-explorer/xml-formatter.js)
