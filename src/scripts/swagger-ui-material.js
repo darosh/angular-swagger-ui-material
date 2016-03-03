@@ -34,26 +34,29 @@ angular.module('swaggerUiMaterial',
                 theme: '=?'
             },
             link: function (scope) {
-                if (angular.isUndefined(scope.validatorUrl)) {
-                    scope.validatorUrl = 'http://online.swagger.io/validator';
-                }
+                // Directive properties
+                scope.theme = theme.$configure(scope.theme);
+                scope.parser = scope.parser || 'auto';
+                scope.validatorUrl = angular.isUndefined(scope.validatorUrl) ?
+                    'http://online.swagger.io/validator' : scope.validatorUrl;
 
                 // Services
-                scope.theme = theme.$configure(scope.theme);
                 scope.style = style;
                 scope.httpInfoUtils = httpInfoUtils;
 
                 // UI
                 scope.sidenavOpen = false;
                 scope.sidenavLockedOpen = false;
-                scope.explorerForm = {};
                 scope.grouped = true;
                 scope.descriptions = false;
                 scope.searchOpened = false;
                 scope.searchFilter = '';
                 scope.searchObject = {httpMethod: '', path: ''};
-                scope.editUrl = scope.url;
                 scope.editOpen = false;
+                scope.editUrl = scope.url;
+                scope.explorerForm = {};
+
+                // Original properties
 
                 // Selected operation
                 scope.sop = null;
@@ -77,7 +80,6 @@ angular.module('swaggerUiMaterial',
                     scope.loading = false;
                     var parseResult = {};
                     // execute modules
-                    scope.parser = scope.parser || 'auto';
                     swaggerModules
                         .execute(swaggerModules.PARSE, scope.parser, swaggerUrl, swaggerType, swagger, scope.trustedSources, parseResult)
                         .then(function (executed) {
@@ -122,32 +124,6 @@ angular.module('swaggerUiMaterial',
                         $log.error(error.code, 'AngularSwaggerUI: ' + error.message);
                     }
                 }
-
-                scope.$watch('url', function (url) {
-                    // reset
-                    scope.infos = {};
-                    scope.resources = [];
-                    scope.form = {};
-                    if (url && url !== '') {
-                        if (scope.loading) {
-                            // TODO cancel current loading swagger
-                        }
-                        // load Swagger descriptor
-                        loadSwagger(url, function (data, status, headers) {
-                            swagger = data;
-                            // execute modules
-                            swaggerModules
-                                .execute(swaggerModules.BEFORE_PARSE, url, swagger)
-                                .then(function () {
-                                    var contentType = headers()['content-type'] || 'application/json';
-                                    var swaggerType = contentType.split(';')[0];
-
-                                    swaggerLoaded(url, swaggerType);
-                                })
-                                .catch(onError);
-                        }, onError);
-                    }
-                });
 
                 /**
                  * show all resource's operations as list or as expanded list
@@ -322,6 +298,32 @@ angular.module('swaggerUiMaterial',
 
                     $event.target.href = $window.URL.createObjectURL(out);
                 };
+
+                scope.$watch('url', function (url) {
+                    // reset
+                    scope.infos = {};
+                    scope.resources = [];
+                    scope.form = {};
+                    if (url && url !== '') {
+                        if (scope.loading) {
+                            // TODO cancel current loading swagger
+                        }
+                        // load Swagger descriptor
+                        loadSwagger(url, function (data, status, headers) {
+                            swagger = data;
+                            // execute modules
+                            swaggerModules
+                                .execute(swaggerModules.BEFORE_PARSE, url, swagger)
+                                .then(function () {
+                                    var contentType = headers()['content-type'] || 'application/json';
+                                    var swaggerType = contentType.split(';')[0];
+
+                                    swaggerLoaded(url, swaggerType);
+                                })
+                                .catch(onError);
+                        }, onError);
+                    }
+                });
 
                 scope.$watch('searchFilter', function () {
                     if (!scope.searchFilter) {
