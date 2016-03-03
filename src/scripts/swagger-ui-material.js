@@ -26,7 +26,7 @@ angular.module('swaggerUiMaterial',
                 validatorUrl: '@?',
                 swaggerMethods: '='
             },
-            link: function (scope, element) {
+            link: function (scope) {
                 if (angular.isUndefined(scope.validatorUrl)) {
                     scope.validatorUrl = 'http://online.swagger.io/validator';
                 }

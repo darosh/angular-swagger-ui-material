@@ -88,7 +88,6 @@ angular
             } else if (schema.type === 'object') {
                 sample = {};
             } else {
-                sample = getSampleValue(getType(schema));
                 sample = schema.defaultValue || schema.example || getSampleValue(getType(schema));
             }
             return sample;
