@@ -98,9 +98,10 @@ angular.module('swaggerUiMaterial',
                 function swaggerLoaded (swaggerUrl, swaggerType) {
                     scope.loading = false;
                     var parseResult = {};
+                    var swaggerCopy = angular.copy(swagger);
                     // execute modules
                     swaggerPlugins
-                        .execute(swaggerPlugins.PARSE, scope.parser, swaggerUrl, swaggerType, swagger, scope.trustedSources, parseResult)
+                        .execute(swaggerPlugins.PARSE, scope.parser, swaggerUrl, swaggerType, swaggerCopy, scope.trustedSources, parseResult)
                         .then(function (executed) {
                             if (executed) {
                                 swaggerParsed(parseResult);

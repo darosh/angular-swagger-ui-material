@@ -42,7 +42,7 @@ angular
             var map = {};
             var form = {};
             var resources = [];
-            var info = angular.extend({}, swagger.info);
+            var info = swagger.info;
             var openPath = $location.hash();
             var defaultContentType = 'application/json';
 
