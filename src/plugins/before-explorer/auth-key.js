@@ -8,10 +8,6 @@
 
 angular
     .module('swaggerUi')
-    .config(function ($httpProvider) {
-        $httpProvider.defaults.useXDomain = true;
-        // delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    })
     .factory('swaggerAuthKey', function ($q) {
         return {
             /**
