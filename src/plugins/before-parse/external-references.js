@@ -51,7 +51,7 @@ angular
             var parts = $ref.split('#/');
             var externalUrl = parts[0];
 
-            if (externalUrl.indexOf('http') !== 0 && externalUrl.indexOf('https') !== 0) {
+            if (externalUrl && (externalUrl.indexOf('http') !== 0)) {
                 // relative url
                 if (externalUrl.indexOf('/') === 0) {
                     var swaggerUrlParts = $window.URL.parse(baseUrl);
@@ -104,6 +104,10 @@ angular
             }
 
             iterate(swagger);
+
+            if (!loading) {
+                deferred.resolve(false);
+            }
         }
     })
     .run(function (swaggerPlugins, swaggerUiExternalReferences) {
