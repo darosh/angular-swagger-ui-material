@@ -38,9 +38,25 @@ angular.module('swaggerUiMaterial',
                     scope.validatorUrl = 'http://online.swagger.io/validator';
                 }
 
+                // Services
                 scope.theme = theme.$configure(scope.theme);
                 scope.style = style;
                 scope.httpInfoUtils = httpInfoUtils;
+
+                // UI
+                scope.sidenavOpen = false;
+                scope.sidenavLockedOpen = false;
+                scope.explorerForm = {};
+                scope.grouped = true;
+                scope.descriptions = false;
+                scope.searchOpened = false;
+                scope.searchFilter = '';
+                scope.searchObject = {httpMethod: '', path: ''};
+                scope.editUrl = scope.url;
+                scope.editOpen = false;
+
+                // Selected operation
+                scope.sop = null;
 
                 var swagger;
 
@@ -165,9 +181,6 @@ angular.module('swaggerUiMaterial',
                         });
                 };
 
-                // Selected Operation === "sop"
-                scope.sop = null;
-
                 scope.selectOperation = function (op, $event) {
                     $event.stopPropagation();
 
@@ -214,9 +227,6 @@ angular.module('swaggerUiMaterial',
                     });
                 };
 
-                // Toggle
-                scope.descriptions = false;
-
                 // Expand/Collapse
                 scope.open = function (open) {
                     angular.forEach(scope.resources, function (api) {
@@ -236,14 +246,9 @@ angular.module('swaggerUiMaterial',
                     api.open = !api.open;
                 };
 
-                scope.sidenavOpen = false;
-                scope.sidenavLockedOpen = false;
-
                 scope.toggleSidenav = function () {
                     scope.sidenavLockedOpen = !scope.sidenavLockedOpen;
                 };
-
-                scope.explorerForm = {};
 
                 scope.submit = function (operation) {
                     if (scope.explorerForm.$valid) {
@@ -317,13 +322,6 @@ angular.module('swaggerUiMaterial',
 
                     $event.target.href = $window.URL.createObjectURL(out);
                 };
-
-                scope.grouped = true;
-                scope.searchOpened = false;
-                scope.searchFilter = '';
-                scope.searchObject = {httpMethod: '', path: ''};
-                scope.editUrl = scope.url;
-                scope.editOpen = false;
 
                 scope.$watch('searchFilter', function () {
                     if (!scope.searchFilter) {
