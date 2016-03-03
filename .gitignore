@@ -1,13 +1,8 @@
 node_modules/
-
 bower_components/
-
 dist/
-
-/demo/*
-!/demo/hub.html
+demo/
 
 .publish/
 
 .idea/
-
