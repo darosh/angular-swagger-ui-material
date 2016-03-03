@@ -127,11 +127,15 @@
     </div>
     <md-tabs class="md-hue-2"
              flex
+             md-stretch-tabs="always"
              md-selected="sop.tab"
              ng-class="{'sum-slide-disabled': omg}">
         <!-- TODO: better tab names? -->
         <md-tab label="Info" layout="column">
             <div class="sum-fade" ng-hide="omg" ng-include="'views/request.html'"></div>
+        </md-tab>
+        <md-tab label="Scripts" layout="column">
+            <div class="sum-fade" ng-hide="omg" ng-include="'views/scripts.html'"></div>
         </md-tab>
         <md-tab class="sum-tab-result" label="Result" ng-disabled="!sop.explorerResult">
             <div class="sum-fade" ng-hide="omg" ng-show="sop.explorerResult" ng-include="'views/result.html'"></div>

@@ -28,7 +28,9 @@
 }
 
 [swagger-ui-material] md-sidenav .md-subheader + .layout-padding,
-[swagger-ui-material] md-sidenav .md-subheader + .layout-padding > *:first-child {
+[swagger-ui-material] md-sidenav .md-subheader + .layout-padding > *:first-child,
+[swagger-ui-material] md-sidenav .sum-subheader + .layout-padding,
+[swagger-ui-material] md-sidenav .sum-subheader + .layout-padding > *:first-child {
     padding-top: 0;
 }
 

@@ -258,7 +258,7 @@ angular.module('swaggerUiMaterial',
                                 }];
 
                                 $timeout(function () {
-                                    operation.tab = 1;
+                                    operation.tab = 2;
                                 }, 50);
                             });
                     }
