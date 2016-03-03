@@ -87,7 +87,6 @@ angular.module('swaggerUiMaterial',
                                 swaggerParsed(parseResult);
                             } else {
                                 onError({
-                                    code: 415,
                                     message: 'no parser found for Swagger descriptor of type ' + swaggerType + ' and version ' + swagger.swagger
                                 });
                             }
@@ -107,7 +106,7 @@ angular.module('swaggerUiMaterial',
                             scope.infos = parseResult.infos;
                             scope.form = parseResult.form;
                             scope.resources = parseResult.resources;
-                            scope.meta = display.meta(scope.infos, scope.url, scope.validatorUrl);
+                            scope.meta = display.meta(scope.infos, scope.url, scope.validatorUrl, scope.openFile);
 
                             if (scope.permalinks) {
                                 $timeout(function () {
@@ -280,9 +279,9 @@ angular.module('swaggerUiMaterial',
                     }
                 };
 
-                scope.openFile = function ($event) {
-                    var text = scope.sop.explorerResult.body;
-                    var type = scope.sop.explorerResult.headers('content-type') || 'text/plain';
+                scope.openFile = function ($event, isSwagger) {
+                    var text = isSwagger ? angular.toJson(swagger, true) : scope.sop.explorerResult.body;
+                    var type = isSwagger ? 'application/json' : (scope.sop.explorerResult.headers('content-type') || 'text/plain');
                     var out = new $window.Blob([text], {type: type});
 
                     $event.target.href = $window.URL.createObjectURL(out);

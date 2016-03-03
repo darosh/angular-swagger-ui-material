@@ -6,9 +6,12 @@ angular.module('swaggerUiMaterial')
             meta: meta
         };
 
-        function meta (i, url, validatorUrl) {
+        function meta (i, url, validatorUrl, download) {
             i.contact = i.contact || {};
             i.license = i.license || {};
+
+            var validatorDebug = ((validatorUrl !== 'false') && url) ? (validatorUrl + '/debug?url=' + url) : null;
+            var validatorBadge = validatorUrl + '?url=' + url;
 
             return [
                 ['Contact', 'person', (i.contact.name && !i.contact.email) ? i.contact.name : null, null],
@@ -18,8 +21,8 @@ angular.module('swaggerUiMaterial')
                 ['Host', 'home', i.scheme + '://' + i.host, i.scheme + '://' + i.host],
                 ['Base URL', 'link', i.basePath, (i.scheme ? (i.scheme + '://') : '') + i.host + i.basePath],
                 ['API version', 'developer_board', i.version, null],
-                ['Download', 'file_download', 'swagger.json', url],
-                [null, 'code', ((validatorUrl !== 'false') && url) ? (validatorUrl + '/debug?url=' + url) : null, validatorUrl + '?url=' + url]
+                ['Download', 'file_download', 'swagger.json', url, download],
+                [null, 'code', validatorDebug, validatorBadge]
             ];
         }
     });
