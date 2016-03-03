@@ -9,33 +9,6 @@
 angular
     .module('swaggerUi')
     .factory('swaggerClient', function ($q, $window, $http, swaggerPlugins) {
-        /**
-         * format API explorer response before display
-         */
-        function formatResult (deferred, response) {
-            var query = '';
-            var data = response.data;
-            var config = response.config;
-
-            if (config.params) {
-                var parts = [];
-                for (var key in config.params) {
-                    parts.push(key + '=' + encodeURIComponent(config.params[key]));
-                }
-                if (parts.length > 0) {
-                    query = '?' + parts.join('&');
-                }
-            }
-            deferred.resolve({
-                url: config.url + query,
-                response: {
-                    body: data ? (angular.isString(data) ? data : angular.toJson(data, true)) : 'no content',
-                    status: response.status,
-                    headers: angular.toJson(response.headers(), true)
-                }
-            });
-        }
-
         return {
             /**
              * Send API explorer request
@@ -105,7 +78,7 @@ angular
                     swaggerPlugins
                         .execute(swaggerPlugins.AFTER_EXPLORER_LOAD, response)
                         .then(function () {
-                            formatResult(deferred, response);
+                            deferred.resolve(response);
                         });
                 };
 
