@@ -1,23 +1,23 @@
 <div layout="column">
     <md-input-container ng-if="apiExplorer && (param.in != 'body') && (param.subtype == 'file')">
         <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
-        <input type="file" file-input ng-model="form[sum.sop.id][param.name]"
+        <input type="file" file-input ng-model="form[sop.id][param.name]"
                placeholder="{{param.required?'(required)':''}}" ng-required="param.required"/>
     </md-input-container>
     <md-input-container
         ng-if="apiExplorer && (param.in != 'body') && (param.subtype != 'enum') && (param.subtype != 'file')">
         <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
-        <input type="text" ng-model="form[sum.sop.id][param.name]" ng-required="param.required"/>
+        <input type="text" ng-model="form[sop.id][param.name]" ng-required="param.required"/>
     </md-input-container>
     <md-input-container ng-if="apiExplorer && (param.in == 'body')">
         <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
-        <textarea ng-model="form[sum.sop.id][param.name]" ng-required="param.required"></textarea>
+        <textarea ng-model="form[sop.id][param.name]" ng-required="param.required"></textarea>
     </md-input-container>
     <md-input-container ng-if="apiExplorer && (param.subtype == 'enum')">
         <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
         <md-select class="sum-no-margin"
                    ng-required="param.required"
-                   ng-model="form[sum.sop.id][param.name]">
+                   ng-model="form[sop.id][param.name]">
             <md-option ng-repeat="value in param.enum" value="{{value}}" ng-selected="param.default == value"
                        ng-bind="value + (param.default == value ? ' (default)' : '')"></md-option>
         </md-select>
@@ -41,14 +41,14 @@
     </div>
     <div ng-if="(param.in == 'body') || param.schema" layout="row" class="sum-ind" style="margin-top: 8px">
         <md-input-container flex ng-if="param.in == 'body'" style="margin-top: 2px; padding-right: 16px">
-            <md-select aria-label="parameter type" ng-model="form[sum.sop.id].contentType">
-                <md-option ng-repeat="item in sum.sop.consumes track by item" value="{{item}}" ng-bind="::item">
+            <md-select aria-label="parameter type" ng-model="form[sop.id].contentType">
+                <md-option ng-repeat="item in sop.consumes track by item" value="{{item}}" ng-bind="::item">
                 </md-option>
             </md-select>
         </md-input-container>
         <div class="sum-tools-in" ng-if="param.schema">
             <a class="md-button md-primary"
-               ng-click="form[sum.sop.id][param.name] = param.schema.json">Set</a>
+               ng-click="form[sop.id][param.name] = param.schema.json">Set</a>
             <a class="md-button md-primary"
                ng-click="param.schema.display = !param.schema.display + 0"
                ng-bind="param.schema.display ? 'Model' : 'Example'"></a>

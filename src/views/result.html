@@ -3,35 +3,35 @@
     <div>
         <a class="md-button sum-link md-primary"
            style="font-weight: normal; white-space: normal; display: inline; overflow: auto; word-wrap: break-word"
-           ng-href="{{sum.sop.explorerResult.url}}"
+           ng-href="{{sop.explorerResult.url}}"
            target="_blank"
-           ng-bind="sum.sop.explorerResult.url"></a>
+           ng-bind="sop.explorerResult.url"></a>
     </div>
 </div>
 <md-subheader class="md-warn md-no-sticky">Response status</md-subheader>
 <div layout-padding>
     <div>
-        <div ng-repeat="resp in sum.sop.explorerResult.response.statusArray track by $index"
+        <div ng-repeat="resp in sop.explorerResult.response.statusArray track by $index"
              ng-include="'views/response.html'"></div>
     </div>
 </div>
 </div>
-<div ng-if="sum.sop.explorerResult.response.headerArray.length">
+<div ng-if="sop.explorerResult.response.headerArray.length">
     <md-subheader class="md-warn md-no-sticky">Response headers</md-subheader>
     <div layout-padding>
         <div>
-            <div ng-repeat="header in sum.sop.explorerResult.response.headerArray"
+            <div ng-repeat="header in sop.explorerResult.response.headerArray"
                  ng-include="'views/header.html'"></div>
         </div>
     </div>
 </div>
-<div ng-if="sum.sop.explorerResult.response.body">
+<div ng-if="sop.explorerResult.response.body">
     <div layout="row">
         <div flex>
             <md-subheader class="md-warn md-no-sticky">Response body</md-subheader>
         </div>
         <div class="sum-tools">
-            <a href="#" target="_blank" class="md-button md-primary" ng-click="sum.openFile($event)">Open</a>
+            <a href="#" target="_blank" class="md-button md-primary" ng-click="openFile($event)">Open</a>
         </div>
     </div>
 
@@ -39,7 +39,7 @@
     <pre class="sum-pre"
          style="word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 6px; margin-bottom: 6px;"
          truncate="1728"
-         ng-bind="sum.sop.explorerResult.response.body"
+         ng-bind="sop.explorerResult.response.body"
          flex></pre>
     </div>
 </div>

@@ -159,28 +159,25 @@ angular.module('swaggerUiMaterial',
                         });
                 };
 
-                // "Swagger UI Material" === "sum" namespace
-                var sum = scope.sum = {};
-
                 // Selected Operation === "sop"
-                sum.sop = null;
+                scope.sop = null;
 
-                sum.selectOperation = function (op, $event) {
+                scope.selectOperation = function (op, $event) {
                     $event.stopPropagation();
 
-                    var opening = !sum.sidenavOpen;
-                    sum.sidenavOpen = true;
+                    var opening = !scope.sidenavOpen;
+                    scope.sidenavOpen = true;
                     op.tab = op.tab || 0;
 
                     // fixes tab content width flickering (might be angular-material issue)
                     // and triggers .sum-fade animation
-                    sum.omg = !opening;
+                    scope.omg = !opening;
 
                     $timeout(function () {
-                        sum.sop = op;
+                        scope.sop = op;
 
                         $timeout(function () {
-                            sum.omg = false;
+                            scope.omg = false;
                         }, 15);
                     }, 15);
 
@@ -212,16 +209,16 @@ angular.module('swaggerUiMaterial',
                 };
 
                 // Toggle
-                sum.descriptions = false;
+                scope.descriptions = false;
 
                 // Expand/Collapse
-                sum.open = function (open) {
+                scope.open = function (open) {
                     angular.forEach(scope.resources, function (api) {
                         api.open = open;
                     });
                 };
 
-                sum.toggleApi = function (api, $event) {
+                scope.toggleApi = function (api, $event) {
                     $event.preventDefault();
                     $event.stopPropagation();
 
@@ -233,17 +230,17 @@ angular.module('swaggerUiMaterial',
                     api.open = !api.open;
                 };
 
-                sum.sidenavOpen = false;
-                sum.sidenavLockedOpen = false;
+                scope.sidenavOpen = false;
+                scope.sidenavLockedOpen = false;
 
-                sum.toggleSidenav = function () {
-                    sum.sidenavLockedOpen = !sum.sidenavLockedOpen;
+                scope.toggleSidenav = function () {
+                    scope.sidenavLockedOpen = !scope.sidenavLockedOpen;
                 };
 
-                sum.explorerForm = {};
+                scope.explorerForm = {};
 
-                sum.submit = function (operation) {
-                    if (sum.explorerForm.$valid) {
+                scope.submit = function (operation) {
+                    if (scope.explorerForm.$valid) {
                         // Commented for tab UI: operation.explorerResult = false;
                         operation.loading = true;
 
@@ -285,19 +282,19 @@ angular.module('swaggerUiMaterial',
                                 }
 
                                 // TODO: model with no content should be null or undefined
-                                if (sum.sop.explorerResult.response.body === 'no content') {
-                                    sum.sop.explorerResult.response.body = null;
+                                if (scope.sop.explorerResult.response.body === 'no content') {
+                                    scope.sop.explorerResult.response.body = null;
                                 }
 
-                                var knownStatus = sum.sop.responseArray.find(
+                                var knownStatus = scope.sop.responseArray.find(
                                         function (i) {
-                                            return i.code === sum.sop.explorerResult.response.status.toString();
+                                            return i.code === scope.sop.explorerResult.response.status.toString();
                                         }
                                     ) || {};
 
-                                sum.sop.explorerResult.response.statusArray = [{
-                                    code: sum.sop.explorerResult.response.status.toString(),
-                                    description: knownStatus.description || sum.getCodeInfo(sum.sop.explorerResult.response.status)[0]
+                                scope.sop.explorerResult.response.statusArray = [{
+                                    code: scope.sop.explorerResult.response.status.toString(),
+                                    description: knownStatus.description || scope.getCodeInfo(scope.sop.explorerResult.response.status)[0]
                                 }];
 
                                 $timeout(function () {
@@ -307,38 +304,38 @@ angular.module('swaggerUiMaterial',
                     }
                 };
 
-                sum.openFile = function ($event) {
-                    var text = sum.sop.explorerResult.response.body;
-                    var type = sum.sop.explorerResult.response.headers['content-type'] || 'text/plain';
+                scope.openFile = function ($event) {
+                    var text = scope.sop.explorerResult.response.body;
+                    var type = scope.sop.explorerResult.response.headers['content-type'] || 'text/plain';
                     var out = new $window.Blob([text], {type: type});
 
                     $event.target.href = $window.URL.createObjectURL(out);
                 };
 
-                sum.grouped = true;
-                sum.searchOpened = false;
-                sum.searchFilter = '';
-                sum.searchObject = {httpMethod: '', path: ''};
-                sum.editUrl = scope.url;
-                sum.editOpen = false;
+                scope.grouped = true;
+                scope.searchOpened = false;
+                scope.searchFilter = '';
+                scope.searchObject = {httpMethod: '', path: ''};
+                scope.editUrl = scope.url;
+                scope.editOpen = false;
 
-                scope.$watch('sum.searchFilter', function () {
-                    if (!sum.searchFilter) {
-                        sum.searchObject = {httpMethod: '', path: ''};
+                scope.$watch('scope.searchFilter', function () {
+                    if (!scope.searchFilter) {
+                        scope.searchObject = {httpMethod: '', path: ''};
                     } else {
-                        var t = sum.searchFilter.toLowerCase().trim();
+                        var t = scope.searchFilter.toLowerCase().trim();
                         var s = t.split(' ');
                         var isMethod = (s.length) === 1 && scope.theme[s[0]];
                         var method = (s.length > 1) ? s[0] : (isMethod ? s[0] : '');
                         var path = (s.length > 1) ? s[1] : (isMethod ? '' : s[0]);
 
-                        sum.searchObject = {httpMethod: method, path: path};
+                        scope.searchObject = {httpMethod: method, path: path};
                     }
                 });
 
-                scope.$watch('sum.editOpen', function () {
-                    if (!sum.editOpen) {
-                        scope.url = sum.editUrl;
+                scope.$watch('scope.editOpen', function () {
+                    if (!scope.editOpen) {
+                        scope.url = scope.editUrl;
                     }
                 });
 
