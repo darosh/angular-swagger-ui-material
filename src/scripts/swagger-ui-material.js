@@ -33,8 +33,7 @@ angular.module('swaggerUiMaterial',
                 validatorUrl: '@?'
             },
             link: function (scope, element, attr) {
-                // WARNING: Authentication is not implemented,
-                // please use 'api-explorer-transform' directive's param to customize API calls
+                // WARNING: Authentication is not implemented
 
                 // Directive properties
                 scope.theme = theme.$configure(scope.theme);
