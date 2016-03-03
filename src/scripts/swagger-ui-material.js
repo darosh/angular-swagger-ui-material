@@ -86,7 +86,7 @@ angular.module('swaggerUiMaterial',
                  */
                 function loadSwagger (url, callback, onError) {
                     scope.loading = true;
-                    loader.load(url, callback, onError);
+                    swaggerLoader.load(url, callback, onError);
                 }
 
                 /**
