@@ -9,7 +9,6 @@
 angular
     .module('swaggerUi')
     .controller('swaggerUiController', function ($scope, $location, $q, $log, $anchorScroll, $timeout, loader, swaggerClient, swaggerModules) {
-
         var swagger;
 
         // WARNING authentication is not implemented, please use 'api-explorer-transform' directive's param to customize API calls
@@ -76,13 +75,13 @@ angular
         }
 
         $scope.$watch('url', function (url) {
-            //reset
+            // reset
             $scope.infos = {};
             $scope.resources = [];
             $scope.form = {};
             if (url && url !== '') {
                 if ($scope.loading) {
-                    //TODO cancel current loading swagger
+                    // TODO cancel current loading swagger
                 }
                 // load Swagger descriptor
                 loadSwagger(url, function (data, status, headers) {
@@ -91,8 +90,8 @@ angular
                     swaggerModules
                         .execute(swaggerModules.BEFORE_PARSE, url, swagger)
                         .then(function () {
-                            var contentType = headers()['content-type'] || 'application/json',
-                                swaggerType = contentType.split(';')[0];
+                            var contentType = headers()['content-type'] || 'application/json';
+                            var swaggerType = contentType.split(';')[0];
 
                             swaggerLoaded(url, swaggerType);
                         })
@@ -132,5 +131,4 @@ angular
                     operation.explorerResult = result;
                 });
         };
-
     });

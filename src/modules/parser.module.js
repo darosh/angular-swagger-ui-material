@@ -9,10 +9,9 @@
 angular
     .module('swaggerUi')
     .factory('swaggerParser', function ($q, $sce, $location, swaggerModel) {
-
-        var trustedSources,
-            operationId,
-            paramId;
+        var trustedSources;
+        var operationId;
+        var paramId;
 
         return {
             /**
@@ -41,12 +40,12 @@ angular
          * parse swagger description to ease HTML generation
          */
         function parseSwagger2Json (swagger, url, deferred, parseResult) {
-            var map = {},
-                form = {},
-                resources = [],
-                infos = swagger.info,
-                openPath = $location.hash(),
-                defaultContentType = 'application/json';
+            var map = {};
+            var form = {};
+            var resources = [];
+            var infos = swagger.info;
+            var openPath = $location.hash();
+            var defaultContentType = 'application/json';
 
             operationId = 0;
             paramId = 0;
@@ -116,7 +115,7 @@ angular
                 delete pathObject.parameters;
                 for (httpMethod in pathObject) {
                     operation = pathObject[httpMethod];
-                    //TODO manage 'deprecated' operations ?
+                    // TODO manage 'deprecated' operations ?
                     operation.id = operationId;
                     operation.description = trustHtml(operation.description);
                     operation.produces = operation.produces || swagger.produces;
@@ -152,12 +151,15 @@ angular
          * compute path and operation parameters
          */
         function computeParameters (swagger, pathParameters, operation) {
-            var i, j, k, l,
-                operationParameters = operation.parameters || [],
-                parameters = [].concat(operationParameters),
-                found,
-                pathParameter,
-                operationParameter;
+            var i;
+            var j;
+            var k;
+            var l;
+            var operationParameters = operation.parameters || [];
+            var parameters = [].concat(operationParameters);
+            var found;
+            var pathParameter;
+            var operationParameter;
 
             for (i = 0, l = pathParameters.length; i < l; i++) {
                 found = false;
@@ -166,7 +168,7 @@ angular
                 for (j = 0, k = operationParameters.length; j < k; j++) {
                     operationParameter = swaggerModel.resolveReference(swagger, operationParameters[j]);
                     if (pathParameter.name === operationParameter.name && pathParameter.in === operationParameter.in) {
-                        // overriden parameter
+                        // overridden parameter
                         found = true;
                         break;
                     }
@@ -183,13 +185,14 @@ angular
          * parse operation parameters
          */
         function parseParameters (swagger, operation, pathParameters, form, defaultContentType) {
-            var i, l,
-                param,
-                parameters = operation.parameters = computeParameters(swagger, pathParameters, operation);
+            var i;
+            var l;
+            var param;
+            var parameters = operation.parameters = computeParameters(swagger, pathParameters, operation);
 
             for (i = 0, l = parameters.length; i < l; i++) {
-                //TODO manage 'collectionFormat' (csv, multi etc.) ?
-                //TODO manage constraints (pattern, min, max etc.) ?
+                // TODO manage 'collectionFormat' (csv, multi etc.) ?
+                // TODO manage constraints (pattern, min, max etc.) ?
                 param = parameters[i] = swaggerModel.resolveReference(swagger, parameters[i]);
                 param.id = paramId;
                 param.type = swaggerModel.getType(param);
@@ -224,7 +227,7 @@ angular
 
             if (operation.responses) {
                 for (code in operation.responses) {
-                    //TODO manage response headers
+                    // TODO manage response headers
                     response = operation.responses[code];
                     response.description = trustHtml(response.description);
                     if (response.schema) {
@@ -296,7 +299,6 @@ angular
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#039;');
         }
-
     })
     .run(function (swaggerModules, swaggerParser) {
         swaggerModules.add(swaggerModules.PARSE, swaggerParser);

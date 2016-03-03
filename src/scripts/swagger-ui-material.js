@@ -31,7 +31,7 @@ angular.module('swaggerUiMaterial',
                     scope.validatorUrl = 'http://online.swagger.io/validator';
                 }
 
-                // "Swager UI Material" === "sum" namespace
+                // "Swagger UI Material" === "sum" namespace
                 var sum = scope.sum = {};
 
                 // Selected Operation === "sop"
@@ -120,7 +120,7 @@ angular.module('swaggerUiMaterial',
                         operation.loading = true;
 
                         // TODO: this is replacing original scope.submitExplorer call,
-                        // we need the send promise and the var swagger is inaccesible
+                        // we need the send promise and the var swagger is inaccessible
 
                         var swagger = {
                             schemes: [scope.infos.scheme],

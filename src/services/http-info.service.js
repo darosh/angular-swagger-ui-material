@@ -1,6 +1,6 @@
 'use strict';
 
-//noinspection HtmlDeprecatedTag
+// noinspection HtmlDeprecatedTag
 angular.module('swaggerUiMaterial')
     .value('httpInfo', {
         method: {

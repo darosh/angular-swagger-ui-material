@@ -14,9 +14,9 @@ angular
              * Module entry point
              */
             execute: function (response) {
-                var executed = false,
-                    deferred = $q.defer(),
-                    contentType = response.headers && response.headers()['content-type'];
+                var executed = false;
+                var deferred = $q.defer();
+                var contentType = response.headers && response.headers()['content-type'];
 
                 if (contentType && contentType.toLowerCase().indexOf('/xml') > 0) {
                     response.data = formatXml(response.data);
@@ -28,14 +28,14 @@ angular
         };
 
         function formatXml (xml) {
-            var formatted = '',
-                reg = /(>)(<)(\/*)/g,
-                pad = 0;
+            var formatted = '';
+            var reg = /(>)(<)(\/*)/g;
+            var pad = 0;
 
             xml = xml.replace(reg, '$1\r\n$2$3');
             angular.forEach(xml.split('\r\n'), function (node) {
-                var indent = 0,
-                    padding = '';
+                var indent = 0;
+                var padding = '';
 
                 if (node.match(/.+<\/\w[^>]*>$/)) {
                     indent = 0;
@@ -59,7 +59,6 @@ angular
 
             return formatted;
         }
-
     })
     .run(function (swaggerModules, swaggerUiXmlFormatter) {
         swaggerModules.add(swaggerModules.AFTER_EXPLORER_LOAD, swaggerUiXmlFormatter);

@@ -9,7 +9,6 @@
 angular
     .module('swaggerUi')
     .factory('swaggerModules', function ($q) {
-
         var modules = {};
 
         return {
@@ -35,10 +34,10 @@ angular
              * Executes modules' phase
              */
             execute: function () {
-                var args = Array.prototype.slice.call(arguments), // get an Array from arguments
-                    phase = args.splice(0, 1),
-                    deferred = $q.defer(),
-                    phaseModules = modules[phase] || [];
+                var args = Array.prototype.slice.call(arguments);
+                var phase = args.splice(0, 1);
+                var deferred = $q.defer();
+                var phaseModules = modules[phase] || [];
 
                 executeAll(deferred, [].concat(phaseModules), args);
                 return deferred.promise;

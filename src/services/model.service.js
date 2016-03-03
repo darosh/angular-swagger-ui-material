@@ -9,7 +9,6 @@
 angular
     .module('swaggerUi')
     .factory('swaggerModel', function ($log) {
-
         /**
          * sample object cache to avoid generating the same one multiple times
          */
@@ -128,9 +127,9 @@ angular
         /**
          * generates a sample JSON string (request body or response body)
          */
-        function generateSampleJson(swagger, schema) {
-            var json,
-                obj = getSampleObj(swagger, schema);
+        function generateSampleJson (swagger, schema) {
+            var json;
+            var obj = getSampleObj(swagger, schema);
 
             if (obj) {
                 json = angular.toJson(obj, true);
@@ -147,16 +146,16 @@ angular
          * generates object's model
          */
         var generateModel = function (swagger, schema, modelName, currentGenerated) {
-            var model = '',
-                buffer,
-                submodels,
-                propertyName,
-                property,
-                hasProperties = false,
-                name,
-                className,
-                def,
-                sub;
+            var model = '';
+            var buffer;
+            var subModels;
+            var propertyName;
+            var property;
+            var hasProperties = false;
+            var name;
+            var className;
+            var def;
+            var sub;
 
             currentGenerated = currentGenerated || {}; // used to handle circular references
 
@@ -168,7 +167,7 @@ angular
                 modelName = modelName || ('Inline Model' + countInLine++);
                 currentGenerated[modelName] = true;
                 buffer = ['<div><strong>' + modelName + ' {</strong>'];
-                submodels = [];
+                subModels = [];
                 for (propertyName in schema.properties) {
                     hasProperties = true;
                     property = schema.properties[propertyName];
@@ -177,19 +176,19 @@ angular
                     if (property.properties) {
                         name = 'Inline Model' + countInLine++;
                         buffer.push(name);
-                        submodels.push(generateModel(swagger, property, name, currentGenerated));
+                        subModels.push(generateModel(swagger, property, name, currentGenerated));
                     } else if (property.$ref) {
                         buffer.push(getClassName(property));
-                        submodels.push(generateModel(swagger, property, null, currentGenerated));
+                        subModels.push(generateModel(swagger, property, null, currentGenerated));
                     } else if (property.type === 'array') {
                         buffer.push('Array[');
                         if (property.items.properties) {
                             name = 'Inline Model' + countInLine++;
                             buffer.push(name);
-                            submodels.push(generateModel(swagger, property, name, currentGenerated));
+                            subModels.push(generateModel(swagger, property, name, currentGenerated));
                         } else if (property.items.$ref) {
                             buffer.push(getClassName(property.items));
-                            submodels.push(generateModel(swagger, property.items, null, currentGenerated));
+                            subModels.push(generateModel(swagger, property.items, null, currentGenerated));
                         } else {
                             buffer.push(getType(property.items));
                         }
@@ -218,7 +217,7 @@ angular
                     buffer.push('</div>');
                 }
                 buffer.push('<div><strong>}</strong></div>');
-                buffer.push(submodels.join(''), '</div>');
+                buffer.push(subModels.join(''), '</div>');
                 model = buffer.join('');
             } else if (schema.$ref) {
                 className = getClassName(schema);

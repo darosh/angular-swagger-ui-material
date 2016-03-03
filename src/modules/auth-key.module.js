@@ -10,7 +10,7 @@ angular
     .module('swaggerUi')
     .config(function ($httpProvider) {
         $httpProvider.defaults.useXDomain = true;
-        //delete $httpProvider.defaults.headers.common['X-Requested-With'];
+        // delete $httpProvider.defaults.headers.common['X-Requested-With'];
     })
     .factory('swaggerAuthKey', function ($q) {
         return {
@@ -20,7 +20,7 @@ angular
             execute: function (options) {
                 var deferred = $q.defer();
 
-                options.params.auth_key = '31tR64EKJfZVdWZ1YzK5M7diY9t4BTUVHTwOmbDSxZcT9BhTNoLZilSrJhr7mAlm';
+                options.params.auth_key = '...';
 
                 deferred.resolve();
 

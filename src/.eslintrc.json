@@ -1,5 +1,5 @@
 {
-  "extends": "standard",
+  "extends": "angular",
   "rules": {
     "semi": [
       2,
@@ -12,5 +12,8 @@
         "SwitchCase": 1
       }
     ]
+  },
+  "globals": {
+    "angular": true
   }
 }

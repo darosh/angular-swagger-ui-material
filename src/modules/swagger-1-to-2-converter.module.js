@@ -14,8 +14,8 @@ angular
              * Module entry point
              */
             execute: function (swaggerUrl, swaggerData) {
-                var deferred = $q.defer(),
-                    version = swaggerData.swaggerVersion;
+                var deferred = $q.defer();
+                var version = swaggerData.swaggerVersion;
 
                 if (version && version.indexOf('1.') === 0) {
                     convert(deferred, swaggerUrl, swaggerData);
@@ -52,9 +52,9 @@ angular
          */
         function convert (deferred, swaggerUrl, swaggerData) {
             // prepare swagger2 objects
-            var swagger2 = swaggerData,
-                info = swagger2.info,
-                promises = [];
+            var swagger2 = swaggerData;
+            var info = swagger2.info;
+            var promises = [];
 
             info.contact = {
                 email: info.contact
@@ -158,8 +158,8 @@ angular
                         type: operation.type
                     };
                     if (operation.type === 'array') {
-                        var ref = operation.items.type || operation.items.$ref,
-                            items = response.schema.items = {};
+                        var ref = operation.items.type || operation.items.$ref;
+                        var items = response.schema.items = {};
 
                         if (swagger1.models && swagger1.models[ref]) {
                             items.$ref = '#/definitions/' + ref;
@@ -203,7 +203,6 @@ angular
                 });
             });
         }
-
     })
     .run(function (swaggerModules, swagger1ToSwagger2Converter) {
         swaggerModules.add(swaggerModules.BEFORE_PARSE, swagger1ToSwagger2Converter);

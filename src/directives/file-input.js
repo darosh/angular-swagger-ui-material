@@ -16,7 +16,7 @@ angular
             link: function (scope, element, attr, ngModel) {
                 element.bind('change', function () {
                     scope.$apply(function () {
-                        //TODO manage multiple files ?
+                        // TODO manage multiple files ?
                         ngModel.$setViewValue(element[0].files[0]);
                     });
                 });

@@ -8,11 +8,10 @@
 
 angular
     .module('swaggerUi')
-    .factory('swaggerUiExternalReferences', function ($http, $q, swaggerModules) {
-
-        var url,
-            deferred,
-            swagger;
+    .factory('swaggerUiExternalReferences', function ($http, $q, $window, swaggerModules) {
+        var url;
+        var deferred;
+        var swagger;
 
         return {
             /**
@@ -74,13 +73,13 @@ angular
          * Generate external URL
          */
         function getExternalUrl ($ref) {
-            var parts = $ref.split('#/'),
-                externalUrl = parts[0];
+            var parts = $ref.split('#/');
+            var externalUrl = parts[0];
 
             if (externalUrl.indexOf('http') !== 0 && externalUrl.indexOf('https') !== 0) {
                 // relative url
                 if (externalUrl.indexOf('/') === 0) {
-                    var swaggerUrlParts = URL.parse(url);
+                    var swaggerUrlParts = $window.URL.parse(url);
                     externalUrl = swaggerUrlParts.protocol + '//' + swaggerUrlParts.host + externalUrl;
                 } else {
                     var pos = url.lastIndexOf('/');
@@ -94,7 +93,6 @@ angular
          * Find and resolve external definitions
          */
         function loadExternalReferences () {
-
             var loading = 0;
 
             function loadOperations (path) {
@@ -128,14 +126,14 @@ angular
         }
 
         function loadExternalDefinitions () {
-            var loading = 0,
-                loadingUrls = {};
+            var loading = 0;
+            var loadingUrls = {};
 
             function loadDefinitions (item) {
-                var matches = item.$ref.match(/(.*)#\/(.*)\/(.*)/),
-                    prefix = matches[1],
-                    section = matches[2],
-                    externalUrl = getExternalUrl(item.$ref);
+                var matches = item.$ref.match(/(.*)#\/(.*)\/(.*)/);
+                var prefix = matches[1];
+                var section = matches[2];
+                var externalUrl = getExternalUrl(item.$ref);
 
                 // rewrite reference
                 item.$ref = item.$ref.replace(/(.*)#\/(.*)\/(.*)/, '#/$2/$1/$3');
@@ -180,7 +178,8 @@ angular
 
             for (var path in swagger.paths) {
                 var operations = swagger.paths[path];
-                //TODO manage path parameters
+
+                // TODO manage path parameters
                 for (var httpMethod in operations) {
                     checkOperationDefinitions(operations[httpMethod]);
                 }
@@ -190,7 +189,6 @@ angular
                 deferred.resolve(true);
             }
         }
-
     })
     .run(function (swaggerModules, swaggerUiExternalReferences) {
         swaggerModules.add(swaggerModules.BEFORE_PARSE, swaggerUiExternalReferences);
