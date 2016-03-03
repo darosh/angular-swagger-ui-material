@@ -114,7 +114,7 @@
         <md-subheader class="md-warn md-no-sticky" ng-if="sum.sop.deprecated">Deprecated</md-subheader>
         <div layout-padding>
             <div ng-class="{'sum-deprecated': sum.sop.deprecated}" layout="row" style="word-break: break-all">
-                <md-button ng-class="swaggerMethods[sum.sop.httpMethod]"
+                <md-button ng-class="theme[sum.sop.httpMethod]"
                            ng-click="sum.infoMethod(sum.sop, $event)"
                            aria-label="method"
                            class="sum-http-method md-raised"

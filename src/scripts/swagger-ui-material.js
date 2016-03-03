@@ -12,7 +12,7 @@ angular.module('swaggerUiMaterial',
     // Derived from original swaggerUi directive
     .directive('swaggerUiMaterial', function ($location, $q, $log, $anchorScroll, $timeout, $window,
                                               loader, swaggerClient, swaggerModules,
-                                              httpInfo, dialog) {
+                                              theme, httpInfo, dialog) {
         return {
             restrict: 'A',
             templateUrl: 'views/main.html',
@@ -25,12 +25,14 @@ angular.module('swaggerUiMaterial',
                 errorHandler: '=?',
                 trustedSources: '=?',
                 validatorUrl: '@?',
-                swaggerMethods: '='
+                theme: '=?'
             },
-            link: function ($scope) {
-                if (angular.isUndefined($scope.validatorUrl)) {
-                    $scope.validatorUrl = 'http://online.swagger.io/validator';
+            link: function (scope) {
+                if (angular.isUndefined(scope.validatorUrl)) {
+                    scope.validatorUrl = 'http://online.swagger.io/validator';
                 }
+
+                scope.theme = theme.$configure(scope.theme);
 
                 var swagger;
 
@@ -40,7 +42,7 @@ angular.module('swaggerUiMaterial',
                  * Load Swagger descriptor
                  */
                 function loadSwagger (url, callback, onError) {
-                    $scope.loading = true;
+                    scope.loading = true;
                     loader.load(url, callback, onError);
                 }
 
@@ -48,12 +50,12 @@ angular.module('swaggerUiMaterial',
                  * Swagger descriptor has been loaded, launch parsing
                  */
                 function swaggerLoaded (swaggerUrl, swaggerType) {
-                    $scope.loading = false;
+                    scope.loading = false;
                     var parseResult = {};
                     // execute modules
-                    $scope.parser = $scope.parser || 'auto';
+                    scope.parser = scope.parser || 'auto';
                     swaggerModules
-                        .execute(swaggerModules.PARSE, $scope.parser, swaggerUrl, swaggerType, swagger, $scope.trustedSources, parseResult)
+                        .execute(swaggerModules.PARSE, scope.parser, swaggerUrl, swaggerType, swagger, scope.trustedSources, parseResult)
                         .then(function (executed) {
                             if (executed) {
                                 swaggerParsed(parseResult);
@@ -76,10 +78,10 @@ angular.module('swaggerUiMaterial',
                         .execute(swaggerModules.BEFORE_DISPLAY, parseResult)
                         .then(function () {
                             // display swagger UI
-                            $scope.infos = parseResult.infos;
-                            $scope.form = parseResult.form;
-                            $scope.resources = parseResult.resources;
-                            if ($scope.permalinks) {
+                            scope.infos = parseResult.infos;
+                            scope.form = parseResult.form;
+                            scope.resources = parseResult.resources;
+                            if (scope.permalinks) {
                                 $timeout(function () {
                                     $anchorScroll();
                                 }, 100);
@@ -89,21 +91,21 @@ angular.module('swaggerUiMaterial',
                 }
 
                 function onError (error) {
-                    $scope.loading = false;
-                    if (angular.isFunction($scope.errorHandler)) {
-                        $scope.errorHandler(error.message, error.code);
+                    scope.loading = false;
+                    if (angular.isFunction(scope.errorHandler)) {
+                        scope.errorHandler(error.message, error.code);
                     } else {
                         $log.error(error.code, 'AngularSwaggerUI: ' + error.message);
                     }
                 }
 
-                $scope.$watch('url', function (url) {
+                scope.$watch('url', function (url) {
                     // reset
-                    $scope.infos = {};
-                    $scope.resources = [];
-                    $scope.form = {};
+                    scope.infos = {};
+                    scope.resources = [];
+                    scope.form = {};
                     if (url && url !== '') {
-                        if ($scope.loading) {
+                        if (scope.loading) {
                             // TODO cancel current loading swagger
                         }
                         // load Swagger descriptor
@@ -126,15 +128,15 @@ angular.module('swaggerUiMaterial',
                 /**
                  * show all resource's operations as list or as expanded list
                  */
-                $scope.expand = function (resource, expandOperations) {
+                scope.expand = function (resource, expandOperations) {
                     resource.open = true;
                     for (var i = 0, op = resource.operations, l = op.length; i < l; i++) {
                         op[i].open = expandOperations;
                     }
                 };
 
-                $scope.permalink = function (name) {
-                    if ($scope.permalinks) {
+                scope.permalink = function (name) {
+                    if (scope.permalinks) {
                         $location.hash(name);
                         $timeout(function () {
                             $anchorScroll();
@@ -145,10 +147,10 @@ angular.module('swaggerUiMaterial',
                 /**
                  * sends a sample API request
                  */
-                $scope.submitExplorer = function (operation) {
+                scope.submitExplorer = function (operation) {
                     operation.loading = true;
                     swaggerClient
-                        .send(swagger, operation, $scope.form[operation.id])
+                        .send(swagger, operation, scope.form[operation.id])
                         .then(function (result) {
                             operation.loading = false;
                             operation.explorerResult = result;
@@ -156,7 +158,7 @@ angular.module('swaggerUiMaterial',
                 };
 
                 // "Swagger UI Material" === "sum" namespace
-                var sum = $scope.sum = {};
+                var sum = scope.sum = {};
 
                 // Selected Operation === "sop"
                 sum.sop = null;
@@ -182,8 +184,8 @@ angular.module('swaggerUiMaterial',
 
                     // TODO: this is fixing not selected single "text/html" in produces,
                     // TODO: angular-swagger-ui probably setting this to "application/json" not present in op.produces
-                    if ((op.produces.indexOf($scope.form[op.id].responseType)) === -1 && (op.produces.length === 1)) {
-                        $scope.form[op.id].responseType = op.produces[0];
+                    if ((op.produces.indexOf(scope.form[op.id].responseType)) === -1 && (op.produces.length === 1)) {
+                        scope.form[op.id].responseType = op.produces[0];
                     }
 
                     op.responseArray = [];
@@ -212,7 +214,7 @@ angular.module('swaggerUiMaterial',
 
                 // Expand/Collapse
                 sum.open = function (open) {
-                    angular.forEach($scope.resources, function (api) {
+                    angular.forEach(scope.resources, function (api) {
                         api.open = open;
                     });
                 };
@@ -247,13 +249,13 @@ angular.module('swaggerUiMaterial',
                         // we need the send promise and the var swagger is inaccessible
 
                         var swagger = {
-                            schemes: [$scope.infos.scheme],
-                            host: $scope.infos.host,
-                            basePath: $scope.infos.basePath
+                            schemes: [scope.infos.scheme],
+                            host: scope.infos.host,
+                            basePath: scope.infos.basePath
                         };
 
                         swaggerClient
-                            .send(swagger, operation, $scope.form[operation.id])
+                            .send(swagger, operation, scope.form[operation.id])
                             .then(function (result) {
                                 operation.loading = false;
                                 operation.explorerResult = result;
@@ -315,16 +317,16 @@ angular.module('swaggerUiMaterial',
                 sum.searchOpened = false;
                 sum.searchFilter = '';
                 sum.searchObject = {httpMethod: '', path: ''};
-                sum.editUrl = $scope.url;
+                sum.editUrl = scope.url;
                 sum.editOpen = false;
 
-                $scope.$watch('sum.searchFilter', function () {
+                scope.$watch('sum.searchFilter', function () {
                     if (!sum.searchFilter) {
                         sum.searchObject = {httpMethod: '', path: ''};
                     } else {
                         var t = sum.searchFilter.toLowerCase().trim();
                         var s = t.split(' ');
-                        var isMethod = (s.length) === 1 && $scope.swaggerMethods[s[0]];
+                        var isMethod = (s.length) === 1 && scope.theme[s[0]];
                         var method = (s.length > 1) ? s[0] : (isMethod ? s[0] : '');
                         var path = (s.length > 1) ? s[1] : (isMethod ? '' : s[0]);
 
@@ -332,24 +334,24 @@ angular.module('swaggerUiMaterial',
                     }
                 });
 
-                $scope.$watch('sum.editOpen', function () {
+                scope.$watch('sum.editOpen', function () {
                     if (!sum.editOpen) {
-                        $scope.url = sum.editUrl;
+                        scope.url = sum.editUrl;
                     }
                 });
 
-                $scope.$watch('infos', function () {
-                    if (!$scope.infos || !Object.keys($scope.infos).length) {
-                        $scope.metas = [];
+                scope.$watch('infos', function () {
+                    if (!scope.infos || !Object.keys(scope.infos).length) {
+                        scope.metas = [];
 
                         return;
                     }
 
-                    var i = $scope.infos;
+                    var i = scope.infos;
                     i.contact = i.contact || {};
                     i.license = i.license || {};
 
-                    $scope.metas = [
+                    scope.metas = [
                         ['Contact', 'person', (i.contact.name && !i.contact.email) ? i.contact.name : null, null],
                         ['Email', 'email', i.contact.email ? (i.contact.name || i.contact.email) : null, 'mailto:' + i.contact.email + '?subject=' + i.title],
                         ['License', 'vpn_key', i.license.name || i.license.url, i.license.url],
@@ -357,8 +359,8 @@ angular.module('swaggerUiMaterial',
                         ['Host', 'home', i.scheme + '://' + i.host, i.scheme + '://' + i.host],
                         ['Base URL', 'link', i.basePath, (i.sheme ? (i.sheme + '://') : '') + i.host + i.basePath],
                         ['API version', 'developer_board', i.version, null],
-                        ['Download', 'file_download', 'swagger.json', $scope.url],
-                        [null, 'code', (($scope.validatorUrl !== 'false') && $scope.url) ? ($scope.validatorUrl + '/debug?url=' + $scope.url) : null, $scope.validatorUrl + '?url=' + $scope.url]
+                        ['Download', 'file_download', 'swagger.json', scope.url],
+                        [null, 'code', ((scope.validatorUrl !== 'false') && scope.url) ? (scope.validatorUrl + '/debug?url=' + scope.url) : null, scope.validatorUrl + '?url=' + scope.url]
                     ];
                 });
 
@@ -372,18 +374,9 @@ angular.module('swaggerUiMaterial',
                         description: i[0],
                         link: i[2],
                         section: i[1].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                        style: $scope.swaggerMethods[sop.httpMethod],
+                        style: scope.theme[sop.httpMethod],
                         meta: [i[3], i[4], i[5]]
                     });
-                };
-
-                sum.codeClass = {
-                    1: $scope.swaggerMethods.post,
-                    2: $scope.swaggerMethods.get,
-                    3: $scope.swaggerMethods.put,
-                    4: $scope.swaggerMethods.delete,
-                    5: $scope.swaggerMethods.delete,
-                    7: $scope.swaggerMethods.delete
                 };
 
                 sum.getCodeInfo = function (code) {
@@ -401,22 +394,16 @@ angular.module('swaggerUiMaterial',
                         description: i[1],
                         link: i[3],
                         section: i[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                        style: sum.codeClass[code[0]] || sum.codeClass[7],
+                        style: scope.theme[code[0]] || scope.theme[7],
                         meta: null
                     });
                 };
 
-                sum.headerClass = {
-                    standard: $scope.swaggerMethods.post,
-                    obsoleted: $scope.swaggerMethods.delete,
-                    undefined: $scope.swaggerMethods.post
-                };
-
-                sum.getHeaderClass = function (title) {
+                sum.gettheme = function (title) {
                     var i = httpInfo.header[title.toLowerCase()];
 
                     if (i) {
-                        return sum.headerClass[i[1]] || sum.headerClass.undefined;
+                        return scope.theme[i[1]] || scope.theme.undefined;
                     } else {
                         return null;
                     }
@@ -432,7 +419,7 @@ angular.module('swaggerUiMaterial',
                         description: i[1],
                         link: i[3],
                         section: i[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                        style: sum.headerClass[i[1]] || sum.headerClass.undefined,
+                        style: scope.theme[i[1]] || scope.theme.undefined,
                         meta: null
                     });
                 };

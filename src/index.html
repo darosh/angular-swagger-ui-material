@@ -28,7 +28,6 @@
 <div layout="row"
      flex
      swagger-ui-material
-     swagger-methods="swaggerMethods"
      url="swaggerUrl"
      loading="isLoading"
      api-explorer="true"
@@ -67,6 +66,7 @@
 <script src="./directives/toolbar-edit.js"></script>
 <script src="./directives/truncate.js"></script>
 <script src="./services/dialog.service.js"></script>
+<script src="./services/theme.service.js"></script>
 <!-- endinject -->
 
 <script type="text/javascript">
@@ -104,17 +104,6 @@
             $scope.isLoading = false;
             //noinspection JSCheckFunctionSignatures
             $scope.swaggerUrl = $location.search()['url'] || 'http://petstore.swagger.io/v2/swagger.json';
-
-            <!-- TODO: swaggerMethods should have default values -->
-            $scope.swaggerMethods = {
-                get: 'md-primary',
-                head: 'md-primary md-hue-2',
-                options: 'md-primary md-hue-3',
-                post: 'md-accent',
-                put: 'md-accent md-hue-2',
-                patch: 'md-accent md-hue-2',
-                delete: 'md-warn'
-            };
 
             // error management
             $scope.myErrorHandler = function (data, status) {
