@@ -9,7 +9,7 @@
             <toolbar-edit class="sum-delay md-toolbar-tools"
                           ng-model="editUrl"
                           open="editOpen"
-                          display-title="infos.title"
+                          display-title="info.title"
                           ng-if="!searchOpened"
                           flex
                           style="padding-left: 0; padding-right: 0"></toolbar-edit>
@@ -65,7 +65,7 @@
     </md-toolbar>
     <md-content>
         <div layout-padding layout="column" style="padding-bottom: 0">
-            <div ng-if="infos.description" ng-bind-html="::infos.description" class="markdown-body"></div>
+            <div ng-if="info.description" ng-bind-html="::info.description" class="markdown-body"></div>
             <div style="padding: 4px 4px 0 4px" ng-include="'views/info.html'"></div>
             <div ng-if="!loading && (resources.length == 0)">No API found.</div>
         </div>
@@ -87,7 +87,7 @@
                  flex-md="{{sidenavLockedOpen ? 50 : 33}}"
                  flex-lg="{{sidenavLockedOpen ? 33 : 25}}"
                  flex-xl="{{sidenavLockedOpen ? 25 : 20}}"
-                 ng-repeat="op in infos.operations | filter:searchObject:false track by op.id"
+                 ng-repeat="op in info.operations | filter:searchObject:false track by op.id"
                  style="padding-top: 0; padding-bottom: 0">
                 <div ng-class="{'sum-selected': sop === op}"
                      ng-include="'views/operation.html'"></div>

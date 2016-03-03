@@ -15,8 +15,8 @@ angular.module('swaggerUiMarkdown', ['swaggerUi'])
 
                 // TODO: is there any other GFM field to be transformed? Find "GFM" in http://swagger.io/specification/ page
 
-                if (parseResult.infos && parseResult.infos.description) {
-                    parseResult.infos.description = markdown(parseResult.infos.description);
+                if (parseResult.info && parseResult.info.description) {
+                    parseResult.info.description = markdown(parseResult.info.description);
                 }
 
                 angular.forEach(parseResult.resources, function (resource) {

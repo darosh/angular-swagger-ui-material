@@ -103,10 +103,10 @@ angular.module('swaggerUiMaterial',
                         .execute(swaggerPlugins.BEFORE_DISPLAY, parseResult)
                         .then(function () {
                             // display swagger UI
-                            scope.infos = parseResult.infos;
+                            scope.info = parseResult.info;
                             scope.form = parseResult.form;
                             scope.resources = parseResult.resources;
-                            scope.meta = display.meta(scope.infos, scope.url, scope.validatorUrl, scope.openFile);
+                            scope.meta = display.meta(scope.info, scope.url, scope.validatorUrl, scope.openFile);
                         })
                         .catch(onError);
                 }
@@ -211,9 +211,9 @@ angular.module('swaggerUiMaterial',
                         // we need the send promise and the var swagger is inaccessible
 
                         var swagger = {
-                            schemes: [scope.infos.scheme],
-                            host: scope.infos.host,
-                            basePath: scope.infos.basePath
+                            schemes: [scope.info.scheme],
+                            host: scope.info.host,
+                            basePath: scope.info.basePath
                         };
 
                         swaggerClient
@@ -274,7 +274,7 @@ angular.module('swaggerUiMaterial',
 
                 scope.$watch('url', function (url) {
                     // reset
-                    scope.infos = {};
+                    scope.info = {};
                     scope.resources = [];
                     scope.form = {};
                     if (url) {

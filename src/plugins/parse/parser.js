@@ -25,7 +25,6 @@ angular
                         parseSwagger2Json(data, url, deferred, parseResult);
                     } catch (e) {
                         deferred.reject({
-                            code: 500,
                             message: 'failed to parse swagger: ' + e.message
                         });
                     }
@@ -43,38 +42,38 @@ angular
             var map = {};
             var form = {};
             var resources = [];
-            var infos = swagger.info;
+            var info = swagger.info;
             var openPath = $location.hash();
             var defaultContentType = 'application/json';
 
             operationId = 0;
             paramId = 0;
-            parseInfos(swagger, url, infos, defaultContentType);
+            parseInfo(swagger, url, info, defaultContentType);
             parseTags(swagger, resources, map);
             parseOperations(swagger, resources, form, map, defaultContentType, openPath);
             cleanUp(resources, openPath);
             // prepare result
-            parseResult.infos = infos;
+            parseResult.info = info;
             parseResult.resources = resources;
             parseResult.form = form;
             deferred.resolve(true);
         }
 
         /**
-         * parse main infos
+         * parse main info
          */
-        function parseInfos (swagger, url, infos, defaultContentType) {
+        function parseInfo (swagger, url, info, defaultContentType) {
             // build URL params
             var a = angular.element('<a href="' + url + '"></a>')[0];
             swagger.schemes = [swagger.schemes && swagger.schemes[0] || a.protocol.replace(':', '')];
             swagger.host = swagger.host || a.host;
             swagger.consumes = swagger.consumes || [defaultContentType];
             swagger.produces = swagger.produces || [defaultContentType];
-            // build main infos
-            infos.scheme = swagger.schemes[0];
-            infos.basePath = swagger.basePath;
-            infos.host = swagger.host;
-            infos.description = trustHtml(infos.description);
+            // build main info
+            info.scheme = swagger.schemes[0];
+            info.basePath = swagger.basePath;
+            info.host = swagger.host;
+            info.description = trustHtml(info.description);
         }
 
         /**

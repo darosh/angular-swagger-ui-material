@@ -5,11 +5,11 @@ angular.module('swaggerUiMaterial')
             execute: function (parseResult) {
                 var deferred = $q.defer();
 
-                parseResult.infos.operations = [];
+                parseResult.info.operations = [];
 
                 angular.forEach(parseResult.resources, function (resource) {
                     angular.forEach(resource.operations, function (operation) {
-                        parseResult.infos.operations.push(operation);
+                        parseResult.info.operations.push(operation);
                     });
 
                     // TODO: allow configuration of minimum auto expanded endpoints
@@ -18,7 +18,7 @@ angular.module('swaggerUiMaterial')
                     }
                 });
 
-                parseResult.infos.operations.sort(function (a, b) {
+                parseResult.info.operations.sort(function (a, b) {
                     return (a.path.toLowerCase().replace(/[^a-z]+/gi, '') + '-' + a.httpMethod)
                         .localeCompare(b.path.toLowerCase().replace(/[^a-z]+/gi, '') + '-' + b.httpMethod);
                 });

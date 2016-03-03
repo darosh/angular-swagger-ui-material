@@ -76,7 +76,7 @@ angular
             $q.all(promises)
                 .then(function (results) {
                     angular.forEach(results, function (swagger1) {
-                        convertInfos(swagger1, swagger2);
+                        convertInfo(swagger1, swagger2);
                         convertOperations(swagger1, swagger2);
                         convertModels(swagger1, swagger2);
                     });
@@ -87,9 +87,9 @@ angular
         }
 
         /**
-         * convert main infos and tags
+         * convert main info and tags
          */
-        function convertInfos (swagger1, swagger2) {
+        function convertInfo (swagger1, swagger2) {
             swagger2.info.version = swagger2.info.version || swagger1.apiVersion;
             swagger2.basePath = swagger2.basePath || swagger1.basePath;
             if (swagger2.basePath.indexOf('http') === 0) {
