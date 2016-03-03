@@ -20,6 +20,6 @@ angular.module('swaggerUiMaterial')
                 ['API version', 'developer_board', i.version, null],
                 ['Download', 'file_download', 'swagger.json', url],
                 [null, 'code', ((validatorUrl !== 'false') && url) ? (validatorUrl + '/debug?url=' + url) : null, validatorUrl + '?url=' + url]
-            ]
+            ];
         }
     });

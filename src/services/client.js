@@ -10,87 +10,93 @@ angular
     .module('swaggerUi')
     .factory('swaggerClient', function ($q, $window, $http, swaggerPlugins) {
         return {
-            /**
-             * Send API explorer request
-             */
-            send: function (swagger, operation, values) {
-                var deferred = $q.defer();
-                var query = {};
-                var headers = {};
-                var path = operation.path;
-                var body = null;
+            configure: configure,
+            send: send,
+            base: base
+        };
 
-                // build request parameters
-                for (var i = 0, params = operation.parameters || [], l = params.length; i < l; i++) {
-                    // TODO manage 'collectionFormat' (csv etc.) !!
-                    var param = params[i];
-                    var value = values[param.name];
+        /**
+         * Send API explorer request
+         */
+        function send (swagger, operation, values) {
+            var deferred = $q.defer();
+            var baseUrl = base(swagger);
+            var options = configure(operation, values, baseUrl);
 
-                    switch (param.in) {
-                        case 'query':
-                            if (value) {
-                                query[param.name] = value;
-                            }
-                            break;
-                        case 'path':
-                            path = path.replace('{' + param.name + '}', encodeURIComponent(value));
-                            break;
-                        case 'header':
-                            if (value) {
-                                headers[param.name] = value;
-                            }
-                            break;
-                        case 'formData':
-                            body = body || new $window.FormData();
-                            if (value) {
-                                if (param.type === 'file') {
-                                    values.contentType = undefined; // make browser defining it by himself
-                                }
-                                body.append(param.name, value);
-                            }
-                            break;
-                        case 'body':
-                            body = body || value;
-                            break;
-                    }
-                }
-
-                // add headers
-                headers.Accept = values.responseType;
-                headers['Content-Type'] = body ? values.contentType : 'text/plain';
-
-                // build request
-                var baseUrl = [
-                    swagger.schemes[0],
-                    '://',
-                    swagger.host,
-                    swagger.basePath || ''
-                ].join('');
-                var options = {
-                    method: operation.httpMethod,
-                    url: baseUrl + path,
-                    headers: headers,
-                    data: body,
-                    params: query
-                };
-                var callback = function (response) {
-                    // execute modules
-                    swaggerPlugins
-                        .execute(swaggerPlugins.AFTER_EXPLORER_LOAD, response)
-                        .then(function () {
-                            deferred.resolve(response);
-                        });
-                };
-
+            function done (response) {
                 // execute modules
                 swaggerPlugins
-                    .execute(swaggerPlugins.BEFORE_EXPLORER_LOAD, options)
+                    .execute(swaggerPlugins.AFTER_EXPLORER_LOAD, response)
                     .then(function () {
-                        // send request
-                        $http(options).then(callback, callback);
+                        deferred.resolve(response);
                     });
-
-                return deferred.promise;
             }
-        };
+
+            // execute modules
+            swaggerPlugins
+                .execute(swaggerPlugins.BEFORE_EXPLORER_LOAD, options)
+                .then(function () {
+                    // send request
+                    $http(options).then(done, done);
+                });
+
+            return deferred.promise;
+        }
+
+        function configure (operation, values, baseUrl) {
+            var path = operation.path;
+            var query = {};
+            var headers = {};
+            var body = null;
+
+            // build request parameters
+            angular.forEach(operation.parameters, function (param) {
+                // TODO manage 'collectionFormat' (csv etc.) !!
+                var value = values[param.name];
+
+                switch (param.in) {
+                    case 'query':
+                        query[param.name] = value || undefined;
+                        break;
+                    case 'path':
+                        path = path.replace('{' + param.name + '}', encodeURIComponent(value));
+                        break;
+                    case 'header':
+                        headers[param.name] = value || undefined;
+                        break;
+                    case 'formData':
+                        body = body || new $window.FormData();
+                        if (value) {
+                            // make browser defining it by himself
+                            values.contentType = (param.type === 'file') ? undefined : values.contentType;
+                            body.append(param.name, value);
+                        }
+                        break;
+                    case 'body':
+                        body = body || value;
+                        break;
+                }
+            });
+
+            // add headers
+            headers.accept = values.responseType;
+            headers['content-type'] = body ? values.contentType : 'text/plain';
+
+            return {
+                method: operation.httpMethod,
+                url: baseUrl + path,
+                headers: headers,
+                data: body,
+                params: query
+            };
+        }
+
+        function base (swagger) {
+            return [
+                swagger.schemes[0],
+                '://',
+                swagger.host,
+                swagger.basePath || ''
+            ].join('');
+        }
     });

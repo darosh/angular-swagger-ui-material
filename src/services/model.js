@@ -20,9 +20,30 @@ angular
         var modelCache = {};
 
         /**
+         * inline model counter
+         */
+        var countInLine = 0;
+
+        return {
+            generateModel: generateModel,
+            getType: getType,
+            resolveReference: resolveReference,
+            generateSampleJson: generateSampleJson,
+            clearCache: clearCache
+        };
+
+        /**
+         * clears generated models cache
+         */
+        function clearCache () {
+            objCache = {};
+            modelCache = {};
+        }
+
+        /**
          * retrieves object definition
          */
-        var resolveReference = function (swagger, object) {
+        function resolveReference (swagger, object) {
             if (object.$ref) {
                 var parts = object.$ref.replace('#/', '').split('/');
                 object = swagger;
@@ -31,12 +52,12 @@ angular
                 }
             }
             return object;
-        };
+        }
 
         /**
          * determines a property type
          */
-        var getType = function (item) {
+        function getType (item) {
             var format = item.format;
             switch (format) {
                 case 'int32':
@@ -47,7 +68,7 @@ angular
                     break;
             }
             return format || item.type;
-        };
+        }
 
         /**
          * retrieves object class name based on $ref
@@ -137,14 +158,9 @@ angular
         }
 
         /**
-         * inline model counter
-         */
-        var countInLine = 0;
-
-        /**
          * generates object's model
          */
-        var generateModel = function (swagger, schema, modelName, currentGenerated) {
+        function generateModel (swagger, schema, modelName, currentGenerated) {
             var model = '';
             var buffer;
             var subModels;
@@ -250,20 +266,7 @@ angular
             } else if (schema.type === 'object') {
                 model = '<strong>Inline Model {<br>}</strong>';
             }
-            return model;
-        };
 
-        return {
-            generateModel: generateModel,
-            getType: getType,
-            resolveReference: resolveReference,
-            generateSampleJson: generateSampleJson,
-            /**
-             * clears generated models cache
-             */
-            clearCache: function () {
-                objCache = {};
-                modelCache = {};
-            }
-        };
+            return model;
+        }
     });
