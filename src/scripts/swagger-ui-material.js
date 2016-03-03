@@ -144,19 +144,6 @@ angular.module('swaggerUiMaterial',
                     }
                 };
 
-                /**
-                 * sends a sample API request
-                 */
-                scope.submitExplorer = function (operation) {
-                    operation.loading = true;
-                    swaggerClient
-                        .send(swagger, operation, scope.form[operation.id])
-                        .then(function (result) {
-                            operation.loading = false;
-                            operation.explorerResult = result;
-                        });
-                };
-
                 scope.selectOperation = function (op, $event) {
                     $event.stopPropagation();
 
@@ -226,6 +213,9 @@ angular.module('swaggerUiMaterial',
                     scope.sidenavLockedOpen = !scope.sidenavLockedOpen;
                 };
 
+                /**
+                 * sends a sample API request
+                 */
                 scope.submit = function (operation) {
                     if (scope.explorerForm.$valid) {
                         // Commented for tab UI: operation.explorerResult = false;
