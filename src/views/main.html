@@ -80,7 +80,7 @@
                  ng-if="(api.operations | filter:sum.searchObject:false).length"
                  ng-include="'views/endpoint.html'"></div>
         </div>
-        <!-- TODO: multi-column layout with top>boottom sort would be better? -->
+        <!-- TODO: multi-column layout with top>bottom sort would be better? -->
         <div ng-if="!sum.grouped" layout="row" layout-wrap layout-padding style="margin-top: 12px;">
             <div flex-xs="100"
                  flex-sm="{{sum.sidenavLockedOpen ? 100 : 50}}"
