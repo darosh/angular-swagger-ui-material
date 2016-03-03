@@ -155,7 +155,6 @@ angular.module('swaggerUiMaterial',
                         });
                 };
 
-
                 // "Swagger UI Material" === "sum" namespace
                 var sum = $scope.sum = {};
 
