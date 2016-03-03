@@ -47,12 +47,6 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/js-yaml/3.5.3/js-yaml.min.js"></script>
 
 <!-- inject:js -->
-<!--<script src="../bower_components/angular-swagger-ui/dist/scripts/swagger-ui.js"></script>-->
-<!-- Deprecated Swagger version -->
-<!--<script src="../bower_components/angular-swagger-ui/dist/scripts/modules/swagger1-to-swagger2-converter.min.js"></script>-->
-<!-- External reference not used in demo -->
-<!--<script src="../bower_components/angular-swagger-ui/dist/scripts/modules/swagger-external-references.min.js"></script>-->
-
 <script src="./scripts/swagger-ui.js"></script>
 <script src="./scripts/swagger-ui.ctrl.js"></script>
 <script src="./services/client.service.js"></script>
@@ -100,6 +94,7 @@
                 '700': 'dadada'
             }));
 
+            //noinspection JSUnresolvedFunction
             $mdThemingProvider
                 .theme('default')
                 .primaryPalette(search.primary || 'teal')
