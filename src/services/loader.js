@@ -7,7 +7,7 @@
 'use strict';
 
 angular.module('swaggerUi')
-    .factory('loader', function ($http, swaggerPlugins) {
+    .factory('swaggerLoader', function ($http, swaggerPlugins) {
         return {
             load: load
         };

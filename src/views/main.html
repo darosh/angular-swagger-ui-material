@@ -115,7 +115,7 @@
         <div layout-padding>
             <div ng-class="{'sum-deprecated': sop.deprecated}" layout="row" style="word-break: break-all">
                 <md-button ng-class="theme[sop.httpMethod]"
-                           ng-click="httpInfoUtils.method(sop.httpMethod, $event)"
+                           ng-click="utils.method(sop.httpMethod, $event)"
                            aria-label="method"
                            class="sum-http-method md-raised"
                            ng-bind="sop.httpMethod">

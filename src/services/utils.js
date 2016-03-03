@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('swaggerUiMaterial')
-    .factory('httpInfoUtils', function (dialog, theme, httpInfo) {
+    .factory('utils', function (dialog, theme, httpData) {
         return {
             method: method,
             status: status,
@@ -10,7 +10,7 @@ angular.module('swaggerUiMaterial')
         };
 
         function method (method, $event) {
-            var i = httpInfo.method[method];
+            var i = httpData.method[method];
 
             dialog.show($event, {
                 title: method.toUpperCase(),
@@ -40,7 +40,7 @@ angular.module('swaggerUiMaterial')
         }
 
         function header (title, $event) {
-            var i = httpInfo.header[title.toLowerCase()] || [title, 'Unknown header.', '', null];
+            var i = httpData.header[title.toLowerCase()] || [title, 'Unknown header.', '', null];
 
             dialog.show($event, {
                 title: i[0],
@@ -59,7 +59,7 @@ angular.module('swaggerUiMaterial')
         }
 
         function statusInfo (code) {
-            return httpInfo.status[code] || httpInfo.status[code[0] + 'xx'] ||
+            return httpData.status[code] || httpData.status[code[0] + 'xx'] ||
                 ['**Undefined**', 'no spec found.', '', null];
         }
     });

@@ -16,9 +16,9 @@ angular.module('swaggerUiMaterial',
         'truncate'
     ])
     // Derived from original swaggerUi directive
-    .directive('swaggerUiMaterial', function ($location, $q, $log, $anchorScroll, $timeout, $window,
-                                              loader, swaggerClient, swaggerPlugins, swaggerFormat,
-                                              theme, style, display, httpInfoUtils) {
+    .directive('swaggerUiMaterial', function ($timeout, $window,
+                                              swaggerLoader, swaggerClient, swaggerPlugins, swaggerFormat,
+                                              theme, style, display, utils) {
         return {
             restrict: 'A',
             templateUrl: 'views/main.html',
@@ -45,7 +45,7 @@ angular.module('swaggerUiMaterial',
 
                 // Services
                 scope.style = style;
-                scope.httpInfoUtils = httpInfoUtils;
+                scope.utils = utils;
 
                 // UI
                 scope.sidenavOpen = false;
@@ -209,7 +209,7 @@ angular.module('swaggerUiMaterial',
 
                     response.statusArray = [{
                         code: response.status.toString(),
-                        description: knownStatus.description || httpInfoUtils.statusInfo(response.status)[0]
+                        description: knownStatus.description || utils.statusInfo(response.status)[0]
                     }];
 
                     $timeout(function () {

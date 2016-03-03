@@ -2,7 +2,7 @@
 
 // noinspection HtmlDeprecatedTag
 angular.module('swaggerUiMaterial')
-    .value('httpInfo', {
+    .value('httpData', {
         method: {
             delete: [
                 'requests that the origin server remove the association between the target resource and its current functionality.',

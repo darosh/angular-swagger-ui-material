@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('swaggerUiMaterial')
-    .value('httpInfo', {
+    .value('httpData', {
         method: {},
         status: {},
         header: {}
