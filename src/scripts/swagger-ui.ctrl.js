@@ -8,7 +8,7 @@
 
 angular
     .module('swaggerUi')
-    .controller('swaggerUiController', function ($scope, $http, $location, $q, $log, $anchorScroll, $timeout, swaggerClient, swaggerModules) {
+    .controller('swaggerUiController', function ($scope, $location, $q, $log, $anchorScroll, $timeout, loader, swaggerClient, swaggerModules) {
 
         var swagger;
 
@@ -17,25 +17,9 @@ angular
         /**
          * Load Swagger descriptor
          */
-        function loadSwagger (url, callback) {
+        function loadSwagger (url, callback, onError) {
             $scope.loading = true;
-            var options = {
-                method: 'GET',
-                url: url
-            };
-            swaggerModules
-                .execute(swaggerModules.BEFORE_LOAD, options)
-                .then(function () {
-                    $http(options)
-                        .success(callback)
-                        .error(function (data, status) {
-                            onError({
-                                code: status,
-                                message: data
-                            });
-                        });
-                })
-                .catch(onError);
+            loader.load(url, callback, onError);
         }
 
         /**
@@ -113,7 +97,7 @@ angular
                             swaggerLoaded(url, swaggerType);
                         })
                         .catch(onError);
-                });
+                }, onError);
             }
         });
 
