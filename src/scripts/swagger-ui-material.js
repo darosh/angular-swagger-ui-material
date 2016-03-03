@@ -24,24 +24,23 @@ angular.module('swaggerUiMaterial',
             templateUrl: 'views/main.html',
             scope: {
                 url: '=',
-                parser: '@?',
                 loading: '=?',
-                permalinks: '=?',
                 apiExplorer: '=?',
                 errorHandler: '=?',
                 trustedSources: '=?',
-                validatorUrl: '@?',
-                theme: '=?'
+                theme: '=?',
+                parser: '@?',
+                validatorUrl: '@?'
             },
-            link: function (scope) {
+            link: function (scope, element, attr) {
                 // WARNING: Authentication is not implemented,
                 // please use 'api-explorer-transform' directive's param to customize API calls
 
                 // Directive properties
                 scope.theme = theme.$configure(scope.theme);
-                scope.parser = scope.parser || 'auto';
-                scope.validatorUrl = angular.isUndefined(scope.validatorUrl)
-                    ? 'http://online.swagger.io/validator' : scope.validatorUrl;
+                attr.parser = attr.parser || 'auto';
+                attr.validatorUrl = angular.isUndefined(attr.validatorUrl)
+                    ? 'http://online.swagger.io/validator' : attr.validatorUrl;
 
                 // Services
                 scope.style = style;
