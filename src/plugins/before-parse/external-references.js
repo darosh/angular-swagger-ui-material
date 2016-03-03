@@ -77,7 +77,7 @@ angular
                     loading--;
 
                     var subPath = obj.$ref.split('#/')[1];
-                    var subJson = subPath ? json[subPath] : json;
+                    var subJson = subPath ? json.data[subPath] : json.data;
 
                     angular.extend(obj, subJson);
 
