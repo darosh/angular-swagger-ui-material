@@ -18,9 +18,11 @@ angular.module('swaggerUi')
 
             if (config.params) {
                 var parts = [];
-                for (var key in config.params) {
-                    parts.push(key + '=' + encodeURIComponent(config.params[key]));
-                }
+
+                angular.forEach(config.params, function (v, k) {
+                    parts.push(k + '=' + encodeURIComponent(v));
+                });
+
                 if (parts.length > 0) {
                     query = '?' + parts.join('&');
                 }

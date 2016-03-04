@@ -29,7 +29,7 @@ angular.module('toolbarEdit', [])
                 scope.toggle = function () {
                     scope.open = !scope.open;
 
-                    if(scope.open) {
+                    if (scope.open) {
                         scope.focus();
                     } else {
                         scope.ngChanged();

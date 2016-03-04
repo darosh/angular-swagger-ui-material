@@ -7,7 +7,6 @@ angular.module('swaggerUiYaml', ['swaggerUi'])
                 var deferred = $q.defer();
 
                 options.transformResponse = function (data, headersGetter) {
-
                     try {
                         return angular.fromJson(data);
                     } catch (ign) {
@@ -17,7 +16,6 @@ angular.module('swaggerUiYaml', ['swaggerUi'])
                             headersGetter()['content-type'] = 'application/json';
 
                             return obj;
-
                         } catch (ign) {
                             return data;
                         }

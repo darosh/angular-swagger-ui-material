@@ -231,8 +231,10 @@ angular.module('swaggerUiMaterial',
                         type = scope.sop.explorerResult.headers('content-type') || 'text/plain';
                     }
 
+                    // noinspection JSUnresolvedFunction
                     var out = new $window.Blob([text], {type: type});
 
+                    // noinspection JSUnresolvedFunction
                     $event.target.href = $window.URL.createObjectURL(out);
                 }
 
