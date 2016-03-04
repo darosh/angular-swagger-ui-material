@@ -39,14 +39,18 @@
                  flex-md="33"
                  flex-lg="25"
                  flex-xl="20"
-                 ng-repeat="api in vm.apis.apis track by $index"
+                 ng-repeat="api in vm.apis track by $index"
                  style="padding: 12px">
 
-                <a ng-href="./#?url={{api.properties[0].url}}" style="text-decoration: none">
-                    <md-toolbar class="md-whiteframe-2dp md-accent">
-                        <div class="md-toolbar-tools">
-                            <span class="md-title" flex ng-bind="::api.name"></span>
-                            <small style="line-height: 20px; padding-left:20px" ng-bind="::api.version"></small>
+                <a ng-href="./#?url={{api.swaggerUrl}}" style="text-decoration: none">
+                    <md-toolbar class="md-whiteframe-2dp md-accent" style="height: auto; max-height: none">
+                        <div layout="row" layout-padding layout-align="start start" style="height: auto; max-height: none; min-height: 64px; padding-bottom: 4px; padding-top: 4px">
+                            <span class="md-title" flex ng-bind="::api.info.title" style="line-height: 28px"></span>
+                            <div layout="column" layout-align="start end" style="line-height: 28px; text-align:right; opacity: 0.8">
+                                <small ng-bind="::api.parts[0]"></small>
+                                <small ng-bind="::api.parts[1]" ng-if="api.parts[1]"></small>
+                                <small ng-bind="::api.info.version"></small>
+                            </div>
                         </div>
                     </md-toolbar>
                 </a>
@@ -102,12 +106,22 @@
 
             vm.loading = true;
 
-            $http({method: 'GET', url: 'https://apis-guru.github.io/api-models/apis.json'}).then(function (response) {
+            $http({
+                method: 'GET',
+                url: 'https://apis-guru.github.io/api-models/api/v1/list.json'
+            }).then(function (response) {
                 vm.loading = false;
-                vm.apis = response.data;
+                vm.apis = [];
 
-                vm.apis.apis.sort(function (a, b) {
-                    return (a.name + a.version).localeCompare(b.name + b.version);
+                angular.forEach(response.data, function (v, k) {
+                    var s = v.versions[v.preferred];
+                    s.key = k;
+                    s.parts = k.split(':');
+                    vm.apis.push(s);
+                });
+
+                vm.apis.sort(function (a, b) {
+                    return (a.key).localeCompare(b.key);
                 });
             });
         });
