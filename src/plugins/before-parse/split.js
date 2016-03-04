@@ -6,7 +6,6 @@ angular.module('swaggerUiSplit', [])
             execute: function (url, swagger) {
                 var deferred = $q.defer();
 
-                // TODO: split will not work for YAML response :-(
                 if (swagger && swagger.swagger && !swagger.tags) {
                     var tags = {};
 
