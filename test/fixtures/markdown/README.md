@@ -19,12 +19,6 @@ Compare [GitHub](https://github.com/darosh/angular-swagger-ui-material/blob/mast
 
 www.example.com
 
-##### To Do List
-
-- [x] Done
-- [x] Done
-- [ ] Not yet
-
 ##### List
 
 * A
