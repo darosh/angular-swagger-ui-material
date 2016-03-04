@@ -114,6 +114,8 @@ gulp deploy
 * [ ] Optimization (one-time binding, &hellip;)
 * [ ] Hot keys (search, submit)
 * [ ] XML example support
+* [ ] Input[type="password"] for passwords and tokens? (Is it part of Swagger spec?)
+* [ ] Warning about http (non SSL) submit? (dialog + do not show me again?)
 * [ ] Swagger 1.2
 * [ ] GFM task lists vs SCE
 * [ ] E2E tests
