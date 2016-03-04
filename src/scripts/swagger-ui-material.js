@@ -1,3 +1,9 @@
+/*
+ * Orange angular-swagger-ui - v0.3.0
+ *
+ * (C) 2015 Orange, all right reserved
+ * MIT Licensed
+ */
 'use strict';
 
 angular.module('swaggerUiMaterial',
@@ -10,49 +16,266 @@ angular.module('swaggerUiMaterial',
         'truncate'
     ])
     // Derived from original swaggerUi directive
-    .directive('swaggerUiMaterial', function ($timeout, $window, $mdDialog, swaggerClient, httpInfo) {
+    .directive('swaggerUiMaterial', function ($timeout, $window,
+                                              swaggerLoader, swaggerClient, swaggerPlugins, swaggerFormat,
+                                              theme, style, display, utils) {
         return {
             restrict: 'A',
-            controller: 'swaggerUiController',
             templateUrl: 'views/main.html',
             scope: {
                 url: '=',
-                parser: '@?',
                 loading: '=?',
-                permalinks: '=?',
                 apiExplorer: '=?',
                 errorHandler: '=?',
                 trustedSources: '=?',
-                validatorUrl: '@?',
-                swaggerMethods: '='
+                theme: '=?',
+                parser: '@?',
+                validatorUrl: '@?'
             },
-            link: function (scope, element) {
-                if (scope.validatorUrl === undefined) {
-                    scope.validatorUrl = 'http://online.swagger.io/validator';
+            link: function (scope, element, attr) {
+                // WARNING: Authentication is not implemented
+
+                // Directive properties
+                scope.theme = theme.$configure(scope.theme);
+                attr.parser = attr.parser || 'auto';
+                attr.validatorUrl = angular.isUndefined(attr.validatorUrl)
+                    ? 'http://online.swagger.io/validator' : attr.validatorUrl;
+
+                // Services
+                scope.style = style;
+                scope.utils = utils;
+
+                // UI
+                scope.sidenavOpen = false;
+                scope.sidenavLockedOpen = false;
+                scope.grouped = true;
+                scope.descriptions = false;
+                scope.searchOpened = false;
+                scope.searchFilter = '';
+                scope.searchObject = {httpMethod: '', path: ''};
+
+                scope.ngForm = {explorerForm: {}};
+
+                // Selected operation
+                scope.sop = null;
+
+                scope.editUrl = {
+                    model: scope.url,
+                    changed: editedUrl
+                };
+
+                scope.selectOperation = selectOperation;
+                scope.open = open;
+                scope.toggleApi = toggleApi;
+                scope.toggleSidenav = toggleSidenav;
+                scope.submit = submit;
+                scope.openFile = openFile;
+
+                scope.$watch('url', urlUpdated);
+                scope.$watch('searchFilter', searchFilterUpdated);
+
+                var swagger;
+
+                function init () {
+                    swagger = null;
+                    scope.info = {};
+                    scope.resources = [];
+                    scope.form = {};
+                    scope.meta = null;
                 }
 
-                // "Swager UI Material" === "sum" namespace
-                var sum = scope.sum = {};
+                /**
+                 * Load Swagger descriptor
+                 */
+                function loadSwagger (url, callback, onError) {
+                    scope.loading = true;
+                    swaggerLoader.load(url, callback, onError);
+                }
 
-                // Selected Operation === "sop"
-                sum.sop = null;
+                /**
+                 * Swagger descriptor has been loaded, launch parsing
+                 */
+                function swaggerLoaded (swaggerUrl, swaggerType) {
+                    scope.loading = false;
+                    var parseResult = {};
+                    var swaggerCopy = angular.copy(swagger);
+                    // execute modules
+                    swaggerPlugins
+                        .execute(swaggerPlugins.PARSE, scope.parser, swaggerUrl, swaggerType, swaggerCopy, scope.trustedSources, parseResult)
+                        .then(function (executed) {
+                            if (executed) {
+                                swaggerParsed(parseResult);
+                            } else {
+                                onError({
+                                    message: 'no parser found for Swagger descriptor of type ' + swaggerType + ' and version ' + swagger.swagger
+                                });
+                            }
+                        })
+                        .catch(onError);
+                }
 
-                sum.selectOperation = function (op, $event) {
+                function urlUpdated (url) {
+                    init();
+
+                    if (url) {
+                        if (scope.loading) {
+                            // TODO cancel current loading swagger
+                        }
+
+                        // load Swagger descriptor
+                        loadSwagger(url, function (response) {
+                            swagger = response.data;
+                            // execute modules
+                            swaggerPlugins
+                                .execute(swaggerPlugins.BEFORE_PARSE, url, swagger)
+                                .then(function () {
+                                    var contentType = response.headers()['content-type'] || 'application/json';
+                                    var swaggerType = contentType.split(';')[0];
+
+                                    swaggerLoaded(url, swaggerType);
+                                })
+                                .catch(onError);
+                        }, onError);
+                    }
+                }
+
+                function searchFilterUpdated () {
+                    if (!scope.searchFilter) {
+                        scope.searchObject = {httpMethod: '', path: ''};
+                    } else {
+                        var t = scope.searchFilter.toLowerCase().trim();
+                        var s = t.split(' ');
+                        var isMethod = (s.length) === 1 && scope.theme[s[0]];
+                        var method = (s.length > 1) ? s[0] : (isMethod ? s[0] : '');
+                        var path = (s.length > 1) ? s[1] : (isMethod ? '' : s[0]);
+
+                        scope.searchObject = {httpMethod: method, path: path};
+                    }
+                }
+
+                function editedUrl () {
+                    scope.url = scope.editUrl.model;
+                }
+
+                /**
+                 * sends a sample API request
+                 */
+                function submit (operation) {
+                    if (!scope.ngForm.explorerForm.$valid) {
+                        return;
+                    }
+
+                    operation.loading = true;
+
+                    swaggerClient
+                        .send(swagger, operation, scope.form[operation.id])
+                        .then(function (response) {
+                            clientDone(operation, response);
+                        });
+                }
+
+                function clientDone (operation, response) {
+                    operation.loading = false;
+                    operation.explorerResult = response;
+
+                    if (response && response.status) {
+                        response.statusString = response.status.toString();
+                    }
+
+                    response.fullUrl = swaggerFormat.fullUrl(response);
+                    response.body = angular.isObject(response.data) ? angular.toJson(response.data, true) : response.data;
+
+                    response.headerArray = [];
+
+                    if (response && response.headers) {
+                        angular.forEach(response.headers(), function (v, k) {
+                            response.headerArray.push({
+                                name: k,
+                                value: v
+                            });
+                        });
+
+                        response.headerArray.sort(function (a, b) {
+                            a.name.localeCompare(b.name);
+                        });
+                    }
+
+                    var knownStatus = scope.sop.responseArray.find(
+                        function (i) {
+                            return i.code === response.status.toString();
+                        }
+                    );
+
+                    knownStatus = knownStatus || (response.statusText ? {description: response.statusText} : {});
+
+                    response.statusArray = [{
+                        code: response.status.toString(),
+                        description: knownStatus.description || utils.statusInfo(response.status)[0]
+                    }];
+
+                    $timeout(function () {
+                        operation.tab = 2;
+                    }, 50);
+                }
+
+                function openFile ($event, isSwagger) {
+                    var text;
+                    var type;
+
+                    if (isSwagger) {
+                        text = (isSwagger === 'swagger.json')
+                            ? angular.toJson(swagger, true) : $window.jsyaml.safeDump(swagger);
+                        type = (isSwagger === 'swagger.json') ? 'application/json' : 'text/yaml';
+                    } else {
+                        text = scope.sop.explorerResult.body;
+                        type = scope.sop.explorerResult.headers('content-type') || 'text/plain';
+                    }
+
+                    // noinspection JSUnresolvedFunction
+                    var out = new $window.Blob([text], {type: type});
+
+                    // noinspection JSUnresolvedFunction
+                    $event.target.href = $window.URL.createObjectURL(out);
+                }
+
+                function toggleSidenav () {
+                    scope.sidenavLockedOpen = !scope.sidenavLockedOpen;
+                }
+
+                function toggleApi (api, $event) {
+                    $event.preventDefault();
                     $event.stopPropagation();
 
-                    var opening = !sum.sidenavOpen;
-                    sum.sidenavOpen = true;
+                    // Space bar does not stop propagation :-(
+                    if (($event.keyCode || $event.which) === 32) {
+                        return;
+                    }
+
+                    api.open = !api.open;
+                }
+
+                function open (open) {
+                    angular.forEach(scope.resources, function (api) {
+                        api.open = open;
+                    });
+                }
+
+                function selectOperation (op, $event) {
+                    $event.stopPropagation();
+
+                    var opening = !scope.sidenavOpen;
+                    scope.sidenavOpen = true;
                     op.tab = op.tab || 0;
 
                     // fixes tab content width flickering (might be angular-material issue)
                     // and triggers .sum-fade animation
-                    sum.omg = !opening;
+                    scope.omg = !opening;
 
                     $timeout(function () {
-                        sum.sop = op;
+                        scope.sop = op;
 
                         $timeout(function () {
-                            sum.omg = false;
+                            scope.omg = false;
                         }, 15);
                     }, 15);
 
@@ -81,315 +304,32 @@ angular.module('swaggerUiMaterial',
                     op.responseArray.sort(function (a, b) {
                         a.code.toString().localeCompare(b.code.toString());
                     });
-                };
-
-                // Toggle
-                sum.descriptions = false;
-
-                // Expand/Collapse
-                sum.open = function (open) {
-                    angular.forEach(scope.resources, function (api) {
-                        api.open = open;
-                    });
-                };
-
-                sum.toggleApi = function (api, $event) {
-                    $event.preventDefault();
-                    $event.stopPropagation();
-
-                    // Spacebar does not stop propagation :-(
-                    if (($event.keyCode || $event.which) === 32) {
-                        return;
-                    }
-
-                    api.open = !api.open;
-                };
-
-                sum.sidenavOpen = false;
-                sum.sidenavLockedOpen = false;
-
-                sum.toggleSidenav = function () {
-                    sum.sidenavLockedOpen = !sum.sidenavLockedOpen;
-                };
-
-                sum.explorerForm = {};
-
-                sum.submit = function (operation) {
-                    if (sum.explorerForm.$valid) {
-                        // Commented for tab UI: operation.explorerResult = false;
-                        operation.loading = true;
-
-                        // TODO: this is replacing original scope.submitExplorer call,
-                        // we need the send promise and the var swagger is inaccesible
-
-                        var swagger = {
-                            schemes: [scope.infos.scheme],
-                            host: scope.infos.host,
-                            basePath: scope.infos.basePath
-                        };
-
-                        swaggerClient
-                            .send(swagger, operation, scope.form[operation.id])
-                            .then(function (result) {
-                                operation.loading = false;
-                                operation.explorerResult = result;
-
-                                if (result.response && result.response.status) {
-                                    result.response.statusString = result.response.status.toString();
-                                }
-
-                                result.response.headerArray = [];
-
-                                // TODO: result.response.headers is String object
-                                if (result.response && result.response.headers) {
-                                    result.response.headers = JSON.parse(result.response.headers);
-
-                                    for (var k in result.response.headers) {
-                                        result.response.headerArray.push({
-                                            name: k,
-                                            value: result.response.headers[k]
-                                        });
-                                    }
-
-                                    result.response.headerArray.sort(function (a, b) {
-                                        a.name.localeCompare(b.name);
-                                    });
-                                }
-
-                                // TODO: model with no content should be null or undefined
-                                if (sum.sop.explorerResult.response.body === 'no content') {
-                                    sum.sop.explorerResult.response.body = null;
-                                }
-
-                                var knownStatus = sum.sop.responseArray.find(
-                                        function (i) {
-                                            return i.code === sum.sop.explorerResult.response.status.toString();
-                                        }
-                                    ) || {};
-
-                                sum.sop.explorerResult.response.statusArray = [{
-                                    code: sum.sop.explorerResult.response.status.toString(),
-                                    description: knownStatus.description || sum.getCodeInfo(sum.sop.explorerResult.response.status)[0]
-                                }];
-
-                                $timeout(function () {
-                                    operation.tab = 1;
-                                }, 50);
-                            });
-                    }
-                };
-
-                sum.openFile = function ($event) {
-                    var text = sum.sop.explorerResult.response.body;
-                    var type = sum.sop.explorerResult.response.headers['content-type'] || 'text/plain';
-
-                    var out = new $window.Blob([text], {type: type});
-                    var url = $window.URL.createObjectURL(out);
-
-                    $event.target.href = url;
-                };
-
-                sum.grouped = true;
-                sum.searchOpened = false;
-                sum.searchFilter = '';
-                sum.searchObject = {httpMethod: '', path: ''};
-                sum.editUrl = scope.url;
-                sum.editOpen = false;
-
-                scope.$watch('sum.searchFilter', function () {
-                    if (!sum.searchFilter) {
-                        sum.searchObject = {httpMethod: '', path: ''};
-                    } else {
-                        var t = sum.searchFilter.toLowerCase().trim();
-                        var s = t.split(' ');
-                        var isMethod = (s.length) === 1 && scope.swaggerMethods[s[0]];
-                        var method = (s.length > 1) ? s[0] : (isMethod ? s[0] : '');
-                        var path = (s.length > 1) ? s[1] : (isMethod ? '' : s[0]);
-
-                        sum.searchObject = {httpMethod: method, path: path};
-                    }
-                });
-
-                scope.$watch('sum.editOpen', function () {
-                    if (!sum.editOpen) {
-                        scope.url = sum.editUrl;
-                    }
-                });
-
-                scope.$watch('infos', function () {
-                    if (!scope.infos || !Object.keys(scope.infos).length) {
-                        scope.metas = [];
-
-                        return;
-                    }
-
-                    var i = scope.infos;
-                    i.contact = i.contact || {};
-                    i.license = i.license || {};
-
-                    scope.metas = [
-                        ['Contact', 'person', (i.contact.name && !i.contact.email) ? i.contact.name : null, null],
-                        ['Email', 'email', i.contact.email ? (i.contact.name || i.contact.email) : null, 'mailto:' + i.contact.email + '?subject=' + i.title],
-                        ['License', 'vpn_key', i.license.name || i.license.url, i.license.url],
-                        ['Terms of service', 'work', i.termsOfService, i.termsOfService],
-                        ['Host', 'home', i.scheme + '://' + i.host, i.scheme + '://' + i.host],
-                        ['Base URL', 'link', i.basePath, (i.sheme ? (i.sheme + '://') : '') + i.host + i.basePath],
-                        ['API version', 'developer_board', i.version, null],
-                        ['Download', 'file_download', 'swagger.json', scope.url],
-                        [null, 'code', ((scope.validatorUrl !== 'false') && scope.url) ? (scope.validatorUrl + '/debug?url=' + scope.url) : null, scope.validatorUrl + '?url=' + scope.url]
-                    ];
-                });
-
-                sum.infoMethod = function (sop, $event) {
-                    var i = httpInfo.method[sop.httpMethod];
-
-                    dialog($event, {
-                        title: sop.httpMethod.toUpperCase(),
-                        subtitle: 'HTTP Method',
-                        header: null,
-                        description: i[0],
-                        link: i[2],
-                        section: i[1].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                        style: scope.swaggerMethods[sop.httpMethod],
-                        meta: [i[3], i[4], i[5]]
-                    });
-                };
-
-                sum.codeClass = {
-                    1: scope.swaggerMethods.post,
-                    2: scope.swaggerMethods.get,
-                    3: scope.swaggerMethods.put,
-                    4: scope.swaggerMethods.delete,
-                    5: scope.swaggerMethods.delete,
-                    7: scope.swaggerMethods.delete
-                };
-
-                sum.getCodeInfo = function (code) {
-                    return httpInfo.status[code] || httpInfo.status[code[0] + 'xx'] ||
-                        ['**Undefined**', 'no spec found.', '', null];
-                };
-
-                sum.infoCode = function (code, $event) {
-                    var i = sum.getCodeInfo(code);
-
-                    dialog($event, {
-                        title: code,
-                        subtitle: 'HTTP Status',
-                        header: i[0],
-                        description: i[1],
-                        link: i[3],
-                        section: i[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                        style: sum.codeClass[code[0]] || sum.codeClass[7],
-                        meta: null
-                    });
-                };
-
-                sum.headerClass = {
-                    standard: scope.swaggerMethods.post,
-                    obsoleted: scope.swaggerMethods.delete,
-                    undefined: scope.swaggerMethods.post
-                };
-
-                sum.getHeaderClass = function (title) {
-                    var i = httpInfo.header[title.toLowerCase()];
-
-                    if (i) {
-                        return sum.headerClass[i[1]] || sum.headerClass.undefined;
-                    } else {
-                        return null;
-                    }
-                };
-
-                sum.infoHeader = function (title, $event) {
-                    var i = httpInfo.header[title.toLowerCase()] || [title, 'Unknown header.', '', null];
-
-                    dialog($event, {
-                        title: i[0],
-                        subtitle: 'HTTP Header',
-                        header: null,
-                        description: i[1],
-                        link: i[3],
-                        section: i[2].replace(/(RFC)(.*)(#)(.*)/i, '$1 $2 – $4'),
-                        style: sum.headerClass[i[1]] || sum.headerClass.undefined,
-                        meta: null
-                    });
-                };
-
-                function dialog ($event, locals) {
-                    $mdDialog.show({
-                        templateUrl: 'views/dialog.html',
-                        clickOutsideToClose: true,
-                        targetEvent: $event,
-                        controller: DialogCtrl,
-                        locals: locals
-                    });
                 }
 
-                function DialogCtrl ($scope, $mdDialog, title, subtitle, header, description, link, section, style, meta) {
-                    $scope.title = title;
-                    $scope.subtitle = subtitle;
-                    $scope.header = header;
-                    $scope.description = description;
-                    $scope.link = link;
-                    $scope.section = section;
-                    $scope.style = style;
-                    $scope.meta = meta;
-                    $scope.closeDialog = function () {
-                        $mdDialog.hide();
-                    };
+                /**
+                 * Swagger descriptor has parsed, launch display
+                 */
+                function swaggerParsed (parseResult) {
+                    // execute modules
+                    swaggerPlugins
+                        .execute(swaggerPlugins.BEFORE_DISPLAY, parseResult)
+                        .then(function () {
+                            // display swagger UI
+                            scope.info = parseResult.info;
+                            scope.form = parseResult.form;
+                            scope.resources = parseResult.resources;
+                            scope.meta = display.meta(scope.info, scope.url, scope.validatorUrl, scope.openFile);
+                        })
+                        .catch(onError);
+                }
+
+                function onError (error) {
+                    scope.loading = false;
+
+                    if (angular.isFunction(scope.errorHandler)) {
+                        scope.errorHandler(error);
+                    }
                 }
             }
         };
-    })
-    // List ungrouped operations
-    .service('operations', function ($q) {
-        this.execute = function (parseResult) {
-            var deferred = $q.defer();
-
-            parseResult.infos.operations = [];
-
-            angular.forEach(parseResult.resources, function (resource) {
-                angular.forEach(resource.operations, function (operation) {
-                    parseResult.infos.operations.push(operation);
-                });
-
-                // TODO: allow configuration of minimum auto expanded endpoints
-                if (parseResult.resources.length <= 8) {
-                    resource.open = true;
-                }
-            });
-
-            parseResult.infos.operations.sort(function (a, b) {
-                return (a.path.toLowerCase().replace(/[^a-z]+/gi, '') + '-' + a.httpMethod)
-                    .localeCompare(b.path.toLowerCase().replace(/[^a-z]+/gi, '') + '-' + b.httpMethod);
-            });
-
-            deferred.resolve(true);
-
-            return deferred.promise;
-        };
-    })
-    .run(function (swaggerModules, operations) {
-        swaggerModules.add(swaggerModules.BEFORE_DISPLAY, operations);
-    })
-    // Catch default transform invalid JSON parse
-    .service('transform', function ($q, $http) {
-        this.execute = function (config) {
-            var deferred = $q.defer();
-
-            config.transformResponse = function (data, headersGetter, status) {
-                try {
-                    return $http.defaults.transformResponse[0](data, headersGetter, status);
-                } catch (ing) {
-                    return data;
-                }
-            };
-
-            deferred.resolve(true);
-
-            return deferred.promise;
-        };
-    })
-    .run(function (swaggerModules, transform) {
-        swaggerModules.add(swaggerModules.BEFORE_EXPLORER_LOAD, transform);
     });

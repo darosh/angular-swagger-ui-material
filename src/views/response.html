@@ -1,8 +1,8 @@
 <div class="md-body-1" layout="row">
-    <md-button ng-click="sum.infoCode(resp.code, $event)"
+    <md-button ng-click="utils.status(resp.code, $event)"
                class="sum-http-code md-raised"
-               ng-class="sum.codeClass[resp.code[0]]"
-               ng-disabled="!sum.codeClass[resp.code[0]]"
+               ng-class="theme[resp.code[0]]"
+               ng-disabled="!theme[resp.code[0]]"
                aria-label="code"
                ng-bind="resp.code"></md-button>
     <span flex style="padding-left: 8px; padding-top: 4px; word-wrap: break-word" ng-bind-html="resp.description"></span>

@@ -18,11 +18,14 @@
         </div>
     </div>
     <md-divider ng-if="meta"></md-divider>
+    <!--suppress HtmlUnknownTag -->
     <md-dialog-content ng-if="header || description" class="md-dialog-content">
         <h3 ng-if="header" class="md-title" ng-bind="header"></h3>
         <p ng-if="description" class="sum-sentence" ng-bind="description"></p>
     </md-dialog-content>
+    <!--suppress HtmlUnknownTag -->
     <md-dialog-actions>
+        <!--suppress HtmlUnknownAttribute -->
         <md-button ng-if="link" ng-href="{{link}}" target="_blank" class="md-primary" ng-bind="section"
                    aria-label="spec"></md-button>
         <md-button ng-click="closeDialog()">Close</md-button>

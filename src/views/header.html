@@ -1,8 +1,8 @@
 <div class="md-body-1" style="text-indent: -9px; margin-left: 9px">
-    <md-button ng-click="sum.infoHeader(header.name, $event)"
+    <md-button ng-click="utils.header(header.name, $event)"
                class="sum-http-header md-raised"
-               ng-disabled="!sum.getHeaderClass(header.name)"
-               ng-class="sum.getHeaderClass(header.name)"
+               ng-disabled="!style.header(header.name)"
+               ng-class="style.header(header.name)"
                style="font-weight: bold; top: 0"
                aria-label="header"
                ng-bind="header.name"></md-button>

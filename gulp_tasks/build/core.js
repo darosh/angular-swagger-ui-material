@@ -6,7 +6,7 @@ gulp.task('core', function () {
     var uglifyjs = require('gulp-uglifyjs');
     var concat = require('gulp-concat');
 
-    return gulp.src(['src/directives/**/*.js', 'src/scripts/**/*.js'])
+    return gulp.src(['src/directives/**/*.js', 'src/services/**/*.js', 'src/scripts/**/*.js', 'src/plugins/**/*.core.js'])
         .pipe(ngAnnotate())
         .pipe(angularFilesort())
         .pipe(concat('swagger-ui-material.core.js'))

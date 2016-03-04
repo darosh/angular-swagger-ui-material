@@ -1,0 +1,130 @@
+<!doctype html>
+<html ng-app="hub">
+<head>
+    <meta charset="utf-8">
+    <title>Material Swagger UI Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <!-- styles CDN -->
+    <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css">
+
+    <!-- inject:css -->
+    <!-- endinject -->
+
+    <style>
+        .ng-cloak {
+            display: none;
+        }
+    </style>
+</head>
+<body ng-controller="HubCtrl as vm" layout="column" class="ng-cloak">
+
+<div flex layout="column">
+    <md-toolbar md-whiteframe="2">
+        <div class="md-toolbar-tools" ng-show="vm.loading" style="padding-left: 0">
+            <md-progress-circular class="md-accent md-hue-1" md-mode="indeterminate"
+                                  md-diameter="56"></md-progress-circular>
+            <span>Loading&hellip;</span>
+        </div>
+        <div class="md-toolbar-tools" ng-hide="vm.loading">
+            <span>APIs</span>
+        </div>
+    </md-toolbar>
+    <md-content ng-show="!vm.loading">
+        <div layout="row" layout-wrap layout-padding>
+            <div flex-xs="100"
+                 flex-sm="50"
+                 flex-md="33"
+                 flex-lg="25"
+                 flex-xl="20"
+                 ng-repeat="api in vm.apis track by $index"
+                 style="padding: 12px">
+
+                <a ng-href="./#?url={{api.swaggerUrl}}" style="text-decoration: none">
+                    <md-toolbar class="md-whiteframe-2dp md-accent" style="height: auto; max-height: none">
+                        <div layout="row" layout-padding layout-align="start start" style="height: auto; max-height: none; min-height: 64px; padding-bottom: 4px; padding-top: 4px">
+                            <span class="md-title" flex ng-bind="::api.info.title" style="line-height: 28px"></span>
+                            <div layout="column" layout-align="start end" style="line-height: 28px; text-align:right; opacity: 0.8">
+                                <small ng-bind="::api.parts[0]"></small>
+                                <small ng-bind="::api.parts[1]" ng-if="api.parts[1]"></small>
+                                <small ng-bind="::api.info.version"></small>
+                            </div>
+                        </div>
+                    </md-toolbar>
+                </a>
+            </div>
+
+            <div flex="100" layout="row" layout-align="end end">
+                <div flex-xs="100"
+                     flex-sm="50"
+                     flex-md="33"
+                     flex-lg="25"
+                     flex-xl="20"
+                     style="padding: 12px">
+                    <a class="md-whiteframe-2dp" href="http://APIs.guru" style="text-decoration: none; display: block">
+                        <md-toolbar class="md-accent md-hue-1">
+                            <div class="md-toolbar-tools">
+                                <span class="md-title">Powered by</span>
+                            </div>
+                        </md-toolbar>
+                        <md-divider></md-divider>
+                        <div style="padding: 12px 12px 0 12px">
+                            <img src="https://apis-guru.github.io/api-models/branding/logo_horizontal.svg" alt="logo"
+                                 style="max-width: 100%">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </md-content>
+</div>
+
+<!-- scripts CDN -->
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-aria.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-messages.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.min.js"></script>
+
+<!-- inject:js -->
+<!-- endinject -->
+
+<script type="text/javascript">
+    angular.module('hub', ['ngMaterial', 'ngSanitize'])
+        .config(function ($mdThemingProvider) {
+            $mdThemingProvider
+                .theme('default')
+                .primaryPalette('teal')
+                .accentPalette('grey')
+                .warnPalette('amber');
+        })
+        .controller('HubCtrl', function ($http) {
+            var vm = this;
+
+            vm.loading = true;
+
+            $http({
+                method: 'GET',
+                url: 'https://apis-guru.github.io/api-models/api/v1/list.json'
+            }).then(function (response) {
+                vm.loading = false;
+                vm.apis = [];
+
+                angular.forEach(response.data, function (v, k) {
+                    var s = v.versions[v.preferred];
+                    s.key = k;
+                    s.parts = k.split(':');
+                    vm.apis.push(s);
+                });
+
+                vm.apis.sort(function (a, b) {
+                    return (a.key).localeCompare(b.key);
+                });
+            });
+        });
+</script>
+</body>
+</html>

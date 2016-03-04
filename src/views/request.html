@@ -1,41 +1,43 @@
-<div ng-if="sum.sop.description">
+<div ng-if="sop.description">
     <md-subheader class="md-warn md-no-sticky">Description</md-subheader>
     <div layout-padding>
-        <div class="md-body-1" truncate ng-bind-html="sum.sop.description"></div>
+        <div class="md-body-1" truncate ng-bind-html="sop.description"></div>
     </div>
 </div>
 
-<form role="form" name="sum.explorerForm" ng-submit="sum.submit(sum.sop)">
-    <div ng-if="sum.sop.responseClass.schema" layout="row">
+<form role="form" name="ngForm.explorerForm" ng-submit="submit(sop)">
+    <!-- TODO: <fieldset ng-disabled="sop.loading"> https://github.com/angular/material/issues/2417 -->
+    <div ng-if="sop.responseClass.schema" layout="row">
         <div flex>
             <md-subheader class="md-warn md-no-sticky">Response class</md-subheader>
         </div>
-        <div class="sum-tools" ng-if="sum.sop.responseClass.display != -1">
+        <div class="sum-tools" ng-if="sop.responseClass.display != -1">
             <a class="md-button md-primary"
-               ng-click="sum.sop.responseClass.display = !sum.sop.responseClass.display + 0"
-               ng-bind="sum.sop.responseClass.display ? 'Model' : 'Example'"></a>
+               ng-click="sop.responseClass.display = !sop.responseClass.display + 0"
+               ng-bind="sop.responseClass.display ? 'Model' : 'Example'"></a>
         </div>
     </div>
 
     <!-- TODO: missing XML example -->
-    <div ng-if="sum.sop.responseClass.schema && (sum.sop.responseClass.display != -1)" layout-padding class="sum-top">
+    <div ng-if="sop.responseClass.schema && (sop.responseClass.display != -1)" layout-padding class="sum-top">
          <pre class="sum-pre sum-wrap sum-no-margin"
-              ng-if="sum.sop.responseClass.display == 0"
-              ng-bind-html="sum.sop.responseClass.schema.model"></pre>
-         <pre class="sum-pre sum-no-margin" ng-if="sum.sop.responseClass.display == 1"
-              ng-bind="sum.sop.responseClass.schema.json"></pre>
+              ng-if="sop.responseClass.display == 0"
+              ng-bind-html="sop.responseClass.schema.model"></pre>
+         <pre class="sum-pre sum-no-margin" ng-if="sop.responseClass.display == 1"
+              ng-bind="sop.responseClass.schema.json"></pre>
     </div>
 
-    <div ng-if="sum.sop.produces.length">
+    <div ng-if="sop.produces.length">
         <md-subheader class="md-warn md-no-sticky">Response type</md-subheader>
         <div layout-padding
              style="padding-bottom: 0; top: -8px; position: relative">
             <div layout="row">
                 <md-input-container flex>
-                    <md-select aria-label="response type" ng-model="form[sum.sop.id].responseType"
-                               ng-disabled="sum.sop.produces.length == 1">
+                    <md-select aria-label="response type" ng-model="form[sop.id].responseType"
+                               ng-disabled="sop.produces.length == 1">
+                        <!--suppress HtmlUnknownAttribute -->
                         <md-option
-                            ng-repeat="item in sum.sop.produces track by item" value="{{item}}" ng-bind="::item">
+                            ng-repeat="item in sop.produces track by item" value="{{item}}" ng-bind="::item">
                         </md-option>
                     </md-select>
                 </md-input-container>
@@ -43,19 +45,19 @@
         </div>
     </div>
 
-    <div ng-if="sum.sop.parameters.length">
+    <div ng-if="sop.parameters.length">
         <md-subheader class="md-warn md-no-sticky">Parameters</md-subheader>
         <div layout-padding
              style="padding-top: 8px"
-             ng-repeat="param in sum.sop.parameters track by $index"
+             ng-repeat="param in sop.parameters track by $index"
              ng-include="'views/parameter.html'"></div>
     </div>
 
-    <div ng-if="sum.sop.hasResponses || sum.sop.defaultResponse" style="padding-bottom: 8px;">
+    <div ng-if="sop.responseArray.length" style="padding-bottom: 8px;">
         <md-subheader class="md-warn md-no-sticky">Response messages</md-subheader>
         <div layout-padding>
             <div>
-                <div ng-repeat="resp in sum.sop.responseArray track by $index"
+                <div ng-repeat="resp in sop.responseArray track by $index"
                      ng-include="'views/response.html'"></div>
             </div>
         </div>

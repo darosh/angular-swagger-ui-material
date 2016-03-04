@@ -1,0 +1,23 @@
+{
+  "extends": "angular",
+  "rules": {
+    "semi": [
+      2,
+      "always"
+    ],
+    "indent": [
+      2,
+      4,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "complexity": [
+      2,
+      22
+    ]
+  },
+  "globals": {
+    "angular": true
+  }
+}

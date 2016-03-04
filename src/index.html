@@ -25,10 +25,10 @@
     </style>
 </head>
 <body ng-controller="MyCtrl" layout="column" class="ng-cloak">
+<!--suppress HtmlUnknownAttribute -->
 <div layout="row"
      flex
      swagger-ui-material
-     swagger-methods="swaggerMethods"
      url="swaggerUrl"
      loading="isLoading"
      api-explorer="true"
@@ -47,22 +47,33 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/js-yaml/3.5.3/js-yaml.min.js"></script>
 
 <!-- inject:js -->
-<script src="../bower_components/angular-swagger-ui/dist/scripts/swagger-ui.js"></script>
-<!-- Deprecated Swagger version -->
-<!--<script src="../bower_components/angular-swagger-ui/dist/scripts/modules/swagger1-to-swagger2-converter.min.js"></script>-->
-<!-- External reference not used in demo -->
-<!--<script src="../bower_components/angular-swagger-ui/dist/scripts/modules/swagger-external-references.min.js"></script>-->
+<script src="./scripts/swagger-ui.js"></script>
+<script src="services/client.js"></script>
+<script src="services/model.js"></script>
+<script src="services/plugins.js"></script>
+<script src="services/loader.js"></script>
+<script src="services/format.js"></script>
+<script src="plugins/parse/parser.core.js "></script>
+
 <script src="./scripts/swagger-ui-material.js"></script>
-<script src="./scripts/swagger-ui-material-http-info.js"></script>
+<script src="services/http-data.js"></script>
 <script src="../bower_components/showdown/dist/showdown.js"></script>
-<script src="../bower_components/angular-markdown-filter/markdown.js"></script>
-<script src="./modules/swagger-sort.js"></script>
-<script src="./modules/swagger-markdown.js"></script>
-<script src="./modules/swagger-yaml.js"></script>
-<script src="./modules/swagger-split.js"></script>
+<script src="plugins/before-display/sort.js"></script>
+<script src="plugins/before-display/markdown.js"></script>
+<script src="plugins/before-load/yaml.js"></script>
+<script src="plugins/before-parse/split.js"></script>
+<script src="plugins/before-explorer/transform.js"></script>
+<script src="plugins/before-display/operations.js"></script>
+<script src="plugins/before-parse/external-references.js"></script>
+<script src="plugins/before-parse/swagger-1-to-2.broken.js"></script>
 <script src="./directives/toolbar-search.js"></script>
 <script src="./directives/toolbar-edit.js"></script>
 <script src="./directives/truncate.js"></script>
+<script src="services/dialog.js"></script>
+<script src="services/theme.js"></script>
+<script src="services/style.js"></script>
+<script src="services/display.js"></script>
+<script src="services/utils.js"></script>
 <!-- endinject -->
 
 <script type="text/javascript">
@@ -88,6 +99,7 @@
                 '700': 'dadada'
             }));
 
+            //noinspection JSUnresolvedFunction
             $mdThemingProvider
                 .theme('default')
                 .primaryPalette(search.primary || 'teal')
@@ -95,25 +107,17 @@
                 .warnPalette(search.warn || 'amber')
                 .foregroundPalette[3] = 'rgba(0, 0, 0, 0.4)';
         })
-        .controller('MyCtrl', function ($scope, $location, $mdToast) {
+        .controller('MyCtrl', function ($scope, $location, $mdToast, $log) {
             $scope.isLoading = false;
+            //noinspection JSCheckFunctionSignatures
             $scope.swaggerUrl = $location.search()['url'] || 'http://petstore.swagger.io/v2/swagger.json';
 
-            <!-- TODO: swaggerMethods should have default values -->
-            $scope.swaggerMethods = {
-                get: 'md-primary',
-                head: 'md-primary md-hue-2',
-                options: 'md-primary md-hue-3',
-                post: 'md-accent',
-                put: 'md-accent md-hue-2',
-                patch: 'md-accent md-hue-2',
-                delete: 'md-warn'
-            };
-
             // error management
-            $scope.myErrorHandler = function (data, status) {
-                $mdToast.show($mdToast.simple().textContent('Failed to load :-('));
-                console.error(status, data);
+            $scope.myErrorHandler = function (error) {
+                var e = error || {};
+                var m = 'Something is wrong';
+                $mdToast.show($mdToast.simple().textContent(e.statusText || e.message || m));
+                $log.error(error || m);
             };
         });
 </script>
