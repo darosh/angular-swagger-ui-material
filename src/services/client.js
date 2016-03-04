@@ -95,12 +95,12 @@ angular
             };
         }
 
-        function base (swagger) {
+        function base (swaggerInfo) {
             return [
-                swagger.schemes[0],
+                swaggerInfo.scheme,
                 '://',
-                swagger.host,
-                swagger.basePath || ''
+                swaggerInfo.host,
+                swaggerInfo.basePath || ''
             ].join('');
         }
     });

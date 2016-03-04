@@ -168,7 +168,7 @@ angular.module('swaggerUiMaterial',
                     operation.loading = true;
 
                     swaggerClient
-                        .send(swagger, operation, scope.form[operation.id])
+                        .send(scope.info, operation, scope.form[operation.id])
                         .then(function (response) {
                             clientDone(operation, response);
                         });
