@@ -167,8 +167,6 @@ angular
             var model = '';
             var buffer;
             var subModels;
-            var propertyName;
-            var property;
             var hasProperties = false;
             var name;
             var className;
