@@ -1,5 +1,7 @@
 # GitHub Flavoured Markdown Test
 
+Compare [GitHub](https://github.com/darosh/angular-swagger-ui-material/test/fixtures/markdown/README.md) and [Swagger](darosh.github.io/angular-swagger-ui-material/#?url=http://darosh.github.io/angular-swagger-ui-material/swagger-gfm.json) render powered by [Showdown](https://github.com/showdownjs/showdown).
+
 ## Header (level 2)
 
 ### Header (level 3)
