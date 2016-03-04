@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('swaggerUiMaterial')
-    .factory('display', function () {
+    .factory('display', function ($window) {
         return {
             meta: meta
         };
@@ -22,7 +22,8 @@ angular.module('swaggerUiMaterial')
                 ['Host', 'home', i.scheme + '://' + i.host, i.scheme + '://' + i.host],
                 ['Base URL', 'link', i.basePath, (i.scheme ? (i.scheme + '://') : '') + i.host + i.basePath],
                 ['API version', 'developer_board', i.version, null],
-                ['Download', 'file_download', 'swagger.json', url, download],
+                ['Download', 'file_download', 'swagger.json', '#', download],
+                ['Download', 'file_download', $window.jsyaml ? 'swagger.yaml' : null, '#', download],
                 [null, 'code', validatorDebug, validatorBadge]
             ];
         }

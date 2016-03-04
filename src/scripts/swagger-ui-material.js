@@ -219,8 +219,18 @@ angular.module('swaggerUiMaterial',
                 }
 
                 function openFile ($event, isSwagger) {
-                    var text = isSwagger ? angular.toJson(swagger, true) : scope.sop.explorerResult.body;
-                    var type = isSwagger ? 'application/json' : (scope.sop.explorerResult.headers('content-type') || 'text/plain');
+                    var text;
+                    var type;
+
+                    if (isSwagger) {
+                        text = (isSwagger === 'swagger.json')
+                            ? angular.toJson(swagger, true) : $window.jsyaml.safeDump(swagger);
+                        type = (isSwagger === 'swagger.json') ? 'application/json' : 'text/yaml';
+                    } else {
+                        text = scope.sop.explorerResult.body;
+                        type = scope.sop.explorerResult.headers('content-type') || 'text/plain';
+                    }
+
                     var out = new $window.Blob([text], {type: type});
 
                     $event.target.href = $window.URL.createObjectURL(out);
