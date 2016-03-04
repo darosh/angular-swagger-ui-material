@@ -242,3 +242,15 @@ md-dialog.sum-dialog {
     max-width: 360px;
     min-width: 280px;
 }
+
+[swagger-ui-material] span.md-button {
+    display: inline;
+    min-width: 0;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    line-height: normal;
+    font-size: 13px;
+    font-weight: normal;
+    text-transform: none;
+}

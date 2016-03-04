@@ -216,7 +216,8 @@ angular
          * parse operation responses
          */
         function parseResponses (swagger, operation) {
-            var sampleJson;
+            // var sampleJson;
+            var sampleObj;
 
             if (operation.responses) {
                 angular.forEach(operation.responses, function (response, code) {
@@ -225,12 +226,16 @@ angular
 
                     if (response.schema) {
                         if (response.examples && response.examples[operation.produces[0]]) {
-                            sampleJson = angular.toJson(response.examples[operation.produces[0]], true);
+                            // TODO: we prefer object(?)
+                            // sampleJson = angular.toJson(response.examples[operation.produces[0]], true);
+                            sampleObj = response.examples[operation.produces[0]];
                         } else {
-                            sampleJson = swaggerModel.generateSampleJson(swagger, response.schema);
+                            // sampleJson = swaggerModel.generateSampleJson(swagger, response.schema);
+                            sampleObj = swaggerModel.getSampleObj(swagger, response.schema);
                         }
 
-                        response.schema.json = sampleJson;
+                        // response.schema.json = sampleJson;
+                        response.schema.obj = sampleObj;
 
                         if (response.schema.type === 'object' || response.schema.type === 'array' || response.schema.$ref) {
                             response.display = 1; // display schema

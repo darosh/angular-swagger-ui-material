@@ -29,6 +29,7 @@ angular
             getType: getType,
             resolveReference: resolveReference,
             generateSampleJson: generateSampleJson,
+            getSampleObj: getSampleObj,
             clearCache: clearCache
         };
 
@@ -157,6 +158,7 @@ angular
             if (obj) {
                 json = angular.toJson(obj, true);
             }
+
             return json;
         }
 

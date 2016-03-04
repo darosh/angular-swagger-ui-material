@@ -18,7 +18,7 @@ angular.module('swaggerUiMaterial',
     // Derived from original swaggerUi directive
     .directive('swaggerUiMaterial', function ($timeout, $window,
                                               swaggerLoader, swaggerClient, swaggerPlugins, swaggerFormat,
-                                              theme, style, display, utils) {
+                                              theme, style, display, syntax, utils) {
         return {
             restrict: 'A',
             templateUrl: 'views/main.html',
@@ -278,6 +278,10 @@ angular.module('swaggerUiMaterial',
                             scope.omg = false;
                         }, 15);
                     }, 15);
+
+                    if (op.responseClass && op.responseClass.schema && !op.responseClass.schema.json) {
+                        op.responseClass.schema.json = syntax.json(angular.toJson(op.responseClass.schema.obj, true));
+                    }
 
                     // TODO: this is fixing not selected single "text/html" in produces,
                     // TODO: angular-swagger-ui probably setting this to "application/json" not present in op.produces

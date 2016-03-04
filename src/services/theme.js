@@ -18,7 +18,12 @@ angular.module('swaggerUiMaterial')
             7: 'md-warn',
             standard: 'md-accent',
             obsoleted: 'md-warn',
-            undefined: 'md-accent'
+            undefined: 'md-accent',
+            key: '',
+            string: 'md-primary',
+            number: 'md-warn',
+            boolean: 'md-accent md-hue-3',
+            null: 'md-accent md-hue-2'
         };
 
         var self = {

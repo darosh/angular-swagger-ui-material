@@ -24,7 +24,7 @@
               ng-if="sop.responseClass.display == 0"
               ng-bind-html="sop.responseClass.schema.model"></pre>
          <pre class="sum-pre sum-no-margin" ng-if="sop.responseClass.display == 1"
-              ng-bind="sop.responseClass.schema.json"></pre>
+              ng-bind-html="sop.responseClass.schema.json"></pre>
     </div>
 
     <div ng-if="sop.produces.length">
