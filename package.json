@@ -12,7 +12,6 @@
     "gulp": "^3.9.1",
     "gulp-angular-filesort": "^1.1.1",
     "gulp-angular-templatecache": "^1.8.0",
-    "gulp-clang-format": "^1.0.23",
     "gulp-concat": "^2.6.0",
     "gulp-csso": "^1.1.0",
     "gulp-eslint": "^2.0.0",
