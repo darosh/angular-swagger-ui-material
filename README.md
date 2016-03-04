@@ -108,6 +108,7 @@ gulp deploy
 * [angular-swagger-ui-material](https://github.com/darosh/angular-swagger-ui-material/search?q=TODO&type=Code&utf8=%E2%9C%93)
 * [ ] Alternative layout in "documentation" style
 * [ ] Operation permalinks
+* [ ] Permalinks in description? ([example](http://darosh.github.io/angular-swagger-ui-material/#?url=https:%2F%2Fapis-guru.github.io%2Fapi-models%2Fimport.io%2F1.0%2Fswagger.json))
 * [ ] Scripts tab with examples
 * [ ] Cross-browser compatibility (unknown)
 * [ ] Optimization (one-time binding, &hellip;)
