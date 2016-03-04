@@ -200,13 +200,13 @@ angular.module('swaggerUiMaterial',
                         });
                     }
 
-                    var knownStatus = response.statusText && {description: response.statusText};
+                    var knownStatus = scope.sop.responseArray.find(
+                        function (i) {
+                            return i.code === response.status.toString();
+                        }
+                    );
 
-                    knownStatus = knownStatus || scope.sop.responseArray.find(
-                            function (i) {
-                                return i.code === response.status.toString();
-                            }
-                        ) || {};
+                    knownStatus = knownStatus || (response.statusText ? {description: response.statusText} : {});
 
                     response.statusArray = [{
                         code: response.status.toString(),
