@@ -100,7 +100,7 @@ angular
                 swaggerInfo.scheme,
                 '://',
                 swaggerInfo.host,
-                swaggerInfo.basePath || ''
+                (swaggerInfo.basePath === '/' ? '' : swaggerInfo.basePath) || ''
             ].join('');
         }
     });
