@@ -56,13 +56,17 @@ angular
 
                 switch (param.in) {
                     case 'query':
-                        query[param.name] = value || undefined;
+                        if (value) {
+                            query[param.name] = value;
+                        }
                         break;
                     case 'path':
                         path = path.replace('{' + param.name + '}', encodeURIComponent(value));
                         break;
                     case 'header':
-                        headers[param.name] = value || undefined;
+                        if (value) {
+                            headers[param.name] = value;
+                        }
                         break;
                     case 'formData':
                         body = body || new $window.FormData();
