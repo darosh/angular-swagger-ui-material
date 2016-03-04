@@ -1,0 +1,17 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "GiHub Flavored Markdown Test",
+    "description": "# GitHub Flavoured Markdown Test\n\n## Header (level 2)\n\n### Header (level 3)\n\n#### Header (level 4)\n\n##### Table\n\n| Header | Header | Header |\n| --- | --- | --- |\n| Cell | Cell | Cell |\n| Cell | Cell | Cell |\n\n##### Auto-link\n\nwww.example.com\n\n##### To Do List\n\n- [x] Done\n- [x] Done\n- [ ] Not yet\n\n##### List\n\n* A\n* B\n* C\n\n##### Block\n\n```\nHello block!\n```\n\n##### Blockquote\n\n> &hellip;in blockquote.\n\n##### Horizontal Rule\n\n---\n"
+  },
+  "basePath": "/api",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {}
+}
