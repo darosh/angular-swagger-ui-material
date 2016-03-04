@@ -55,7 +55,7 @@ Material Design ~~template~~ Swagger UI ~~for~~ based on [angular-swagger-ui](ht
 
 ## Plugins
 
-See [src/plugins](./src/plugins)
+See [src/plugins](./src/plugins).
 
 ## Reference
 
