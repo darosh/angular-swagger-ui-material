@@ -114,5 +114,6 @@ gulp deploy
 * [ ] Hot keys (search, submit)
 * [ ] XML example support
 * [ ] Swagger 1.2
+* [ ] GFM task lists vs SCE
 * [ ] E2E tests
 * [ ] [Security Requirement Object](http://swagger.io/specification/#securityRequirementObject) support
