@@ -14,7 +14,9 @@ angular.module('swaggerUiSplit', [])
                         tags[t] = true;
 
                         angular.forEach(path, function (method) {
-                            method.tags = [t];
+                            if (!method.tags || !method.tags.length) {
+                                method.tags = [t];
+                            }
                         });
                     });
 
