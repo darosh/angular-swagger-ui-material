@@ -5,7 +5,7 @@ gulp.task('full', ['scripts'], function () {
     var uglifyjs = require('gulp-uglifyjs');
     var ngAnnotate = require('gulp-ng-annotate');
 
-    gulp.src(
+    return gulp.src(
         [
             'dist/scripts/swagger-ui-material.js',
             'src/plugins/**/*.js',
