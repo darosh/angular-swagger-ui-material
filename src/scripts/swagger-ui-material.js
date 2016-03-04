@@ -183,7 +183,7 @@ angular.module('swaggerUiMaterial',
                     }
 
                     response.fullUrl = swaggerFormat.fullUrl(response);
-                    response.body = angular.isString(response.data) ? response.data : angular.toJson(response.data, true);
+                    response.body = angular.isObject(response.data) ? angular.toJson(response.data, true) : response.data;
 
                     response.headerArray = [];
 
