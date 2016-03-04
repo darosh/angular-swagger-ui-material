@@ -53,7 +53,7 @@ angular
         function convert (deferred, swaggerUrl, swaggerData) {
             // prepare swagger2 objects
             var swagger2 = swaggerData;
-            var info = swagger2.info;
+            var info = swagger2.info || {};
             var promises = [];
 
             info.contact = {

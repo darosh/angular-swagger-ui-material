@@ -10,6 +10,7 @@ gulp.task('full', ['scripts'], function () {
             'dist/scripts/swagger-ui-material.js',
             'src/plugins/**/*.js',
             '!src/plugins/**/*.core.js',
+            '!src/plugins/**/*.broken.js',
             '!src/plugins/**/*.sample.js'
         ])
         .pipe(concat('swagger-ui-material.full.js'))

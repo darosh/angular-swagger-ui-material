@@ -5,7 +5,7 @@ gulp.task('plugins', function () {
     var ngAnnotate = require('gulp-ng-annotate');
     var rename = require('gulp-rename');
 
-    return gulp.src(['src/plugins/**/*.js', '!src/plugins/parse/*.js'])
+    return gulp.src(['src/plugins/**/*.js', '!src/plugins/parse/*.js', '!src/plugins/**/*.broken.js'])
         .pipe(gulp.dest('dist/plugins'))
         .pipe(ngAnnotate())
         .pipe(uglify())
