@@ -7,7 +7,7 @@
 'use strict';
 
 angular
-    .module('swaggerUi', ['ng'])
+    .module('swaggerUi')
     .directive('fileInput', function () {
         // helper to be able to retrieve HTML5 File in ngModel from input
         return {
