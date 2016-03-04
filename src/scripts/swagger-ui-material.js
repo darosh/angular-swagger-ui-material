@@ -290,14 +290,14 @@ angular.module('swaggerUiMaterial',
                     if (op.responseClass && op.responseClass.status) {
                         op.responseArray.push({
                             code: op.responseClass.status,
-                            description: op.responseClass.description
+                            description: op.responseClass.description || utils.statusInfo(op.responseClass.status)[0]
                         });
                     }
 
                     angular.forEach(op.responses, function (r, c) {
                         op.responseArray.push({
                             code: c,
-                            description: r.description
+                            description: r.description || utils.statusInfo(c)[0]
                         });
                     });
 
