@@ -101,20 +101,15 @@ angular
          * parse operations
          */
         function parseOperations (swagger, resources, form, map, defaultContentType, openPath) {
-            var path,
-                pathObject,
-                pathParameters,
-                httpMethod,
-                operation,
-                tag,
-                resource;
+            var pathParameters;
+            var tag;
+            var resource;
 
-            for (path in swagger.paths) {
-                pathObject = swagger.paths[path];
+            angular.forEach(swagger.paths, function (pathObject, path) {
                 pathParameters = pathObject.parameters || [];
                 delete pathObject.parameters;
-                for (httpMethod in pathObject) {
-                    operation = pathObject[httpMethod];
+
+                angular.forEach(pathObject, function (operation, httpMethod) {
                     // TODO manage 'deprecated' operations ?
                     operation.id = operationId;
                     operation.description = trustHtml(operation.description);
@@ -143,8 +138,8 @@ angular
                         resource.open = true;
                     }
                     operationId++;
-                }
-            }
+                });
+            });
         }
 
         /**
@@ -221,28 +216,29 @@ angular
          * parse operation responses
          */
         function parseResponses (swagger, operation) {
-            var code,
-                response,
-                sampleJson;
+            var sampleJson;
 
             if (operation.responses) {
-                for (code in operation.responses) {
+                angular.forEach(operation.responses, function (response, code) {
                     // TODO manage response headers
-                    response = operation.responses[code];
                     response.description = trustHtml(response.description);
+
                     if (response.schema) {
                         if (response.examples && response.examples[operation.produces[0]]) {
                             sampleJson = angular.toJson(response.examples[operation.produces[0]], true);
                         } else {
                             sampleJson = swaggerModel.generateSampleJson(swagger, response.schema);
                         }
+
                         response.schema.json = sampleJson;
+
                         if (response.schema.type === 'object' || response.schema.type === 'array' || response.schema.$ref) {
                             response.display = 1; // display schema
                             response.schema.model = $sce.trustAsHtml(swaggerModel.generateModel(swagger, response.schema));
                         } else if (response.schema.type === 'string') {
                             delete response.schema;
                         }
+
                         if (code === '200' || code === '201') {
                             operation.responseClass = response;
                             operation.responseClass.display = 1;
@@ -254,14 +250,14 @@ angular
                     } else {
                         operation.hasResponses = true;
                     }
-                }
+                });
             }
         }
 
         function cleanUp (resources, openPath) {
-            var i,
-                resource,
-                operations;
+            var i;
+            var resource;
+            var operations;
 
             for (i = 0; i < resources.length; i++) {
                 resource = resources[i];
@@ -271,6 +267,7 @@ angular
                     resources.splice(i--, 1);
                 }
             }
+
             // sort resources alphabetically
             resources.sort(function (a, b) {
                 if (a.name > b.name) {
@@ -280,14 +277,17 @@ angular
                 }
                 return 0;
             });
+
             swaggerModel.clearCache();
         }
 
         function trustHtml (text) {
             var trusted = text;
+
             if (angular.isString(text) && trustedSources) {
                 trusted = $sce.trustAsHtml(escapeChars(text));
             }
+
             // else ngSanitize MUST be added to app
             return trusted;
         }

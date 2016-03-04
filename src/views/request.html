@@ -35,6 +35,7 @@
                 <md-input-container flex>
                     <md-select aria-label="response type" ng-model="form[sop.id].responseType"
                                ng-disabled="sop.produces.length == 1">
+                        <!--suppress HtmlUnknownAttribute -->
                         <md-option
                             ng-repeat="item in sop.produces track by item" value="{{item}}" ng-bind="::item">
                         </md-option>
