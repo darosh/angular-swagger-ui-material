@@ -6,6 +6,7 @@
 </div>
 
 <form role="form" name="ngForm.explorerForm" ng-submit="submit(sop)">
+    <!-- TODO: <fieldset ng-disabled="sop.loading"> https://github.com/angular/material/issues/2417 -->
     <div ng-if="sop.responseClass.schema" layout="row">
         <div flex>
             <md-subheader class="md-warn md-no-sticky">Response class</md-subheader>
