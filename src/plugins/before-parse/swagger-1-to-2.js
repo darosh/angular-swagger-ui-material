@@ -53,16 +53,18 @@ angular
         function convert (deferred, swaggerUrl, swaggerData) {
             // prepare swagger2 objects
             var swagger2 = swaggerData;
-            var info = swagger2.info || {};
+            var info = swagger2.info = swagger2.info || {};
             var promises = [];
 
             info.contact = {
                 email: info.contact
             };
+
             info.license = {
                 name: info.license,
                 url: info.licenseUrl
             };
+
             info.termsOfService = info.termsOfServiceUrl;
             swagger2.paths = {};
             swagger2.definitions = {};
@@ -92,12 +94,16 @@ angular
         function convertInfo (swagger1, swagger2) {
             swagger2.info.version = swagger2.info.version || swagger1.apiVersion;
             swagger2.basePath = swagger2.basePath || swagger1.basePath;
+
             if (swagger2.basePath.indexOf('http') === 0) {
                 var a = angular.element('<a href="' + swagger2.basePath + '"></a>')[0];
                 swagger2.schemes = [a.protocol.replace(':', '')];
                 swagger2.host = a.host;
                 swagger2.basePath = a.pathname;
             }
+
+            swagger2.info.title = swagger2.info.title || swagger2.host;
+
             swagger2.tags.push({
                 name: swagger1.resourcePath
             });
@@ -154,9 +160,17 @@ angular
                         response.type = resp.responseModel;
                     }
                 } else if (resp.code === 200 && operation.type !== 'void') {
-                    response.schema = {
-                        type: operation.type
-                    };
+                    if (swagger1.models && swagger1.models[operation.type]) {
+                        response.schema = {
+                            type: operation.type,
+                            $ref: '#/definitions/' + operation.type
+                        };
+                    } else {
+                        response.schema = {
+                            type: operation.type
+                        };
+                    }
+
                     if (operation.type === 'array') {
                         var ref = operation.items.type || operation.items.$ref;
                         var items = response.schema.items = {};

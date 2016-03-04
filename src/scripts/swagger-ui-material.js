@@ -223,8 +223,11 @@ angular.module('swaggerUiMaterial',
                     var type;
 
                     if (isSwagger) {
+                        // TODO: fromJson is lazy fix for https://github.com/crucialfelix/supercolliderjs/issues/17
+                        var json = angular.toJson(swagger, true);
+
                         text = (isSwagger === 'swagger.json')
-                            ? angular.toJson(swagger, true) : $window.jsyaml.safeDump(swagger);
+                            ? json : $window.jsyaml.safeDump(angular.fromJson(json));
                         type = (isSwagger === 'swagger.json') ? 'application/json' : 'text/yaml';
                     } else {
                         text = scope.sop.explorerResult.body;
@@ -279,7 +282,7 @@ angular.module('swaggerUiMaterial',
                         }, 15);
                     }, 15);
 
-                    if (op.responseClass && op.responseClass.schema && !op.responseClass.schema.json) {
+                    if (op.responseClass && op.responseClass.schema && op.responseClass.schema.obj && !op.responseClass.schema.json) {
                         op.responseClass.schema.json = syntax.json(angular.toJson(op.responseClass.schema.obj, true));
                     }
 
