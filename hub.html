@@ -22,14 +22,14 @@
 <body ng-controller="HubCtrl as vm" layout="column" class="ng-cloak">
 
 <div flex layout="column">
-    <md-toolbar md-whiteframe="2">
+    <md-toolbar md-whiteframe="4" class="md-accent md-hue-1" style="z-index: 20;">
         <div class="md-toolbar-tools" ng-show="vm.loading" style="padding-left: 0">
-            <md-progress-circular class="md-accent md-hue-1" md-mode="indeterminate"
+            <md-progress-circular class="md-accent md-hue-3" md-mode="indeterminate"
                                   md-diameter="56"></md-progress-circular>
             <span>Loading&hellip;</span>
         </div>
         <div class="md-toolbar-tools" ng-hide="vm.loading">
-            <span>APIs</span>
+            <span class="md-title">APIs</span>
         </div>
     </md-toolbar>
     <md-content ng-show="!vm.loading">
@@ -43,10 +43,16 @@
                  style="padding: 12px">
 
                 <a ng-href="./#?url={{api.swaggerUrl}}" style="text-decoration: none">
-                    <md-toolbar class="md-whiteframe-2dp md-accent" style="height: auto; max-height: none">
-                        <div layout="row" layout-padding layout-align="start start" style="height: auto; max-height: none; min-height: 64px; padding-bottom: 4px; padding-top: 4px">
+                    <md-toolbar class="md-whiteframe-2dp md-accent"
+                                style="height: auto; max-height: none; border-top-left-radius: 4px; border-top-right-radius: 4px"
+                                md-whiteframe="2">
+                        <div style="height: 8px; border-top-left-radius: 4px; border-top-right-radius: 4px"
+                             ng-style="{background: api.gradient}" md-whiteframe="1"></div>
+                        <div layout="row" layout-padding layout-align="start start"
+                             style="height: auto; max-height: none; min-height: 64px; padding-bottom: 4px; padding-top: 4px">
                             <span class="md-title" flex ng-bind="::api.info.title" style="line-height: 28px"></span>
-                            <div layout="column" layout-align="start end" style="line-height: 28px; text-align:right; opacity: 0.8">
+                            <div layout="column" layout-align="start end"
+                                 style="line-height: 28px; text-align:right; opacity: 0.8">
                                 <small ng-bind="::api.parts[0]"></small>
                                 <small ng-bind="::api.parts[1]" ng-if="api.parts[1]"></small>
                                 <small ng-bind="::api.info.version"></small>
@@ -106,6 +112,11 @@
 
             vm.loading = true;
 
+            var colors = $http({
+                method: 'GET',
+                url: 'hub.json'
+            });
+
             $http({
                 method: 'GET',
                 url: 'https://apis-guru.github.io/api-models/api/v1/list.json'
@@ -122,6 +133,24 @@
 
                 vm.apis.sort(function (a, b) {
                     return (a.key).localeCompare(b.key);
+                });
+
+                colors.then(function (response) {
+                    angular.forEach(vm.apis, function (api) {
+                        var colors = response.data[api.key];
+                        var rgbs = [];
+
+                        angular.forEach(colors, function (c) {
+                            if ((c[0] + c[1] + c[2]) < 128) {
+                                c[0] = c[1] = c[2] = 255;
+                            }
+
+                            c[3] = 0.36;
+                            rgbs.push('rgba(' + c.join(',') + ')');
+                        });
+
+                        api.gradient = 'linear-gradient(120deg, ' + rgbs.join(',') + ')'
+                    });
                 });
             });
         });
