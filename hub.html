@@ -30,11 +30,14 @@
         a:focus {
             outline: none;
         }
+
+        .md-errors-spacer {
+            display: none;
+        }
     </style>
 </head>
-<body ng-controller="HubCtrl as vm" layout="column" class="ng-cloak">
-
-<div flex layout="column">
+<body ng-controller="HubCtrl as vm" layout="row" class="ng-cloak">
+<div layout="column" flex>
     <md-toolbar md-whiteframe="2" class="md-accent md-hue-1" style="z-index: 20;">
         <div class="md-toolbar-tools" ng-show="vm.loading" style="padding-left: 0">
             <md-progress-circular class="md-accent md-hue-3" md-mode="indeterminate"
@@ -42,16 +45,22 @@
             <span>Loading&hellip;</span>
         </div>
         <div class="md-toolbar-tools" ng-hide="vm.loading">
+            <span ng-if="vm.apis.length && (vm.count != vm.apis.length)">{{vm.count}} of&nbsp;</span>
             <span class="md-title">{{vm.apis.length}} APIs</span>
+            <span flex></span>
+            <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button">
+                <md-icon>filter_list</md-icon>
+            </md-button>
         </div>
     </md-toolbar>
     <md-content ng-show="!vm.loading" style="background-color: #fff">
-        <div layout="row" layout-wrap layout-padding style="margin-top: 2px">
+        <div ng-show="vm.count" layout="row" layout-wrap layout-padding style="margin-top: 2px">
             <div flex-xs="100"
                  flex-sm="50"
                  flex-md="33"
                  flex-lg="25"
                  flex-xl="20"
+                 ng-hide="api.hide"
                  ng-repeat="api in vm.apis track by $index"
                  style="padding: 12px">
 
@@ -75,31 +84,94 @@
                     </md-toolbar>
                 </a>
             </div>
-
-            <div flex="100" layout="row" layout-align="end end">
-                <div flex-xs="100"
-                     flex-sm="50"
-                     flex-md="33"
-                     flex-lg="25"
-                     flex-xl="20"
-                     style="padding: 12px">
-                    <a class="md-whiteframe-2dp" href="http://APIs.guru" style="text-decoration: none; display: block">
-                        <md-toolbar class="md-accent md-hue-1">
-                            <div class="md-toolbar-tools">
-                                <span class="md-title">Powered by</span>
-                            </div>
-                        </md-toolbar>
-                        <md-divider></md-divider>
-                        <div style="padding: 12px 12px 0 12px; background-color: #fff">
-                            <img src="https://apis-guru.github.io/api-models/branding/logo_horizontal.svg" alt="logo"
-                                 style="max-width: 100%">
+        </div>
+        <md-divider ng-show="vm.count" style="margin: 4px 0 2px 0"></md-divider>
+        <div flex="100" layout="row" layout-padding layout-align="end end" style="margin-top: 2px">
+            <div flex-xs="100"
+                 flex-sm="50"
+                 flex-md="33"
+                 flex-lg="25"
+                 flex-xl="20"
+                 style="padding: 12px">
+                <a class="md-whiteframe-2dp" href="http://APIs.guru"
+                   style="text-decoration: none; display: block">
+                    <md-toolbar class="md-accent md-hue-1">
+                        <div class="md-toolbar-tools">
+                            <span class="md-title">Powered by</span>
                         </div>
-                    </a>
-                </div>
+                    </md-toolbar>
+                    <md-divider></md-divider>
+                    <div style="padding: 12px 12px 0 12px; background-color: #fff">
+                        <img src="https://apis-guru.github.io/api-models/branding/logo_horizontal.svg"
+                             alt="logo"
+                             style="max-width: 100%">
+                    </div>
+                </a>
             </div>
         </div>
     </md-content>
 </div>
+<md-sidenav md-is-open="vm.sidenav" class="md-sidenav-right" layout="column">
+    <md-toolbar md-whiteframe="2" class="md-accent md-hue-1">
+        <div class="md-toolbar-tools">
+            <span>Filter and Search</span>
+            <span flex></span>
+            <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button">
+                <md-icon>close</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-content md-scroll-y flex>
+        <div layout="row" layout-padding>
+            <div flex>
+                <md-input-container style="width: 100%; margin-bottom: 0">
+                    <label>Search</label>
+                    <input type="text" ng-model="vm.filter.search"
+                           ng-model-options="{debounce: {default: 100, blur: 0}}">
+                </md-input-container>
+            </div>
+        </div>
+        <md-list>
+            <md-divider></md-divider>
+            <md-subheader class="md-no-sticky">CORS Support</md-subheader>
+            <md-list-item ng-click="vm.filter.enabled = !vm.filter.enabled">
+                <p>Probably enabled</p>
+                <md-switch class="md-secondary" ng-model="vm.filter.enabled"></md-switch>
+            </md-list-item>
+            <md-list-item ng-click="vm.filter.disabled = !vm.filter.disabled">
+                <p>Probably disabled</p>
+                <md-switch class="md-secondary" ng-model="vm.filter.disabled"></md-switch>
+            </md-list-item>
+            <md-list-item ng-click="vm.filter.unknown = !vm.filter.unknown">
+                <p>Unknown</p>
+                <md-switch class="md-secondary" ng-model="vm.filter.unknown"></md-switch>
+            </md-list-item>
+            <md-divider></md-divider>
+            <md-subheader class="md-no-sticky">Security</md-subheader>
+            <md-list-item ng-click="vm.filter.none = !vm.filter.none">
+                <p>None</p>
+                <md-switch class="md-secondary" ng-model="vm.filter.none"></md-switch>
+            </md-list-item>
+            <md-list-item ng-click="vm.filter.basic = !vm.filter.basic">
+                <p>Basic</p>
+                <md-switch class="md-secondary" ng-model="vm.filter.basic"></md-switch>
+            </md-list-item>
+            <md-list-item ng-click="vm.filter.apiKey = !vm.filter.apiKey">
+                <p>API key</p>
+                <md-switch class="md-secondary" ng-model="vm.filter.apiKey"></md-switch>
+            </md-list-item>
+            <md-list-item ng-click="vm.filter.oauth2 = !vm.filter.oauth2">
+                <p>OAuth 2.0</p>
+                <md-switch class="md-secondary" ng-model="vm.filter.oauth2"></md-switch>
+            </md-list-item>
+            <md-list-item ng-click="vm.filter.unknownSecurity = !vm.filter.unknownSecurity">
+                <p>Unknown</p>
+                <md-switch class="md-secondary" ng-model="vm.filter.unknownSecurity"></md-switch>
+            </md-list-item>
+            <md-divider></md-divider>
+        </md-list>
+    </md-content>
+</md-sidenav>
 
 <!-- scripts CDN -->
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
@@ -121,12 +193,24 @@
                 .accentPalette('grey')
                 .warnPalette('amber');
         })
-        .controller('HubCtrl', function ($http) {
+        .controller('HubCtrl', function ($scope, $http, $timeout) {
             var vm = this;
 
             vm.loading = true;
+            vm.count = 0;
+            vm.filter = {
+                search: '',
+                enabled: true,
+                disabled: true,
+                unknown: true,
+                none: true,
+                basic: true,
+                apiKey: true,
+                oauth2: true,
+                unknownSecurity: true
+            };
 
-            var colors = $http({
+            var data = $http({
                 method: 'GET',
                 url: 'hub.json'
             });
@@ -146,31 +230,83 @@
                     vm.apis.push(s);
                 });
 
+                vm.count = vm.apis.length;
+
                 vm.apis.sort(function (a, b) {
                     return (a.key).localeCompare(b.key);
                 });
 
-                colors.then(function (response) {
+                data.then(function (response) {
                     angular.forEach(vm.apis, function (api) {
-                        var colors = response.data[api.key];
+                        var meta = response.data[api.key];
 
-                        if (!colors) {
+                        if (!meta) {
                             return;
                         }
 
-                        var rgbs = ['rgba(255,255,255,1)'];
-                        var rgbsLight = [];
+                        api.meta = meta;
 
-                        angular.forEach(colors, function (c) {
-                            c[3] = 0.333;
-                            rgbs.push('rgba(' + c.join(',') + ')');
-                            c[3] = 0.222;
-                            rgbsLight.push('rgba(' + c.join(',') + ')');
-                        });
+                        if (meta.colors) {
+                            var rgbs = ['rgba(255,255,255,1)'];
+                            var rgbsLight = [];
 
-                        api.gradient = 'linear-gradient(135deg, ' + rgbs.join(',') + ')';
-                        api.gradientLight = 'linear-gradient(135deg, ' + rgbsLight.join(',') + ')';
+                            angular.forEach(meta.colors, function (c) {
+                                c[3] = 0.333;
+                                rgbs.push('rgba(' + c.join(',') + ')');
+                                c[3] = 0.222;
+                                rgbsLight.push('rgba(' + c.join(',') + ')');
+                            });
+
+                            api.gradient = 'linear-gradient(135deg, ' + rgbs.join(',') + ')';
+                            api.gradientLight = 'linear-gradient(135deg, ' + rgbsLight.join(',') + ')';
+                        }
                     });
+
+                    $scope.$watch(function () {
+                        return vm.filter
+                    }, function () {
+                        $timeout(update, 200);
+                    }, true);
+
+                    function update () {
+                        var search = vm.filter.search.toLowerCase();
+
+                        vm.count = 0;
+
+                        angular.forEach(vm.apis, function (a) {
+                            var m = a.meta || {};
+                            a.hide = false;
+
+                            if ((m.cors === true) && !vm.filter.enabled) {
+                                a.hide = true;
+                            } else if ((m.cors === false) && !vm.filter.disabled) {
+                                a.hide = true;
+                            } else if (((m.cors === null) || angular.isUndefined(m.cors)) && !vm.filter.unknown) {
+                                a.hide = true;
+                            }
+
+                            if ((m.security === null) && !vm.filter.none) {
+                                a.hide = true;
+                            } else if ((m.security === 'basic') && !vm.filter.basic) {
+                                a.hide = true;
+                            } else if ((m.security === 'apiKey') && !vm.filter.apiKey) {
+                                a.hide = true;
+                            } else if ((m.security === 'oauth2') && !vm.filter.oauth2) {
+                                a.hide = true;
+                            } else if (angular.isUndefined(m.security) && !vm.filter.unknownSecurity) {
+                                a.hide = true;
+                            }
+
+                            if (vm.filter.search) {
+                                if ((a.info.title.toLowerCase().indexOf(search) === -1) &&
+                                    (a.key.toLowerCase().indexOf(search) === -1)) {
+                                    a.hide = true;
+                                }
+                            }
+
+                            vm.count += !a.hide;
+                        });
+                    }
                 });
             });
         });
