@@ -48,6 +48,10 @@ angular
          * Generate external URL
          */
         function getExternalUrl (baseUrl, $ref) {
+            if (!angular.isString($ref)) {
+                return '';
+            }
+
             var parts = $ref.split('#/');
             var externalUrl = parts[0];
 
@@ -61,6 +65,7 @@ angular
                     externalUrl = baseUrl.substring(0, pos) + '/' + externalUrl;
                 }
             }
+
             return externalUrl;
         }
 
