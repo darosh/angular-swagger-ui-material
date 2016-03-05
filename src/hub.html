@@ -18,11 +18,24 @@
             display: none;
         }
     </style>
+    <style>
+        small {
+            max-width: 120px;
+            text-overflow: ellipsis;
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        a:focus {
+            outline: none;
+        }
+    </style>
 </head>
 <body ng-controller="HubCtrl as vm" layout="column" class="ng-cloak">
 
 <div flex layout="column">
-    <md-toolbar md-whiteframe="4" class="md-accent md-hue-1" style="z-index: 20;">
+    <md-toolbar md-whiteframe="2" class="md-accent md-hue-1" style="z-index: 20;">
         <div class="md-toolbar-tools" ng-show="vm.loading" style="padding-left: 0">
             <md-progress-circular class="md-accent md-hue-3" md-mode="indeterminate"
                                   md-diameter="56"></md-progress-circular>
@@ -32,8 +45,8 @@
             <span class="md-title">{{vm.apis.length}} APIs</span>
         </div>
     </md-toolbar>
-    <md-content ng-show="!vm.loading">
-        <div layout="row" layout-wrap layout-padding>
+    <md-content ng-show="!vm.loading" style="background-color: #fff">
+        <div layout="row" layout-wrap layout-padding style="margin-top: 2px">
             <div flex-xs="100"
                  flex-sm="50"
                  flex-md="33"
@@ -42,11 +55,12 @@
                  ng-repeat="api in vm.apis track by $index"
                  style="padding: 12px">
 
-                <a ng-href="./#?url={{api.swaggerUrl}}" style="text-decoration: none">
-                    <md-toolbar class="md-whiteframe-2dp md-accent"
-                                style="height: auto; max-height: none; border-top-left-radius: 4px; border-top-right-radius: 4px"
-                                md-whiteframe="2">
-                        <div style="height: 8px; border-top-left-radius: 4px; border-top-right-radius: 4px"
+                <a ng-href="./#?url={{api.swaggerUrl}}"
+                   style="background-color: #fff; display: block; text-decoration: none">
+                    <md-toolbar class="md-whiteframe-2dp md-accent md-hue-1"
+                                style="height: auto; max-height: none; border-top-left-radius: 6px; border-top-right-radius: 6px"
+                                md-whiteframe="2" ng-style="{background: api.gradientLight}">
+                        <div style="height: 8px; border-top-left-radius: 6px; border-top-right-radius: 6px"
                              ng-style="{background: api.gradient}" md-whiteframe="1"></div>
                         <div layout="row" layout-padding layout-align="start start"
                              style="height: auto; max-height: none; min-height: 64px; padding-bottom: 4px; padding-top: 4px">
@@ -76,7 +90,7 @@
                             </div>
                         </md-toolbar>
                         <md-divider></md-divider>
-                        <div style="padding: 12px 12px 0 12px">
+                        <div style="padding: 12px 12px 0 12px; background-color: #fff">
                             <img src="https://apis-guru.github.io/api-models/branding/logo_horizontal.svg" alt="logo"
                                  style="max-width: 100%">
                         </div>
@@ -128,6 +142,7 @@
                     var s = v.versions[v.preferred];
                     s.key = k;
                     s.parts = k.split(':');
+                    s.info.title = s.info.title.replace(/([^A-Z])([A-Z])/, '$1\u200b$2');
                     vm.apis.push(s);
                 });
 
@@ -138,18 +153,23 @@
                 colors.then(function (response) {
                     angular.forEach(vm.apis, function (api) {
                         var colors = response.data[api.key];
-                        var rgbs = [];
+
+                        if (!colors) {
+                            return;
+                        }
+
+                        var rgbs = ['rgba(255,255,255,1)'];
+                        var rgbsLight = [];
 
                         angular.forEach(colors, function (c) {
-                            if ((c[0] + c[1] + c[2]) < 128) {
-                                c[0] = c[1] = c[2] = 255;
-                            }
-
-                            c[3] = 0.36;
+                            c[3] = 0.333;
                             rgbs.push('rgba(' + c.join(',') + ')');
+                            c[3] = 0.222;
+                            rgbsLight.push('rgba(' + c.join(',') + ')');
                         });
 
-                        api.gradient = 'linear-gradient(120deg, ' + rgbs.join(',') + ')'
+                        api.gradient = 'linear-gradient(135deg, ' + rgbs.join(',') + ')';
+                        api.gradientLight = 'linear-gradient(135deg, ' + rgbsLight.join(',') + ')';
                     });
                 });
             });
