@@ -1,0 +1,19 @@
+{
+  "name": "api-models-rainbows",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^1.5.2",
+    "colorgram": "^0.1.5",
+    "d3-color": "^0.4.2",
+    "gm": "^1.21.1",
+    "got": "^6.2.0",
+    "pngjs": "^2.2.0"
+  }
+}
