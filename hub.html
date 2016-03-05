@@ -18,6 +18,19 @@
             display: none;
         }
     </style>
+    <style>
+        small {
+            max-width: 120px;
+            text-overflow: ellipsis;
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        a:focus {
+            outline: none;
+        }
+    </style>
 </head>
 <body ng-controller="HubCtrl as vm" layout="column" class="ng-cloak">
 
@@ -42,7 +55,8 @@
                  ng-repeat="api in vm.apis track by $index"
                  style="padding: 12px">
 
-                <a ng-href="./#?url={{api.swaggerUrl}}" style="background-color: #fff; display: block; text-decoration: none">
+                <a ng-href="./#?url={{api.swaggerUrl}}"
+                   style="background-color: #fff; display: block; text-decoration: none">
                     <md-toolbar class="md-whiteframe-2dp md-accent md-hue-1"
                                 style="height: auto; max-height: none; border-top-left-radius: 6px; border-top-right-radius: 6px"
                                 md-whiteframe="2" ng-style="{background: api.gradientLight}">
@@ -128,6 +142,7 @@
                     var s = v.versions[v.preferred];
                     s.key = k;
                     s.parts = k.split(':');
+                    s.info.title = s.info.title.replace(/([^A-Z])([A-Z])/, '$1\u200b$2');
                     vm.apis.push(s);
                 });
 
