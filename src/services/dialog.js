@@ -12,19 +12,12 @@ angular.module('swaggerUiMaterial')
                 clickOutsideToClose: true,
                 targetEvent: $event,
                 controller: DialogCtrl,
-                locals: locals
+                locals: {vm: locals}
             });
         }
 
-        function DialogCtrl ($scope, $mdDialog, title, subtitle, header, description, link, section, style, meta) {
-            $scope.title = title;
-            $scope.subtitle = subtitle;
-            $scope.header = header;
-            $scope.description = description;
-            $scope.link = link;
-            $scope.section = section;
-            $scope.style = style;
-            $scope.meta = meta;
+        function DialogCtrl ($scope, $mdDialog, vm) {
+            $scope.vm = vm;
             $scope.closeDialog = function () {
                 $mdDialog.hide();
             };

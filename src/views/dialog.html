@@ -1,32 +1,32 @@
 <md-dialog class="sum-dialog" layout="column">
     <md-toolbar ng-class="style">
         <div class="md-toolbar-tools">
-            <h2><span class="md-title" ng-bind="title"></span></h2>
+            <h2><span class="md-title" ng-bind="vm.title"></span></h2>
             <span flex></span>
-            <small style="padding-left: 16px; text-align: right" ng-bind="subtitle"></small>
+            <small style="padding-left: 16px; text-align: right" ng-bind="vm.subtitle"></small>
         </div>
     </md-toolbar>
-    <div ng-if="meta" layout="row" layout-padding layout-align="space-between start">
+    <div ng-if="vm.meta" layout="row" layout-padding layout-align="space-between start">
         <div class="md-body-2" style="line-height: 24px">Safe
-            <md-icon ng-bind="meta[0] ? 'check_box' : 'check_box_outline_blank'"></md-icon>
+            <md-icon ng-bind="vm.meta[0] ? 'check_box' : 'check_box_outline_blank'"></md-icon>
         </div>
         <div class="md-body-2" style="line-height: 24px">Idempotent
-            <md-icon ng-bind="meta[1] ? 'check_box' : 'check_box_outline_blank'"></md-icon>
+            <md-icon ng-bind="vm.meta[1] ? 'check_box' : 'check_box_outline_blank'"></md-icon>
         </div>
         <div class="md-body-2" style="line-height: 24px">Cacheable
-            <md-icon ng-bind="meta[2] ? 'check_box' : 'check_box_outline_blank'"></md-icon>
+            <md-icon ng-bind="vm.meta[2] ? 'check_box' : 'check_box_outline_blank'"></md-icon>
         </div>
     </div>
-    <md-divider ng-if="meta"></md-divider>
+    <md-divider ng-if="vm.meta"></md-divider>
     <!--suppress HtmlUnknownTag -->
-    <md-dialog-content ng-if="header || description" class="md-dialog-content">
-        <h3 ng-if="header" class="md-title" ng-bind="header"></h3>
-        <p ng-if="description" class="sum-sentence" ng-bind="description"></p>
+    <md-dialog-content ng-if="vm.header || vm.description" class="md-dialog-content">
+        <h3 ng-if="vm.header" class="md-title" ng-bind="vm.header"></h3>
+        <p ng-if="vm.description" class="sum-sentence" ng-bind="vm.description"></p>
     </md-dialog-content>
     <!--suppress HtmlUnknownTag -->
     <md-dialog-actions>
         <!--suppress HtmlUnknownAttribute -->
-        <md-button ng-if="link" ng-href="{{link}}" target="_blank" class="md-primary" ng-bind="section"
+        <md-button ng-if="vm.link" ng-href="{{vm.link}}" target="_blank" class="md-primary" ng-bind="vm.section"
                    aria-label="spec"></md-button>
         <md-button ng-click="closeDialog()">Close</md-button>
     </md-dialog-actions>
