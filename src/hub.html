@@ -53,7 +53,7 @@
             <span class="md-title">{{vm.apis.length}} APIs</span>
             <span flex></span>
             <md-button ng-click="vm.table = !vm.table" class="md-icon-button" aria-label="view">
-                <md-icon ng-bind="vm.table ? 'view_comfy' : 'view_headline'"></md-icon>
+                <md-icon ng-bind="vm.table ? 'view_comfy' : 'view_list'"></md-icon>
             </md-button>
             <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button" aria-label="filter">
                 <md-icon>filter_list</md-icon>
@@ -84,7 +84,7 @@
                             </div>
                         </div>
                         <div style="margin-left: 16px; min-width: 64px; text-align: center">
-                            <small ng-bind="::api.info.version"></small>
+                            <small ng-bind="::api.info.version" style="max-width: 60px"></small>
                         </div>
                         <div style="margin-left: 16px; min-width: 64px">
                             <div style="line-height: 24px" ng-repeat="s in api.meta.security track by $index" ng-bind="s"></div>
