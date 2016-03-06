@@ -1,0 +1,130 @@
+{
+  "_args": [
+    [
+      "got",
+      "C:\\_DEVELOP\\api-colors"
+    ]
+  ],
+  "_from": "got@*",
+  "_id": "got@6.2.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/got",
+  "_nodeVersion": "4.2.4",
+  "_npmOperationalInternal": {
+    "host": "packages-13-west.internal.npmjs.com",
+    "tmp": "tmp/got-6.2.0.tgz_1456991638863_0.8261470813304186"
+  },
+  "_npmUser": {
+    "email": "floatdrop@gmail.com",
+    "name": "floatdrop"
+  },
+  "_npmVersion": "2.14.12",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "got",
+    "raw": "got",
+    "rawSpec": "",
+    "scope": null,
+    "spec": "*",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/got/-/got-6.2.0.tgz",
+  "_shasum": "eab52adb8b44fad77430ed828d0d531264afb2d7",
+  "_shrinkwrap": null,
+  "_spec": "got",
+  "_where": "C:\\_DEVELOP\\api-colors",
+  "browser": {
+    "unzip-response": false
+  },
+  "bugs": {
+    "url": "https://github.com/sindresorhus/got/issues"
+  },
+  "dependencies": {
+    "create-error-class": "^3.0.0",
+    "duplexer3": "^0.1.4",
+    "get-stream": "^1.1.0",
+    "is-plain-obj": "^1.0.0",
+    "is-redirect": "^1.0.0",
+    "is-retry-allowed": "^1.0.0",
+    "is-stream": "^1.0.0",
+    "lowercase-keys": "^1.0.0",
+    "node-status-codes": "^2.0.0",
+    "timed-out": "^2.0.0",
+    "unzip-response": "^1.0.0",
+    "url-parse-lax": "^1.0.0"
+  },
+  "description": "Simplified HTTP/HTTPS requests",
+  "devDependencies": {
+    "ava": "^0.12.0",
+    "coveralls": "^2.11.4",
+    "get-port": "^2.0.0",
+    "into-stream": "^2.0.0",
+    "nyc": "^5.0.1",
+    "pem": "^1.4.4",
+    "pify": "^2.3.0",
+    "tempfile": "^1.1.1",
+    "xo": "*"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "eab52adb8b44fad77430ed828d0d531264afb2d7",
+    "tarball": "http://registry.npmjs.org/got/-/got-6.2.0.tgz"
+  },
+  "engines": {
+    "node": ">=4"
+  },
+  "files": [
+    "index.js"
+  ],
+  "gitHead": "fc86dcc8f100c6b93fe70e945807a4c68be90f4f",
+  "homepage": "https://github.com/sindresorhus/got",
+  "keywords": [
+    "curl",
+    "fetch",
+    "get",
+    "got",
+    "http",
+    "https",
+    "request",
+    "simple",
+    "uri",
+    "url",
+    "util",
+    "utility",
+    "wget"
+  ],
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "sindresorhus",
+      "email": "sindresorhus@gmail.com"
+    },
+    {
+      "name": "floatdrop",
+      "email": "floatdrop@gmail.com"
+    },
+    {
+      "name": "kevva",
+      "email": "kevinmartensson@gmail.com"
+    }
+  ],
+  "name": "got",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sindresorhus/got.git"
+  },
+  "scripts": {
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "test": "xo && nyc ava"
+  },
+  "version": "6.2.0",
+  "xo": {
+    "esnext": true
+  }
+}
