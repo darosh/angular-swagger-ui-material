@@ -34,6 +34,10 @@
         .md-errors-spacer {
             display: none;
         }
+
+        a.md-button {
+            font-weight: normal;
+        }
     </style>
 </head>
 <body ng-controller="HubCtrl as vm" layout="row" class="ng-cloak">
@@ -48,13 +52,57 @@
             <span ng-if="vm.apis.length && (vm.count != vm.apis.length)">{{vm.count}} of&nbsp;</span>
             <span class="md-title">{{vm.apis.length}} APIs</span>
             <span flex></span>
+            <md-button ng-click="vm.table = !vm.table" class="md-icon-button">
+                <md-icon ng-bind="vm.table ? 'view_comfy' : 'view_headline'"></md-icon>
+            </md-button>
             <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button">
                 <md-icon>filter_list</md-icon>
             </md-button>
         </div>
     </md-toolbar>
     <md-content ng-show="!vm.loading" style="background-color: #fff">
-        <div ng-show="vm.count" layout="row" layout-wrap layout-padding style="margin-top: 2px">
+        <div ng-if="vm.table"
+             ng-show="vm.count"
+             layout="row"
+             layout-padding
+             layout-align="center"
+             style="margin-top: 2px">
+            <md-list flex="100" flex-gt-md="50">
+                <md-list-item ng-href="./#?url={{api.swaggerUrl}}"
+                              ng-hide="api.hide"
+                              ng-repeat-start="api in vm.apis track by $index">
+                    <span md-whiteframe="1" class="md-avatar" ng-style="{background: api.gradientAvatar}"
+                          style="opacity: 0.666"></span>
+                    <span class="md-title" flex ng-bind="::api.info.title" style="line-height: 28px"></span>
+
+                    <div hide show-gt-sm class="md-secondary" layout="row" layout-align="start center">
+                        <div>
+                            <div style="text-align: right">
+                                <small style="line-height: 24px" ng-bind="::api.parts[0]"></small>
+                                <small style="line-height: 24px" ng-if="::api.parts[1]" ng-bind="::api.parts[1]"></small>
+                            </div>
+                        </div>
+                        <div style="margin-left: 16px; min-width: 64px; text-align: center">
+                            <small ng-bind="::api.info.version"></small>
+                        </div>
+                        <div style="margin-left: 16px; min-width: 64px">
+                            <div ng-repeat="s in api.meta.security track by $index" ng-bind="s"></div>
+                        </div>
+                        <div style="margin-left: 16px">
+                            <md-icon ng-if="api.meta.cors === true">verified_user</md-icon>
+                            <md-icon ng-if="api.meta.cors === false">security</md-icon>
+                            <md-icon ng-if="api.meta.cors !== true && api.meta.cors !== false">close
+                            </md-icon>
+                        </div>
+                    </div>
+                </md-list-item>
+                <md-divider ng-repeat-end
+                            style="margin: 0 8px"
+                            ng-hide="api.hide"
+                            ng-if="!$last"></md-divider>
+            </md-list>
+        </div>
+        <div ng-if="!vm.table" ng-show="vm.count" layout="row" layout-wrap layout-padding style="margin-top: 2px">
             <div flex-xs="100"
                  flex-sm="50"
                  flex-md="33"
@@ -135,14 +183,17 @@
             <md-divider></md-divider>
             <md-subheader class="md-no-sticky">CORS Support</md-subheader>
             <md-list-item ng-click="vm.filter.enabled = !vm.filter.enabled">
+                <md-icon>verified_user</md-icon>
                 <p>Probably enabled</p>
                 <md-switch class="md-secondary" ng-model="vm.filter.enabled"></md-switch>
             </md-list-item>
             <md-list-item ng-click="vm.filter.disabled = !vm.filter.disabled">
+                <md-icon>security</md-icon>
                 <p>Probably disabled</p>
                 <md-switch class="md-secondary" ng-model="vm.filter.disabled"></md-switch>
             </md-list-item>
             <md-list-item ng-click="vm.filter.unknown = !vm.filter.unknown">
+                <md-icon>close</md-icon>
                 <p>Unknown</p>
                 <md-switch class="md-secondary" ng-model="vm.filter.unknown"></md-switch>
             </md-list-item>
@@ -220,6 +271,7 @@
                 url: 'https://apis-guru.github.io/api-models/api/v1/list.json'
             }).then(function (response) {
                 vm.loading = false;
+                vm.table = false;
                 vm.apis = [];
 
                 angular.forEach(response.data, function (v, k) {
@@ -248,16 +300,22 @@
 
                         if (meta.colors) {
                             var rgbs = ['rgba(255,255,255,1)'];
+                            var rgbsAvatar = ['rgba(255,255,255,1)'];
                             var rgbsLight = [];
 
                             angular.forEach(meta.colors, function (c) {
                                 c[3] = 0.333;
                                 rgbs.push('rgba(' + c.join(',') + ')');
+                                c[3] = 1;
+                                rgbsAvatar.push('rgba(' + c.join(',') + ')');
                                 c[3] = 0.222;
                                 rgbsLight.push('rgba(' + c.join(',') + ')');
                             });
 
+                            rgbsAvatar.push(['rgba(255,255,255,1)']);
+
                             api.gradient = 'linear-gradient(135deg, ' + rgbs.join(',') + ')';
+                            api.gradientAvatar = 'linear-gradient(135deg, ' + rgbsAvatar.join(',') + ')';
                             api.gradientLight = 'linear-gradient(135deg, ' + rgbsLight.join(',') + ')';
                         }
                     });
@@ -285,17 +343,29 @@
                                 a.hide = true;
                             }
 
-                            if ((m.security === null) && !vm.filter.none) {
-                                a.hide = true;
-                            } else if ((m.security === 'basic') && !vm.filter.basic) {
-                                a.hide = true;
-                            } else if ((m.security === 'apiKey') && !vm.filter.apiKey) {
-                                a.hide = true;
-                            } else if ((m.security === 'oauth2') && !vm.filter.oauth2) {
-                                a.hide = true;
-                            } else if (angular.isUndefined(m.security) && !vm.filter.unknownSecurity) {
-                                a.hide = true;
+                            var show = false;
+
+                            if ((m.security && !m.security.length) && vm.filter.none) {
+                                show = true;
                             }
+
+                            if ((m.security.indexOf('basic') > -1) && vm.filter.basic) {
+                                show = true;
+                            }
+
+                            if ((m.security.indexOf('apiKey') > -1) && vm.filter.apiKey) {
+                                show = true;
+                            }
+
+                            if ((m.security.indexOf('oauth2') > -1) && vm.filter.oauth2) {
+                                show = true;
+                            }
+
+                            if (angular.isUndefined(m.security) && vm.filter.unknownSecurity) {
+                                show = true;
+                            }
+
+                            a.hide = a.hide ? true : !show;
 
                             if (vm.filter.search) {
                                 if ((a.info.title.toLowerCase().indexOf(search) === -1) &&
