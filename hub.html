@@ -70,6 +70,7 @@
             <md-list flex="100" flex-gt-md="50">
                 <md-list-item ng-href="./#?url={{api.swaggerUrl}}"
                               ng-hide="api.hide"
+                              aria-label="item"
                               ng-repeat-start="api in vm.apis track by $index">
                     <span md-whiteframe="1" class="md-avatar" ng-style="{background: api.gradientAvatar}"
                           style="opacity: 0.666"></span>
@@ -93,6 +94,9 @@
                             <md-icon ng-if="api.meta.cors === false">security</md-icon>
                             <md-icon ng-if="api.meta.cors !== true && api.meta.cors !== false">close
                             </md-icon>
+                        </div>
+                        <div style="margin-left: 16px">
+                            <img ng-src="http://online.swagger.io/validator?url={{api.swaggerUrl}}" style="width: 97px; height: 30px; display: block"/>
                         </div>
                     </div>
                 </md-list-item>
