@@ -20,6 +20,8 @@ angular.module('swaggerUiMarkdown', ['swaggerUi'])
                 }
 
                 angular.forEach(parseResult.resources, function (resource) {
+                    resource.description = markdown(resource.description);
+
                     angular.forEach(resource.operations, function (operation) {
                         operation.description = markdown(operation.description);
 
