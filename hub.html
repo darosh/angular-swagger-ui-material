@@ -74,7 +74,7 @@
                               ng-repeat-start="api in vm.apis track by $index">
                     <span md-whiteframe="1" class="md-avatar" ng-style="{background: api.gradientAvatar}"
                           style="opacity: 0.666"></span>
-                    <span class="md-title" flex ng-bind="::api.info.title" style="line-height: 28px"></span>
+                    <span class="md-title" flex ng-bind="::api.info.title" style="line-height: 28px; max-width: 360px"></span>
 
                     <div hide show-gt-sm class="md-secondary" layout="row" layout-align="start center">
                         <div>
