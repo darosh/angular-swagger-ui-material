@@ -1,0 +1,8 @@
+{
+  "www.googleapis.com": {
+    "oauth2": {
+      "clientId": "..."
+    },
+    "apiKey": "..."
+  }
+}

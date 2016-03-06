@@ -3,6 +3,9 @@ bower_components/
 dist/
 demo/
 
+src/auth.json
+!src/auth.json.sample
+
 .publish/
 .formatted/
 
