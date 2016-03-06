@@ -52,10 +52,10 @@
             <span ng-if="vm.apis.length && (vm.count != vm.apis.length)">{{vm.count}} of&nbsp;</span>
             <span class="md-title">{{vm.apis.length}} APIs</span>
             <span flex></span>
-            <md-button ng-click="vm.table = !vm.table" class="md-icon-button">
+            <md-button ng-click="vm.table = !vm.table" class="md-icon-button" aria-label="view">
                 <md-icon ng-bind="vm.table ? 'view_comfy' : 'view_headline'"></md-icon>
             </md-button>
-            <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button">
+            <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button" aria-label="filter">
                 <md-icon>filter_list</md-icon>
             </md-button>
         </div>
@@ -349,15 +349,15 @@
                                 show = true;
                             }
 
-                            if ((m.security.indexOf('basic') > -1) && vm.filter.basic) {
+                            if (m.security && (m.security.indexOf('basic') > -1) && vm.filter.basic) {
                                 show = true;
                             }
 
-                            if ((m.security.indexOf('apiKey') > -1) && vm.filter.apiKey) {
+                            if ((m.security && m.security.indexOf('apiKey') > -1) && vm.filter.apiKey) {
                                 show = true;
                             }
 
-                            if ((m.security.indexOf('oauth2') > -1) && vm.filter.oauth2) {
+                            if ((m.security && m.security.indexOf('oauth2') > -1) && vm.filter.oauth2) {
                                 show = true;
                             }
 
