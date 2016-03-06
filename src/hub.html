@@ -86,7 +86,7 @@
                             <small ng-bind="::api.info.version"></small>
                         </div>
                         <div style="margin-left: 16px; min-width: 64px">
-                            <div ng-repeat="s in api.meta.security track by $index" ng-bind="s"></div>
+                            <div style="line-height: 24px" ng-repeat="s in api.meta.security track by $index" ng-bind="s"></div>
                         </div>
                         <div style="margin-left: 16px">
                             <md-icon ng-if="api.meta.cors === true">verified_user</md-icon>
