@@ -30,7 +30,6 @@ angular.module('swaggerUiMarkdown', ['swaggerUi'])
                     } else {
                         sec.description = markdown(sec.description);
                     }
-
                 });
 
                 angular.forEach(parseResult.resources, function (resource) {
