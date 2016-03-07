@@ -254,3 +254,19 @@ md-dialog.sum-dialog {
     font-weight: normal;
     text-transform: none;
 }
+
+.sum-hide-spacer .md-errors-spacer {
+    display: none;
+}
+
+.sum-short-md p {
+    margin: 0;
+}
+
+.markdown-body {
+    font-family: inherit;
+}
+
+.markdown-body.md-body-2 {
+    font-size: 14px;
+}
