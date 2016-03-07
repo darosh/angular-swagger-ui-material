@@ -7,7 +7,7 @@ angular.module('swaggerUiMaterial')
         };
 
         function show ($event, locals, type) {
-            $mdDialog.show({
+            return $mdDialog.show({
                 templateUrl: 'views/' + (type || 'dialog') + '.html',
                 clickOutsideToClose: true,
                 targetEvent: $event,

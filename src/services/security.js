@@ -6,7 +6,6 @@ angular.module('swaggerUiMaterial')
         var swagger;
         var credentials;
         var config;
-
         var configPromise = $http({
             method: 'GET',
             url: './auth.json'
@@ -161,7 +160,7 @@ angular.module('swaggerUiMaterial')
                 credentials: credentials
             };
 
-            $rootScope.$watch(function () {
+            var toBeDestroyed = $rootScope.$watch(function () {
                 return credentials;
             }, saveCredentials, true);
 
@@ -215,7 +214,9 @@ angular.module('swaggerUiMaterial')
                 }
             );
 
-            dialog.show($event, locals, 'security');
+            dialog.show($event, locals, 'security').then(function () {
+                toBeDestroyed();
+            });
         }
 
         function friendlyScopes (sec) {
