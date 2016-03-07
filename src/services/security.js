@@ -4,6 +4,7 @@ angular.module('swaggerUiMaterial')
     .factory('security', function ($q, $http, $timeout, $interval, $window, $rootScope, dialog) {
         var storage = $window.sessionStorage;
         var swagger;
+        var parsed;
         var credentials;
         var config;
         var configPromise = $http({
@@ -19,12 +20,14 @@ angular.module('swaggerUiMaterial')
             setSwagger: setSwagger
         };
 
-        function setSwagger (value) {
+        function setSwagger (value, parsedValue) {
             if (!value) {
                 swagger = null;
+                parsed = null;
                 credentials = null;
             } else {
                 swagger = angular.copy(value);
+                parsed = parsedValue;
                 init();
             }
         }
@@ -33,7 +36,7 @@ angular.module('swaggerUiMaterial')
             var stored = storage.getItem('swaggerUiSecurity:' + swagger.host);
             credentials = stored ? angular.fromJson(stored) : {};
 
-            angular.forEach(swagger.securityDefinitions, function (sec, name) {
+            angular.forEach(parsed.securityDefinitions, function (sec, name) {
                 if (sec.type === 'apiKey') {
                     credentials[name] = credentials[name] || '';
                 } else if (sec.type === 'basic') {
@@ -59,7 +62,7 @@ angular.module('swaggerUiMaterial')
         function execute (options) {
             var deferred = $q.defer();
 
-            angular.forEach(swagger.securityDefinitions, function (sec, name) {
+            angular.forEach(parsed.securityDefinitions, function (sec, name) {
                 if (sec.type === 'apiKey') {
                     if (sec.in === 'header') {
                         options.headers[sec.name] = credentials[name].apiKey;
@@ -156,7 +159,7 @@ angular.module('swaggerUiMaterial')
 
         function showInternal ($event) {
             var locals = {
-                security: swagger.securityDefinitions,
+                security: parsed.securityDefinitions,
                 credentials: credentials
             };
 
@@ -164,7 +167,7 @@ angular.module('swaggerUiMaterial')
                 return credentials;
             }, saveCredentials, true);
 
-            angular.forEach(swagger.securityDefinitions,
+            angular.forEach(parsed.securityDefinitions,
                 function (sec) {
                     if (sec.type === 'apiKey') {
                     } else if (sec.type === 'basic') {

@@ -56,6 +56,7 @@ angular
             parseResult.info = info;
             parseResult.resources = resources;
             parseResult.form = form;
+            parseResult.securityDefinitions = angular.copy(swagger.securityDefinitions);
             deferred.resolve(true);
         }
 

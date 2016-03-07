@@ -80,7 +80,7 @@ angular.module('swaggerUiMaterial',
 
                 function init () {
                     swagger = null;
-                    security.setSwagger(null);
+                    security.setSwagger(null, null);
                     scope.info = {};
                     scope.resources = [];
                     scope.form = {};
@@ -102,13 +102,13 @@ angular.module('swaggerUiMaterial',
                     scope.loading = false;
                     var parseResult = {};
                     var swaggerCopy = angular.copy(swagger);
-                    security.setSwagger(swaggerCopy);
                     // execute modules
                     swaggerPlugins
                         .execute(swaggerPlugins.PARSE, scope.parser, swaggerUrl, swaggerType, swaggerCopy, scope.trustedSources, parseResult)
                         .then(function (executed) {
                             if (executed) {
                                 swaggerParsed(parseResult);
+                                security.setSwagger(swaggerCopy, parseResult);
                             } else {
                                 onError({
                                     message: 'no parser found for Swagger descriptor of type ' + swaggerType + ' and version ' + swagger.swagger

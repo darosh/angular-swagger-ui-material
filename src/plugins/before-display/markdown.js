@@ -19,6 +19,10 @@ angular.module('swaggerUiMarkdown', ['swaggerUi'])
                     parseResult.info.description = markdown(parseResult.info.description);
                 }
 
+                angular.forEach(parseResult.securityDefinitions, function (sec) {
+                    sec.description = markdown(sec.description);
+                });
+
                 angular.forEach(parseResult.resources, function (resource) {
                     resource.description = markdown(resource.description);
 
