@@ -74,20 +74,23 @@
                               ng-repeat-start="api in vm.apis track by $index">
                     <span md-whiteframe="1" class="md-avatar" ng-style="{background: api.gradientAvatar}"
                           style="opacity: 0.666"></span>
-                    <span class="md-title" flex ng-bind="::api.info.title" style="line-height: 28px; max-width: 360px"></span>
+                    <span class="md-title" flex ng-bind="::api.info.title"
+                          style="line-height: 28px; max-width: 360px"></span>
 
                     <div hide show-gt-sm class="md-secondary" layout="row" layout-align="start center">
                         <div>
                             <div style="text-align: right">
                                 <small style="line-height: 24px" ng-bind="::api.parts[0]"></small>
-                                <small style="line-height: 24px" ng-if="::api.parts[1]" ng-bind="::api.parts[1]"></small>
+                                <small style="line-height: 24px" ng-if="::api.parts[1]"
+                                       ng-bind="::api.parts[1]"></small>
                             </div>
                         </div>
                         <div style="margin-left: 16px; min-width: 64px; text-align: center">
                             <small ng-bind="::api.info.version" style="max-width: 60px"></small>
                         </div>
                         <div style="margin-left: 16px; min-width: 64px">
-                            <div style="line-height: 24px" ng-repeat="s in api.meta.security track by $index" ng-bind="s"></div>
+                            <div style="line-height: 24px" ng-repeat="s in api.meta.security track by $index"
+                                 ng-bind="s"></div>
                         </div>
                         <div style="margin-left: 16px">
                             <md-icon ng-if="api.meta.cors === true">verified_user</md-icon>
@@ -95,9 +98,9 @@
                             <md-icon ng-if="api.meta.cors !== true && api.meta.cors !== false">close
                             </md-icon>
                         </div>
-                        <div style="margin-left: 16px">
-                            <img ng-src="http://online.swagger.io/validator?url={{api.swaggerUrl}}" style="width: 97px; height: 30px; display: block"/>
-                        </div>
+                        <!--<div style="margin-left: 16px">-->
+                        <!--<img ng-src="http://online.swagger.io/validator?url={{api.swaggerUrl}}" style="width: 97px; height: 30px; display: block"/>-->
+                        <!--</div>-->
                     </div>
                 </md-list-item>
                 <md-divider ng-repeat-end
