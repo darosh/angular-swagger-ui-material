@@ -255,7 +255,9 @@
   "wikimedia.org": {},
   "winning.email": {},
   "wordnik.com": {},
-  "xkcd.com": {},
+  "xkcd.com": {
+    "tested": true
+  },
   "yunbi.com": {},
   "zoomconnect.com": {}
 }
