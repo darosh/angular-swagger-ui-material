@@ -192,9 +192,6 @@ angular.module('swaggerUiMaterial')
                 function (sec) {
                     if (sec.type === 'apiKey') {
                     } else if (sec.type === 'basic') {
-                        // if (sec.description.toLowerCase() === 'Basic HTTP Authentication'.toLowerCase()) {
-                        // delete sec.description;
-                        // }
                     } else if (sec.type === 'oauth2') {
                         var redirectUrl = $window.location.href.replace($window.location.hash, '') + 'auth.html';
                         sec.friendlyScopes = friendlyScopes(sec);
