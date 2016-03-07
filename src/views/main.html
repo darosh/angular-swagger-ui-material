@@ -34,7 +34,6 @@
                        class="md-icon-button">
                 <md-icon ng-bind="descriptions ? 'speaker_notes_off' : 'speaker_notes'"></md-icon>
             </md-button>
-            <!-- TODO: add missing buttons to mobile menu -->
             <md-button hide show-gt-sm aria-label="proxy" ng-click="showProxy($event)"
                        ng-class="{'md-warn md-hue-1': proxy.url}"
                        class="md-icon-button">
@@ -73,6 +72,20 @@
                         <md-button ng-click="descriptions = !descriptions">
                             <md-icon ng-bind="descriptions ? 'speaker_notes_off' : 'speaker_notes'"></md-icon>
                             Descriptions
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="showProxy($event)"
+                                   ng-class="{'md-warn': proxy.url}">
+                            <md-icon>security</md-icon>
+                            Proxy
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="showSecurity($event)"
+                                   ng-if="security">
+                            <md-icon>vpn_key</md-icon>
+                            Security
                         </md-button>
                     </md-menu-item>
                 </md-menu-content>
