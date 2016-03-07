@@ -43,8 +43,14 @@ angular.module('swaggerUiMaterial')
                     credentials[name] = credentials[name] || {username: '', password: ''};
                 } else if (sec.type === 'oauth2') {
                     sec.scopeKey = getScopeKey(name, sec);
+
+                    if (config[swagger.host] && config[swagger.host]['oauth2']) {
+                        var cid = config[swagger.host]['oauth2'].clientId;
+                    }
+
                     credentials[sec.scopeKey] = credentials[sec.scopeKey] ||
                         {
+                            clientId: cid || '',
                             accessToken: '',
                             tokenType: '',
                             expiresIn: null,
@@ -172,27 +178,15 @@ angular.module('swaggerUiMaterial')
                     if (sec.type === 'apiKey') {
                     } else if (sec.type === 'basic') {
                     } else if (sec.type === 'oauth2') {
-                        var clientId = null;
                         var redirectUrl = $window.location.href.replace($window.location.hash, '') + 'auth.html';
-
-                        if (config && config[swagger.host] && config[swagger.host][sec.type]) {
-                            if (config[swagger.host][sec.type].clientId) {
-                                clientId = encodeURIComponent(config[swagger.host][sec.type].clientId);
-                            }
-
-                            if (config[swagger.host][sec.type].redirectUrl) {
-                                redirectUrl = config[swagger.host][sec.type].redirectUrl;
-                            }
-                        }
-
                         sec.friendlyScopes = friendlyScopes(sec);
-
                         sec.link = '#';
 
                         counter(sec, locals);
 
                         sec.clicked = function ($event) {
                             $event.preventDefault();
+                            var clientId = encodeURIComponent(credentials[sec.scopeKey].clientId || '');
 
                             sec.link = sec.authorizationUrl.replace(/\\/g, '').replace(/\/\//g, '/') +
                                 '?response_type=token' +
