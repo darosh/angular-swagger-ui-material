@@ -20,12 +20,14 @@ angular.module('swaggerUiMarkdown', ['swaggerUi'])
                 }
 
                 angular.forEach(parseResult.securityDefinitions, function (sec) {
+                    var d = sec.description || '';
+
                     // Obvious descriptions
-                    if (sec.type === 'apiKey' && sec.description.toLowerCase() === 'API Key Authentication'.toLowerCase()) {
+                    if (sec.type === 'apiKey' && d.toLowerCase() === 'API Key Authentication'.toLowerCase()) {
                         delete sec.description;
-                    } else if (sec.type === 'basic' && sec.description.toLowerCase() === 'Basic HTTP Authentication'.toLowerCase()) {
+                    } else if (sec.type === 'basic' && d.toLowerCase() === 'Basic HTTP Authentication'.toLowerCase()) {
                         delete sec.description;
-                    } else if (sec.type === 'oauth2' && sec.description.toLowerCase() === 'OAuth 2.0 Authentication'.toLowerCase()) {
+                    } else if (sec.type === 'oauth2' && d.toLowerCase() === 'OAuth 2.0 Authentication'.toLowerCase()) {
                         delete sec.description;
                     } else {
                         sec.description = markdown(sec.description);
