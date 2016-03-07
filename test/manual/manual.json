@@ -52,7 +52,8 @@
   },
   "cambase.io": {
     "security": [],
-    "cors": false
+    "cors": false,
+    "tested": true
   },
   "citrixonline.com:gotoassistseeit": {
     "security": [],
@@ -72,11 +73,14 @@
   },
   "citrixonline.com:scim": {
     "security": [],
-    "cors": true
+    "cors": true,
+    "local": true
   },
   "citycontext.com": {
     "security": [],
-    "cors": true
+    "cors": true,
+    "local": true,
+    "paid": true
   },
   "clarify.io": {
     "security": [],
@@ -86,19 +90,25 @@
     "security": [
       "apiKey"
     ],
-    "cors": true
+    "cors": true,
+    "paid": true,
+    "tested": true
   },
   "consumerfinance.gov": {
     "security": [],
-    "cors": true
+    "cors": true,
+    "tested": true
   },
   "core.ac.uk": {
     "security": [],
-    "cors": true
+    "cors": true,
+    "local": true,
+    "tested": true
   },
   "cybertaxonomy.eu": {
     "security": [],
-    "cors": false
+    "cors": false,
+    "tested": true
   },
   "daisycon.com": {
     "security": [],
@@ -752,7 +762,7 @@
       "oauth2"
     ],
     "cors": false,
-    "testedWWS": true,
+    "tested": true,
     "notes": "have to copy oauth token to api key manually"
   },
   "jirafe.com": {
