@@ -34,6 +34,11 @@
                        class="md-icon-button">
                 <md-icon ng-bind="descriptions ? 'speaker_notes_off' : 'speaker_notes'"></md-icon>
             </md-button>
+            <md-button hide show-gt-sm aria-label="security" ng-click="showSecurity($event)"
+                       ng-if="security"
+                       class="md-icon-button">
+                <md-icon>vpn_key</md-icon>
+            </md-button>
             <md-menu>
                 <md-button hide-gt-sm aria-label="menu" ng-click="$mdOpenMenu($event)" class="md-icon-button">
                     <md-icon>more_vert</md-icon>
@@ -128,7 +133,7 @@
                 </md-button>
                 <span ng-bind="sop.path" class="sum-path-wrap"></span>
             </div>
-            <div ng-if="sop.summary" class="md-body-2" ng-bind="sop.summary"></div>
+            <div ng-if="sop.summary" class="md-body-2 markdown-body" ng-bind="sop.summary"></div>
         </div>
     </div>
     <md-tabs class="md-hue-2"

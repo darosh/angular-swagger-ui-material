@@ -18,7 +18,7 @@ angular.module('swaggerUiMaterial',
     // Derived from original swaggerUi directive
     .directive('swaggerUiMaterial', function ($timeout, $window,
                                               swaggerLoader, swaggerClient, swaggerPlugins, swaggerFormat,
-                                              theme, style, display, syntax, utils) {
+                                              theme, style, display, syntax, utils, security) {
         return {
             restrict: 'A',
             templateUrl: 'views/main.html',
@@ -74,10 +74,13 @@ angular.module('swaggerUiMaterial',
                 scope.$watch('url', urlUpdated);
                 scope.$watch('searchFilter', searchFilterUpdated);
 
+                scope.showSecurity = showSecurity;
+
                 var swagger;
 
                 function init () {
                     swagger = null;
+                    security.setSwagger(null);
                     scope.info = {};
                     scope.resources = [];
                     scope.form = {};
@@ -99,6 +102,7 @@ angular.module('swaggerUiMaterial',
                     scope.loading = false;
                     var parseResult = {};
                     var swaggerCopy = angular.copy(swagger);
+                    security.setSwagger(swaggerCopy);
                     // execute modules
                     swaggerPlugins
                         .execute(swaggerPlugins.PARSE, scope.parser, swaggerUrl, swaggerType, swaggerCopy, scope.trustedSources, parseResult)
@@ -326,6 +330,7 @@ angular.module('swaggerUiMaterial',
                             scope.form = parseResult.form;
                             scope.resources = parseResult.resources;
                             scope.meta = display.meta(scope.info, scope.url, scope.validatorUrl, scope.openFile);
+                            scope.security = Object.keys(swagger.securityDefinitions || {}).length;
                         })
                         .catch(onError);
                 }
@@ -336,6 +341,10 @@ angular.module('swaggerUiMaterial',
                     if (angular.isFunction(scope.errorHandler)) {
                         scope.errorHandler(error);
                     }
+                }
+
+                function showSecurity ($event) {
+                    security.show($event, swagger);
                 }
             }
         };
