@@ -63,9 +63,14 @@
   "data2crm.com": {},
   "datumbox.com": {},
   "dweet.io": {},
-  "eriomem.net": {},
+  "eriomem.net": {
+    "tested": true
+  },
   "exavault.com": {},
-  "figure.nz": {},
+  "figure.nz": {
+    "tested": false,
+    "notes": "The early preview release of the Figure.NZ API has been retired"
+  },
   "firebrowse.org": {},
   "funshouts.com": {},
   "gavagai.se": {},
@@ -183,11 +188,18 @@
   "googleapis.com:youtubeAnalytics": {},
   "googleapis.com:youtubereporting": {},
   "graphhopper.com": {},
-  "gsa.gov": {},
-  "healthcare.gov": {},
+  "gsa.gov": {
+    "tested": false,
+    "notes": "missing apiKey spec"
+  },
+  "healthcare.gov": {
+    "tested": true
+  },
   "hetras-certification.net:booking": {},
   "hetras-certification.net:hotel": {},
-  "hhs.gov": {},
+  "hhs.gov": {
+    "tested": true
+  },
   "iamreal.me": {},
   "idtbeyond.com": {},
   "import.io": {},
@@ -201,7 +213,10 @@
   "learnifier.com": {},
   "likefolio.com": {},
   "loginbycall.com": {},
-  "magick.nu": {},
+  "magick.nu": {
+    "tested": false,
+    "notes": "auth required, but not described"
+  },
   "mandrillapp.com": {},
   "mondiamedia.com": {},
   "moonmoonmoonmoon.com": {},
@@ -211,8 +226,13 @@
   "netlicensing.io": {},
   "nrel.gov:building-case-studies": {},
   "nrel.gov:transportation-incentives-laws": {},
-  "nsidc.org": {},
-  "oceandrivers.com": {},
+  "nsidc.org": {
+    "tested": true,
+    "notes": "xml response"
+  },
+  "oceandrivers.com": {
+    "tested": true
+  },
   "ontraport.com": {},
   "orghunter.com": {},
   "owler.com": {},
@@ -223,10 +243,18 @@
   "plenigo.com": {},
   "pollencheck.eu": {},
   "posty-api.herokuapp.com": {},
-  "prd-prsn.com": {},
-  "reactome.org": {},
-  "refugerestrooms.org": {},
-  "reverb.com": {},
+  "prd-prsn.com": {
+    "tested": true
+  },
+  "reactome.org": {
+    "tested": true
+  },
+  "refugerestrooms.org": {
+    "tested": true
+  },
+  "reverb.com": {
+    "tested": true
+  },
   "rummblelabs.com": {},
   "scrapewebsite.email": {},
   "semantria.com": {},
@@ -248,13 +276,18 @@
   "trello.com": {},
   "twilio.com": {},
   "unavco.org": {},
-  "uploady.com": {},
+  "uploady.com": {
+    "tested": false,
+    "notes": "missing oauth spec"
+  },
   "vatapi.com": {},
   "versioneye.com": {},
   "vestorly.com": {},
   "waag.org": {},
   "watchful.li": {},
-  "wikimedia.org": {},
+  "wikimedia.org": {
+    "tested": true
+  },
   "winning.email": {},
   "wordnik.com": {},
   "xkcd.com": {
