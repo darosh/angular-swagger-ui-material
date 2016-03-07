@@ -25,6 +25,9 @@ angular.module('swaggerUiMarkdown', ['swaggerUi'])
                     angular.forEach(resource.operations, function (operation) {
                         operation.description = markdown(operation.description);
 
+                        // TODO: remove workaround? http://darosh.github.io/angular-swagger-ui-material/#?url=https:%2F%2Fapis-guru.github.io%2Fapi-models%2Fwinning.email%2F1.0.0%2Fswagger.json
+                        operation.summary = operation.summary ? operation.summary.replace(/(<br>)+$/, '') : operation.summary;
+
                         angular.forEach(operation.responses, function (response) {
                             response.description = markdown(response.description);
                         });

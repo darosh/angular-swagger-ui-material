@@ -14,7 +14,7 @@
         </div>
     </md-toolbar>
     <div ng-show="api.open && api.description" style="padding-bottom: 0" layout-padding>
-        <div style="padding-bottom: 0" ng-bind-html="::api.description" class="sum-short-md markdown-body"></div>
+        <div style="padding-bottom: 0" ng-bind-html="::api.description" class="sum-short-md markdown-body md-body-2"></div>
     </div>
     <div ng-show="api.open" style="padding: 13px">
         <div ng-class="{'sum-selected': sop === op}" ng-repeat="op in api.operations | filter:searchObject:false track by op.id"
