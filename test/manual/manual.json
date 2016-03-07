@@ -172,7 +172,10 @@
   "googleapis.com:translate": {},
   "googleapis.com:urlshortener": {},
   "googleapis.com:vision": {},
-  "googleapis.com:webfonts": {},
+  "googleapis.com:webfonts": {
+    "local": true,
+    "tested": true
+  },
   "googleapis.com:webmasters": {},
   "googleapis.com:youtube": {},
   "googleapis.com:youtubeAnalytics": {},
@@ -228,7 +231,9 @@
   "simplyrets.com": {},
   "slack.com": {},
   "slideroom.com": {},
-  "smart-me.com": {},
+  "smart-me.com": {
+    "tested": true
+  },
   "solarvps.com": {},
   "spectrocoin.com": {},
   "spotify.com": {},
