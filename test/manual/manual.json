@@ -256,7 +256,10 @@
     "tested": true
   },
   "rummblelabs.com": {},
-  "scrapewebsite.email": {},
+  "scrapewebsite.email": {
+    "tested": true,
+    "notes": "markdown in summary?"
+  },
   "semantria.com": {},
   "simplyrets.com": {},
   "slack.com": {},
