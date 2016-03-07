@@ -273,7 +273,7 @@ angular.module('swaggerUiMaterial',
                     $event.stopPropagation();
 
                     var opening = !scope.sidenavOpen;
-                    scope.sidenavOpen = true;
+                    scope.sop = op;
                     op.tab = op.tab || 0;
 
                     // fixes tab content width flickering (might be angular-material issue)
@@ -281,12 +281,12 @@ angular.module('swaggerUiMaterial',
                     scope.omg = !opening;
 
                     $timeout(function () {
-                        scope.sop = op;
+                        scope.sidenavOpen = true;
 
                         $timeout(function () {
                             scope.omg = false;
                         }, 15);
-                    }, 15);
+                    }, 150);
 
                     if (op.responseClass && op.responseClass.schema && op.responseClass.schema.obj && !op.responseClass.schema.json) {
                         op.responseClass.schema.json = syntax.json(angular.toJson(op.responseClass.schema.obj, true));
