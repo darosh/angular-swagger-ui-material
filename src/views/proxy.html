@@ -1,0 +1,18 @@
+<md-dialog class="sum-dialog" layout="column">
+    <md-toolbar class="md-warn">
+        <div class="md-toolbar-tools">
+            <h2><span class="md-title">Proxy</span></h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content">
+        <div layout="column">
+            <md-input-container class="sum-hide-spacer">
+                <label>Proxy</label>
+                <input type="text" ng-model="vm.proxy.url">
+            </md-input-container>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button ng-click="closeDialog()">Close</md-button>
+    </md-dialog-actions>
+</md-dialog>

@@ -34,6 +34,11 @@
                        class="md-icon-button">
                 <md-icon ng-bind="descriptions ? 'speaker_notes_off' : 'speaker_notes'"></md-icon>
             </md-button>
+            <!-- TODO: add missing buttons to mobile menu -->
+            <md-button hide show-gt-sm aria-label="proxy" ng-click="showProxy($event)"
+                       class="md-icon-button">
+                <md-icon>security</md-icon>
+            </md-button>
             <md-button hide show-gt-sm aria-label="security" ng-click="showSecurity($event)"
                        ng-if="security"
                        class="md-icon-button">

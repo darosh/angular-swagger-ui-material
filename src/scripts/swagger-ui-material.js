@@ -75,6 +75,7 @@ angular.module('swaggerUiMaterial',
                 scope.$watch('searchFilter', searchFilterUpdated);
 
                 scope.showSecurity = showSecurity;
+                scope.showProxy = showProxy;
 
                 var swagger;
 
@@ -345,6 +346,10 @@ angular.module('swaggerUiMaterial',
 
                 function showSecurity ($event) {
                     security.show($event, swagger);
+                }
+
+                function showProxy ($event) {
+                    security.showProxy($event, swagger);
                 }
             }
         };

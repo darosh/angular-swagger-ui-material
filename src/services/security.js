@@ -13,9 +13,13 @@ angular.module('swaggerUiMaterial')
         }).then(function (response) {
             config = response.data;
         });
+        var proxy = {
+            url: ''
+        };
 
         return {
             show: show,
+            showProxy: showProxy,
             execute: execute,
             setSwagger: setSwagger
         };
@@ -67,6 +71,10 @@ angular.module('swaggerUiMaterial')
 
         function execute (options) {
             var deferred = $q.defer();
+
+            if (proxy.url) {
+                options.url = proxy.url + options.url;
+            }
 
             angular.forEach(parsed.securityDefinitions, function (sec, name) {
                 if (sec.type === 'apiKey') {
@@ -161,6 +169,12 @@ angular.module('swaggerUiMaterial')
                     showInternal($event);
                 }
             );
+        }
+
+        function showProxy ($event) {
+            dialog.show($event, {
+                proxy: proxy
+            }, 'proxy');
         }
 
         function showInternal ($event) {
