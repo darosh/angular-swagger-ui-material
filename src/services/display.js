@@ -22,8 +22,8 @@ angular.module('swaggerUiMaterial')
                 ['Host', 'home', i.scheme + '://' + i.host, i.scheme + '://' + i.host],
                 ['Base URL', 'link', i.basePath, (i.scheme ? (i.scheme + '://') : '') + i.host + i.basePath],
                 ['API version', 'developer_board', i.version, null],
-                ['Download JSON', 'file_download', 'swagger.json', '#', download],
-                ['Download YAML', 'file_download', $window.jsyaml ? 'swagger.yaml' : null, '#', download],
+                ['JSON', 'file_download', 'swagger.json', '#', download],
+                ['YAML', 'file_download', $window.jsyaml ? 'swagger.yaml' : null, '#', download],
                 [null, 'code', validatorDebug, validatorBadge]
             ];
         }
