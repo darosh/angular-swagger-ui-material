@@ -5,6 +5,7 @@ gulp.task('copy', ['build'], function () {
         'dist/styles/swagger-ui-material.min.css',
         'src/hub.*',
         'src/*.json',
+        'src/auth.html',
         'test/fixtures/examples/*.json',
         'test/fixtures/markdown/*.json']).pipe(gulp.dest('demo'));
 });
