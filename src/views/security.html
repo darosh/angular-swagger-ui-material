@@ -18,11 +18,11 @@
             <p ng-if="s.description" ng-bind-html="s.description" class="markdown-body sum-short-md"></p>
             <md-input-container class="sum-hide-spacer">
                 <label>Username</label>
-                <input type="text">
+                <input type="text" ng-model="vm.credentials[name].username">
             </md-input-container>
             <md-input-container class="sum-hide-spacer">
                 <label>Password</label>
-                <input type="password">
+                <input type="password" ng-model="vm.credentials[name].password">
             </md-input-container>
         </div>
         <h3 ng-if="s.type == 'oauth2'" class="md-title">OAuth 2.0 Authentication</h3>

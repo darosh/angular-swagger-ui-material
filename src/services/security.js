@@ -84,8 +84,8 @@ angular.module('swaggerUiMaterial')
                         options.params[sec.name] = credentials[name].apiKey;
                     }
                 } else if (sec.type === 'basic') {
-                    var username = '...';
-                    var password = '...';
+                    var username = credentials[name].username;
+                    var password = credentials[name].password;
                     var auth = $window.btoa(username + ':' + password);
                     options.headers['Authorization'] = 'Basic ' + auth;
                 } else if (sec.type === 'oauth2') {
@@ -191,6 +191,9 @@ angular.module('swaggerUiMaterial')
                 function (sec) {
                     if (sec.type === 'apiKey') {
                     } else if (sec.type === 'basic') {
+                        // if (sec.description.toLowerCase() === 'Basic HTTP Authentication'.toLowerCase()) {
+                        // delete sec.description;
+                        // }
                     } else if (sec.type === 'oauth2') {
                         var redirectUrl = $window.location.href.replace($window.location.hash, '') + 'auth.html';
                         sec.friendlyScopes = friendlyScopes(sec);
