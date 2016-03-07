@@ -5,12 +5,15 @@
         </div>
     </md-toolbar>
     <md-dialog-content class="md-dialog-content">
-        <div layout="column">
-            <md-input-container class="sum-hide-spacer">
-                <label>Proxy</label>
-                <input type="text" ng-model="vm.proxy.url">
-            </md-input-container>
-        </div>
+        <p>Use only proxies <b>you trust</b>!</p>
+        <form ng-submit="closeDialog()">
+            <div layout="column">
+                <md-input-container class="sum-hide-spacer">
+                    <label>Proxy</label>
+                    <input type="text" ng-model="vm.proxy.url">
+                </md-input-container>
+            </div>
+        </form>
     </md-dialog-content>
     <md-dialog-actions>
         <md-button ng-click="closeDialog()">Close</md-button>
