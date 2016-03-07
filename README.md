@@ -41,6 +41,8 @@ Material Design ~~template~~ Swagger UI ~~for~~ based on [angular-swagger-ui](ht
 * [x] Standard HTTP *methods*, *status codes* and *headers* reference thanks to [know-your-http-well](https://github.com/for-GET/know-your-http-well)
 * [x] Grouped and ungrouped views
 * [x] Open response body in new window
+* [x] [securityDefinitions](http://swagger.io/specification/#securityDefinitionsObject) support
+* [x] Proxy support
 * [x] Search
 
 ## Search
@@ -114,9 +116,7 @@ gulp deploy
 * [ ] Optimization (one-time binding, &hellip;)
 * [ ] Hot keys (search, submit)
 * [ ] XML example support
-* [ ] Input[type="password"] for passwords and tokens? (Is it part of Swagger spec?)
 * [ ] Warning about http (non SSL) submit? (dialog + do not show me again?)
 * [ ] Swagger 1.2
 * [ ] GFM task lists vs SCE
 * [ ] E2E tests
-* [ ] [Security Requirement Object](http://swagger.io/specification/#securityRequirementObject) support
