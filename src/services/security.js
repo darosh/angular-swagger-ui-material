@@ -21,7 +21,8 @@ angular.module('swaggerUiMaterial')
             show: show,
             showProxy: showProxy,
             execute: execute,
-            setSwagger: setSwagger
+            setSwagger: setSwagger,
+            proxy: proxy
         };
 
         function setSwagger (value, parsedValue) {

@@ -36,6 +36,7 @@
             </md-button>
             <!-- TODO: add missing buttons to mobile menu -->
             <md-button hide show-gt-sm aria-label="proxy" ng-click="showProxy($event)"
+                       ng-class="{'md-warn md-hue-1': proxy.url}"
                        class="md-icon-button">
                 <md-icon>security</md-icon>
             </md-button>

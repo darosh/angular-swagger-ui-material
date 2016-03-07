@@ -55,6 +55,7 @@ angular.module('swaggerUiMaterial',
                 scope.searchObject = {httpMethod: '', path: ''};
 
                 scope.ngForm = {explorerForm: {}};
+                scope.proxy = security.proxy;
 
                 // Selected operation
                 scope.sop = null;
