@@ -1,19 +1,18 @@
 'use strict';
 
 angular.module('swaggerUiMaterial')
-    .factory('security', function ($q, $http, $timeout, $interval, $window, dialog) {
+    .factory('security', function ($q, $http, $timeout, $interval, $window, $rootScope, dialog) {
         var storage = $window.sessionStorage;
         var swagger;
         var credentials;
         var config;
+
         var configPromise = $http({
             method: 'GET',
             url: './auth.json'
         }).then(function (response) {
             config = response.data;
         });
-
-        checkCode();
 
         return {
             show: show,
@@ -41,16 +40,21 @@ angular.module('swaggerUiMaterial')
                 } else if (sec.type === 'basic') {
                     credentials[name] = credentials[name] || {username: '', password: ''};
                 } else if (sec.type === 'oauth2') {
-                    var scope = getScope(sec.scopes);
-                    credentials[name + ':' + scope] = credentials[name + ':' + scope] ||
+                    sec.scopeKey = getScopeKey(name, sec);
+                    credentials[sec.scopeKey] = credentials[sec.scopeKey] ||
                         {
                             accessToken: '',
                             tokenType: '',
                             expiresIn: null,
-                            expiresFrom: null
+                            expiresFrom: null,
+                            scopes: initScopes(sec)
                         };
                 }
             });
+        }
+
+        function saveCredentials () {
+            storage.setItem('swaggerUiSecurity:' + swagger.host, angular.toJson(credentials));
         }
 
         function execute (options) {
@@ -69,10 +73,18 @@ angular.module('swaggerUiMaterial')
                     var auth = $window.btoa(username + ':' + password);
                     options.headers['Authorization'] = 'Basic ' + auth;
                 } else if (sec.type === 'oauth2') {
-                    var scope = getScope(sec.scopes);
+                    var c = credentials[sec.scopeKey];
 
-                    if (credentials[name + ':' + scope].accessToken) {
-                        options.headers['Authorization'] = credentials[name + ':' + scope].tokenType + ' ' + credentials[name + ':' + scope].accessToken;
+                    if (c.accessToken) {
+                        var a = [];
+
+                        if (c.tokenType) {
+                            a.push(c.tokenType);
+                        }
+
+                        a.push(c.accessToken);
+
+                        options.headers['Authorization'] = a.join(' ');
                     }
                 }
             });
@@ -82,14 +94,54 @@ angular.module('swaggerUiMaterial')
             return deferred.promise;
         }
 
-        function getScope (secScopes) {
+        function getScopeKey (name, sec) {
             var scopes = [];
 
-            angular.forEach(secScopes, function (v, k) {
-                scopes.push(encodeURIComponent(k));
+            angular.forEach(sec.scopes, function (v, k) {
+                scopes.push(k);
             });
 
-            return scopes.join('+');
+            return name + ':' + hashCode(scopes.join(' '));
+        }
+
+        function initScopes (sec) {
+            var obj = {};
+
+            angular.forEach(sec.scopes, function (v, k) {
+                obj[k] = true;
+            });
+
+            return obj;
+        }
+
+        function getSelectedScopes (sec) {
+            var s = [];
+
+            angular.forEach(credentials[sec.scopeKey].scopes, function (v, k) {
+                if (v) {
+                    s.push(k);
+                }
+            });
+
+            return s.join('+');
+        }
+
+        // from http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
+        function hashCode (text) {
+            var hash = 0;
+
+            if (text.length === 0) {
+                return hash;
+            }
+
+            for (var i = 0; i < text.length; i++) {
+                var character = text.charCodeAt(i);
+
+                hash = ((hash << 5) - hash) + character;
+                hash = (hash & hash) + 0x80000000;
+            }
+
+            return hash.toString(16);
         }
 
         function show ($event) {
@@ -109,14 +161,17 @@ angular.module('swaggerUiMaterial')
                 credentials: credentials
             };
 
+            $rootScope.$watch(function () {
+                return credentials;
+            }, saveCredentials, true);
+
             angular.forEach(swagger.securityDefinitions,
-                function (sec, name) {
+                function (sec) {
                     if (sec.type === 'apiKey') {
                     } else if (sec.type === 'basic') {
                     } else if (sec.type === 'oauth2') {
-                        var scope = getScope(sec.scopes);
                         var clientId = null;
-                        var redirectUrl = $window.location.href.replace($window.location.hash, '') + 'index.html';
+                        var redirectUrl = $window.location.href.replace($window.location.hash, '') + 'auth.html';
 
                         if (config && config[swagger.host] && config[swagger.host][sec.type]) {
                             if (config[swagger.host][sec.type].clientId) {
@@ -128,34 +183,34 @@ angular.module('swaggerUiMaterial')
                             }
                         }
 
-                        sec.link = sec.authorizationUrl.replace(/\\/g, '').replace(/\/\//g, '/') +
-                            '?response_type=token' +
-                            (clientId ? ('&client_id=' + clientId) : '') +
-                            '&scope=' + scope +
-                            '&redirect_uri=' + redirectUrl;
+                        sec.friendlyScopes = friendlyScopes(sec);
 
-                        sec.clicked = function () {
-                            storage.setItem('swaggerUiRedirect', $window.location.href);
-                            storage.setItem('swaggerUiRedirectHost', swagger.host);
-                            storage.setItem('swaggerUiRedirectName', name);
-                            storage.setItem('swaggerUiRedirectScope', scope);
+                        sec.link = '#';
+
+                        counter(sec, locals);
+
+                        sec.clicked = function ($event) {
+                            $event.preventDefault();
+
+                            sec.link = sec.authorizationUrl.replace(/\\/g, '').replace(/\/\//g, '/') +
+                                '?response_type=token' +
+                                (clientId ? ('&client_id=' + clientId) : '') +
+                                '&scope=' + getSelectedScopes(sec) +
+                                '&redirect_uri=' + redirectUrl;
+
+                            $window.open(sec.link);
+
+                            $window.onOAuthFinished = function (qp) {
+                                $timeout(function () {
+                                    angular.extend(credentials[sec.scopeKey], {
+                                        accessToken: qp['access_token'],
+                                        tokenType: qp['token_type'],
+                                        expiresIn: parseInt(qp['expires_in']),
+                                        expiresFrom: Date.now()
+                                    });
+                                });
+                            };
                         };
-
-                        sec.scope = getScope(sec.scopes);
-
-                        var c = credentials[name + ':' + scope];
-
-                        if (c.expiresIn) {
-                            sec.counter = Math.round((c.expiresFrom + c.expiresIn * 1000 - Date.now()) / 1000) + ' seconds';
-
-                            var promise = $interval(function () {
-                                if (!locals.opened) {
-                                    $interval.cancel(promise);
-                                }
-
-                                sec.counter = Math.round((c.expiresFrom + c.expiresIn * 1000 - Date.now()) / 1000) + ' seconds';
-                            }, 1000, c.expiresIn * 1000);
-                        }
                     }
                 }
             );
@@ -163,49 +218,32 @@ angular.module('swaggerUiMaterial')
             dialog.show($event, locals, 'security');
         }
 
-        function checkCode () {
-            // from https://github.com/swagger-api/swagger-ui/blob/master/dist/o2c.html
-            var qp;
+        function friendlyScopes (sec) {
+            var obj = {};
 
-            if ($window.window.location.hash) {
-                qp = $window.location.hash.substring(1).replace(/^\//, '');
-            } else {
-                qp = $window.location.search.substring(1);
+            angular.forEach(sec.scopes, function (v, k) {
+                obj[k] = k.replace(/^.*\/([^\/]+)$/g, '$1') || k;
+            });
+
+            return obj;
+        }
+
+        function counter (sec, locals) {
+            var c = credentials[sec.scopeKey];
+
+            if (c.expiresIn) {
+                sec.counter = Math.round((c.expiresFrom + c.expiresIn * 1000 - Date.now()) / 1000) + ' seconds';
             }
 
-            qp = qp ? angular.fromJson('{"' + qp.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
-                function (key, value) {
-                    return key === '' ? value : decodeURIComponent(value);
+            var promise = $interval(function () {
+                if (!locals.opened) {
+                    $interval.cancel(promise);
                 }
-            ) : {};
 
-            var url = storage.getItem('swaggerUiRedirect');
-            var host = storage.getItem('swaggerUiRedirectHost');
-            var name = storage.getItem('swaggerUiRedirectName');
-            var scope = storage.getItem('swaggerUiRedirectScope');
-
-            if (qp['access_token'] && url && host && name) {
-                storage.removeItem('swaggerUiRedirect');
-                storage.removeItem('swaggerUiRedirectHost');
-                storage.removeItem('swaggerUiRedirectName');
-                storage.removeItem('swaggerUiRedirectScope');
-
-                var stored = storage.getItem('swaggerUiSecurity:' + host);
-                credentials = stored ? angular.fromJson(stored) : {};
-
-                credentials[name + ':' + scope] = {
-                    accessToken: qp['access_token'],
-                    tokenType: qp['token_type'],
-                    expiresIn: parseInt(qp['expires_in']),
-                    expiresFrom: Date.now()
-                };
-
-                storage.setItem('swaggerUiSecurity:' + host, angular.toJson(credentials));
-
-                $timeout(function () {
-                    $window.location.href = url;
-                }, 100);
-            }
+                if (c.expiresIn) {
+                    sec.counter = Math.round((c.expiresFrom + c.expiresIn * 1000 - Date.now()) / 1000) + ' seconds';
+                }
+            }, 1000);
         }
     })
     .run(function (swaggerPlugins, security) {
