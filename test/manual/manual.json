@@ -1,0 +1,1040 @@
+{
+  "apis-guru.github.io": {
+    "security": [],
+    "cors": true,
+    "tested": true
+  },
+  "audiosear.ch": {
+    "security": [],
+    "cors": false,
+    "tested": true,
+    "notes": "cors is true"
+  },
+  "backupify.com": {
+    "security": [],
+    "cors": false,
+    "local": true
+  },
+  "bbc.com": {
+    "security": [
+      "apiKey"
+    ],
+    "cors": false
+  },
+  "bbryiot.com": {
+    "security": [],
+    "cors": true,
+    "notes": "missing securityDefinitions, should be oauth2"
+  },
+  "beanstream.com": {
+    "security": [],
+    "cors": true,
+    "notes": "forbidden link in description https://www.beanstream.com/api/v1 , external doc: http://developer.beanstream.com/ , has more response classes , requires header not described in Swagger http://developer.beanstream.com/documentation/your-first-integration/"
+  },
+  "bikewise.org": {
+    "security": [],
+    "cors": true,
+    "tested": true
+  },
+  "botify.com": {
+    "security": [
+      "apiKey"
+    ],
+    "cors": true,
+    "notes": "waiting for account manager to come back with credentials"
+  },
+  "bufferapp.com": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false,
+    "notes": "needs oauth client id , flow:accessCode , security description"
+  },
+  "cambase.io": {
+    "security": [],
+    "cors": false
+  },
+  "citrixonline.com:gotoassistseeit": {
+    "security": [],
+    "cors": true
+  },
+  "citrixonline.com:gotomeeting": {
+    "security": [],
+    "cors": true
+  },
+  "citrixonline.com:gototraining": {
+    "security": [],
+    "cors": true
+  },
+  "citrixonline.com:gotowebinar": {
+    "security": [],
+    "cors": true
+  },
+  "citrixonline.com:scim": {
+    "security": [],
+    "cors": true
+  },
+  "citycontext.com": {
+    "security": [],
+    "cors": true
+  },
+  "clarify.io": {
+    "security": [],
+    "cors": false
+  },
+  "clickmeter.com": {
+    "security": [
+      "apiKey"
+    ],
+    "cors": true
+  },
+  "consumerfinance.gov": {
+    "security": [],
+    "cors": true
+  },
+  "core.ac.uk": {
+    "security": [],
+    "cors": true
+  },
+  "cybertaxonomy.eu": {
+    "security": [],
+    "cors": false
+  },
+  "daisycon.com": {
+    "security": [],
+    "cors": true
+  },
+  "data.gov": {
+    "security": [],
+    "cors": true
+  },
+  "data2crm.com": {
+    "security": [],
+    "cors": false
+  },
+  "datumbox.com": {
+    "security": [],
+    "cors": false
+  },
+  "dweet.io": {
+    "security": [],
+    "cors": true
+  },
+  "eriomem.net": {
+    "security": [],
+    "cors": false
+  },
+  "exavault.com": {
+    "security": [],
+    "cors": false
+  },
+  "figure.nz": {
+    "security": [],
+    "cors": false
+  },
+  "firebrowse.org": {
+    "security": [],
+    "cors": false
+  },
+  "funshouts.com": {
+    "security": [
+      "apiKey"
+    ],
+    "cors": false
+  },
+  "gavagai.se": {
+    "security": [],
+    "cors": false
+  },
+  "geneea.com": {
+    "security": [],
+    "cors": false
+  },
+  "geodesystems.com": {
+    "security": [],
+    "cors": false
+  },
+  "gettyimages.com": {
+    "security": [],
+    "cors": false
+  },
+  "github.com": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "glugbot.com": {
+    "security": [],
+    "cors": false
+  },
+  "googleapis.com:adexchangebuyer": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:adexchangebuyer2": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:adexchangeseller": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:admin": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:adsense": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:adsensehost": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:analytics": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:androidenterprise": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:androidpublisher": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:appengine": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:appsactivity": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:appstate": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:autoscaler": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:bigquery": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:blogger": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:books": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:calendar": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:civicinfo": {
+    "security": [],
+    "cors": true
+  },
+  "googleapis.com:classroom": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:cloudbilling": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:cloudbuild": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:clouddebugger": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:cloudlatencytest": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:cloudmonitoring": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:cloudresourcemanager": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:cloudtrace": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:clouduseraccounts": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:compute": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:container": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:content": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:coordinate": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:customsearch": {
+    "security": [],
+    "cors": true
+  },
+  "googleapis.com:dataflow": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:dataproc": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:datastore": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:deploymentmanager": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:dfareporting": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:discovery": {
+    "security": [],
+    "cors": true
+  },
+  "googleapis.com:dns": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:doubleclickbidmanager": {
+    "security": [],
+    "cors": true
+  },
+  "googleapis.com:doubleclicksearch": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:drive": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:fitness": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:freebase": {
+    "security": [],
+    "cors": true
+  },
+  "googleapis.com:fusiontables": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:games": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:gamesConfiguration": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:gamesManagement": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:gan": {
+    "security": [],
+    "cors": true
+  },
+  "googleapis.com:genomics": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:gmail": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:groupsmigration": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:groupssettings": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:iam": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:identitytoolkit": {
+    "security": [],
+    "cors": true
+  },
+  "googleapis.com:kgsearch": {
+    "security": [],
+    "cors": false
+  },
+  "googleapis.com:licensing": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:logging": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:manager": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:mirror": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:oauth2": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:pagespeedonline": {
+    "security": [],
+    "cors": true
+  },
+  "googleapis.com:partners": {
+    "security": [],
+    "cors": false
+  },
+  "googleapis.com:people": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:playmoviespartner": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:plus": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:plusDomains": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:prediction": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:proximitybeacon": {
+    "security": [],
+    "cors": false
+  },
+  "googleapis.com:pubsub": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:qpxExpress": {
+    "security": [],
+    "cors": true
+  },
+  "googleapis.com:replicapool": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:replicapoolupdater": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:reseller": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:resourceviews": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:script": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:serviceregistry": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:siteVerification": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:spectrum": {
+    "security": [],
+    "cors": true
+  },
+  "googleapis.com:sqladmin": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:storage": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:storagetransfer": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:tagmanager": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:taskqueue": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:tasks": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:translate": {
+    "security": [],
+    "cors": true
+  },
+  "googleapis.com:urlshortener": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:vision": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "googleapis.com:webfonts": {
+    "security": [],
+    "cors": true
+  },
+  "googleapis.com:webmasters": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:youtube": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:youtubeAnalytics": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "googleapis.com:youtubereporting": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "graphhopper.com": {
+    "security": [
+      "apiKey"
+    ],
+    "cors": false
+  },
+  "gsa.gov": {
+    "security": [],
+    "cors": true
+  },
+  "healthcare.gov": {
+    "security": [],
+    "cors": true
+  },
+  "hetras-certification.net:booking": {
+    "security": [],
+    "cors": true
+  },
+  "hetras-certification.net:hotel": {
+    "security": [],
+    "cors": true
+  },
+  "hhs.gov": {
+    "security": [],
+    "cors": false
+  },
+  "iamreal.me": {
+    "security": [],
+    "cors": false
+  },
+  "idtbeyond.com": {
+    "security": [],
+    "cors": true
+  },
+  "import.io": {
+    "security": [
+      "apiKey"
+    ],
+    "cors": true
+  },
+  "inboxroute.com": {
+    "security": [
+      "apiKey"
+    ],
+    "cors": true
+  },
+  "infermedica.com": {
+    "security": [],
+    "cors": false
+  },
+  "instagram.com": {
+    "security": [
+      "apiKey",
+      "oauth2"
+    ],
+    "cors": false,
+    "testedWWS": true,
+    "notes": "have to copy oauth token to api key manually"
+  },
+  "jirafe.com": {
+    "security": [
+      "oauth2",
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "learnifier.com": {
+    "security": [],
+    "cors": false
+  },
+  "likefolio.com": {
+    "security": [],
+    "cors": false
+  },
+  "loginbycall.com": {
+    "security": [],
+    "cors": false
+  },
+  "magick.nu": {
+    "security": [],
+    "cors": false
+  },
+  "mandrillapp.com": {
+    "security": [],
+    "cors": false
+  },
+  "mondiamedia.com": {
+    "security": [],
+    "cors": true
+  },
+  "moonmoonmoonmoon.com": {
+    "security": [],
+    "cors": false
+  },
+  "motaword.com": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "nativeads.com": {
+    "security": [],
+    "cors": false
+  },
+  "neowsapp.com": {
+    "security": [],
+    "cors": true
+  },
+  "netlicensing.io": {
+    "security": [
+      "apiKey",
+      "basic"
+    ],
+    "cors": true
+  },
+  "nrel.gov:building-case-studies": {
+    "security": [],
+    "cors": true
+  },
+  "nrel.gov:transportation-incentives-laws": {
+    "security": [],
+    "cors": true
+  },
+  "nsidc.org": {
+    "security": [],
+    "cors": true
+  },
+  "oceandrivers.com": {
+    "security": [],
+    "cors": true
+  },
+  "ontraport.com": {
+    "security": [],
+    "cors": false
+  },
+  "orghunter.com": {
+    "security": [],
+    "cors": false
+  },
+  "owler.com": {
+    "security": [],
+    "cors": false
+  },
+  "pandorabots.com": {
+    "security": [],
+    "cors": false
+  },
+  "passwordutility.net": {
+    "security": [],
+    "cors": false
+  },
+  "patientview.org": {
+    "security": [],
+    "cors": false
+  },
+  "peel-ci.com": {
+    "security": [],
+    "cors": null
+  },
+  "plenigo.com": {
+    "security": [],
+    "cors": false
+  },
+  "pollencheck.eu": {
+    "security": [],
+    "cors": false
+  },
+  "posty-api.herokuapp.com": {
+    "security": [],
+    "cors": true
+  },
+  "prd-prsn.com": {
+    "security": [],
+    "cors": true
+  },
+  "reactome.org": {
+    "security": [],
+    "cors": true
+  },
+  "refugerestrooms.org": {
+    "security": [],
+    "cors": false
+  },
+  "reverb.com": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "rummblelabs.com": {
+    "security": [],
+    "cors": false
+  },
+  "scrapewebsite.email": {
+    "security": [],
+    "cors": false
+  },
+  "semantria.com": {
+    "security": [],
+    "cors": true
+  },
+  "simplyrets.com": {
+    "security": [
+      "basic"
+    ],
+    "cors": true
+  },
+  "slack.com": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": false
+  },
+  "slideroom.com": {
+    "security": [],
+    "cors": false
+  },
+  "smart-me.com": {
+    "security": [
+      "basic"
+    ],
+    "cors": false
+  },
+  "solarvps.com": {
+    "security": [
+      "apiKey"
+    ],
+    "cors": true
+  },
+  "spectrocoin.com": {
+    "security": [],
+    "cors": false
+  },
+  "spotify.com": {
+    "security": [
+      "oauth2",
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "stackexchange.com": {
+    "security": [
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "statsocial.com": {
+    "security": [],
+    "cors": true
+  },
+  "storecheckerapi.com": {
+    "security": [],
+    "cors": false
+  },
+  "taxamo.com": {
+    "security": [
+      "apiKey"
+    ],
+    "cors": false
+  },
+  "thenounproject.com": {
+    "security": [],
+    "cors": false
+  },
+  "thetvdb.com": {
+    "security": [
+      "apiKey"
+    ],
+    "cors": false
+  },
+  "trello.com": {
+    "security": [
+      "apiKey",
+      "oauth2"
+    ],
+    "cors": true
+  },
+  "twilio.com": {
+    "security": [
+      "basic"
+    ],
+    "cors": true
+  },
+  "unavco.org": {
+    "security": [],
+    "cors": null
+  },
+  "uploady.com": {
+    "security": [],
+    "cors": false
+  },
+  "vatapi.com": {
+    "security": [],
+    "cors": false
+  },
+  "versioneye.com": {
+    "security": [],
+    "cors": false
+  },
+  "vestorly.com": {
+    "security": [],
+    "cors": true
+  },
+  "waag.org": {
+    "security": [],
+    "cors": true
+  },
+  "watchful.li": {
+    "security": [],
+    "cors": true
+  },
+  "wikimedia.org": {
+    "security": [
+      "apiKey"
+    ],
+    "cors": true
+  },
+  "winning.email": {
+    "security": [
+      "apiKey"
+    ],
+    "cors": false
+  },
+  "wordnik.com": {
+    "security": [
+      "apiKey"
+    ],
+    "cors": false
+  },
+  "xkcd.com": {
+    "security": [],
+    "cors": false
+  },
+  "yunbi.com": {
+    "security": [],
+    "cors": false
+  },
+  "zoomconnect.com": {
+    "security": [],
+    "cors": true
+  }
+}
