@@ -4,8 +4,7 @@
   },
   "audiosear.ch": {
     "cors": true,
-    "tested": true,
-    "notes": "cors is true"
+    "tested": true
   },
   "backupify.com": {
     "local": true
