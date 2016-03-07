@@ -70,7 +70,9 @@
   "funshouts.com": {},
   "gavagai.se": {},
   "geneea.com": {},
-  "geodesystems.com": {},
+  "geodesystems.com": {
+    "tested": true
+  },
   "gettyimages.com": {},
   "github.com": {},
   "glugbot.com": {},
