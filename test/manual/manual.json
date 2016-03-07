@@ -276,7 +276,9 @@
   "taxamo.com": {},
   "thenounproject.com": {},
   "thetvdb.com": {},
-  "trello.com": {},
+  "trello.com": {
+    "notes": "Trello supports only OAuth 1, oauth2 is misleading"
+  },
   "twilio.com": {},
   "unavco.org": {},
   "uploady.com": {
