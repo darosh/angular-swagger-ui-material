@@ -4,5 +4,11 @@
       "clientId": "..."
     },
     "apiKey": "..."
+  },
+  "api.github.com": {
+    "oauth2": {
+      "clientId": "...",
+      "clientSecret": "..."
+    }
   }
 }

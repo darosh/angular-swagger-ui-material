@@ -203,7 +203,7 @@ angular.module('swaggerUiMaterial')
                             $event.preventDefault();
                             var clientId = encodeURIComponent(credentials[sec.scopeKey].clientId || '');
 
-                            sec.link = sec.authorizationUrl.replace(/\\/g, '').replace(/\/\//g, '/') +
+                            sec.link = sec.authorizationUrl +
                                 '?response_type=token' +
                                 (clientId ? ('&client_id=' + clientId) : '') +
                                 '&scope=' + getSelectedScopes(sec) +
@@ -212,13 +212,40 @@ angular.module('swaggerUiMaterial')
                             $window.open(sec.link);
 
                             $window.onOAuthFinished = function (qp) {
+                                // using $timeout as $apply in non-Angular event
                                 $timeout(function () {
-                                    angular.extend(credentials[sec.scopeKey], {
-                                        accessToken: qp['access_token'],
-                                        tokenType: qp['token_type'],
-                                        expiresIn: parseInt(qp['expires_in']),
-                                        expiresFrom: Date.now()
-                                    });
+                                    if (qp.code) {
+                                        $http({
+                                            method: 'POST',
+                                            url: sec.tokenUrl,
+                                            headers: {
+                                                Accept: 'application/json'
+                                            },
+                                            params: {
+                                                grant_type: 'authorization_code',
+                                                code: qp.code,
+                                                redirect_url: redirectUrl,
+                                                client_id: clientId,
+                                                client_secret: config[swagger.host]['oauth2'].clientSecret
+                                            }
+                                        }).then(function (response) {
+                                            var qp = response.data;
+
+                                            angular.extend(credentials[sec.scopeKey], {
+                                                accessToken: qp['access_token'],
+                                                tokenType: qp['token_type'],
+                                                expiresIn: parseInt(qp['expires_in']),
+                                                expiresFrom: Date.now()
+                                            });
+                                        });
+                                    } else {
+                                        angular.extend(credentials[sec.scopeKey], {
+                                            accessToken: qp['access_token'],
+                                            tokenType: qp['token_type'],
+                                            expiresIn: parseInt(qp['expires_in']),
+                                            expiresFrom: Date.now()
+                                        });
+                                    }
                                 });
                             };
                         };
