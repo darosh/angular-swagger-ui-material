@@ -144,7 +144,10 @@
   "googleapis.com:groupssettings": {},
   "googleapis.com:iam": {},
   "googleapis.com:identitytoolkit": {},
-  "googleapis.com:kgsearch": {},
+  "googleapis.com:kgsearch": {
+    "tested": false,
+    "notes": "probably missing security definitions"
+  },
   "googleapis.com:licensing": {},
   "googleapis.com:logging": {},
   "googleapis.com:manager": {},
@@ -285,7 +288,9 @@
     "tested": false,
     "notes": "missing oauth spec"
   },
-  "vatapi.com": {},
+  "vatapi.com": {
+    "local": true
+  },
   "versioneye.com": {},
   "vestorly.com": {},
   "waag.org": {},
