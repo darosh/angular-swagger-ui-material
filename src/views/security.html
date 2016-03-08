@@ -26,7 +26,7 @@
                     <input type="password" ng-model="vm.credentials[name].password">
                 </md-input-container>
             </div>
-            <h3 ng-if="s.type == 'oauth2'" class="md-title">OAuth 2.0 Authentication</h3>
+            <h3 ng-if="s.type == 'oauth2'" class="md-title">OAuth 2.0 Authentication <small style="opacity: 0.5">[<span ng-bind="s.flow"></span>]</small></h3>
             <p ng-if="(s.type == 'oauth2') && s.description" ng-bind-html="s.description"
                class="markdown-body sum-short-md"></p>
             <div ng-if="s.type == 'oauth2'" layout="column">
