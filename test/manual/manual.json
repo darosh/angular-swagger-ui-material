@@ -79,7 +79,10 @@
     "tested": true
   },
   "gettyimages.com": {},
-  "github.com": {},
+  "github.com": {
+    "tested": true,
+    "notes": "accessCode flow only + no cors = no client side submit"
+  },
   "glugbot.com": {},
   "googleapis.com:adexchangebuyer": {},
   "googleapis.com:adexchangebuyer2": {},
