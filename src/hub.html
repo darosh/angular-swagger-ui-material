@@ -249,7 +249,37 @@
                 .accentPalette('grey')
                 .warnPalette('amber');
         })
-        .controller('HubCtrl', function ($scope, $http, $timeout) {
+        // from http://embed.plnkr.co/CaZAVeC90qxQP1E4Z5Fb/preview
+        .factory('HubCache', function ($cacheFactory, $window) {
+            var cache = $cacheFactory('someCache', {});
+            var PREFIX = 'swaggerHub:';
+            var storage = $window.sessionStorage;
+
+            cache.get = function (key) {
+                var lruEntry = storage.getItem(PREFIX + key);
+
+                if (!lruEntry) {
+                    return;
+                }
+
+                lruEntry = JSON.parse(lruEntry);
+
+                return lruEntry.data;
+            };
+
+            cache.put = function (key, value) {
+                if (angular.isFunction(value.then)) {
+                    value.then(function (value) {
+                        storage.setItem(PREFIX + key, JSON.stringify(value));
+                    });
+                } else {
+                    storage.setItem(PREFIX + key, JSON.stringify(value));
+                }
+            };
+
+            return cache;
+        })
+        .controller('HubCtrl', function ($scope, $http, $timeout, HubCache) {
             var vm = this;
 
             vm.loading = true;
@@ -273,7 +303,8 @@
 
             $http({
                 method: 'GET',
-                url: 'https://apis-guru.github.io/api-models/api/v1/list.json'
+                url: 'https://apis-guru.github.io/api-models/api/v1/list.json',
+                cache: HubCache
             }).then(function (response) {
                 vm.loading = false;
                 vm.table = false;
