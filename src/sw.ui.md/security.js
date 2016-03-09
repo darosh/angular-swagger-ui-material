@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sw.ui.md')
-    .factory('swSecurity', function ($q, $http, $timeout, $interval, $window, $rootScope, dialog, data) {
+    .factory('security', function ($q, $http, $timeout, $interval, $window, $rootScope, dialog, data) {
         var storage = $window.sessionStorage;
         var securityDefinitions;
         var credentials;
@@ -288,6 +288,6 @@ angular.module('sw.ui.md')
             }, 1000);
         }
     })
-    .run(function (plugins, swSecurity) {
-        plugins.add(plugins.BEFORE_EXPLORER_LOAD, swSecurity);
+    .run(function (plugins, security) {
+        plugins.add(plugins.BEFORE_EXPLORER_LOAD, security);
     });

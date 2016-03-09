@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sw.ui.md')
-    .controller('ToolbarController', function ($scope, $log, $mdMedia, data, swSecurity, theme) {
+    .controller('ToolbarController', function ($scope, $log, $mdMedia, data, security, theme) {
         var vm = this;
 
         vm.data = data;
@@ -55,10 +55,10 @@ angular.module('sw.ui.md')
         }
 
         function showSecurity ($event) {
-            swSecurity.showSecurity($event, data.swagger);
+            security.showSecurity($event, data.swagger);
         }
 
         function showProxy ($event) {
-            swSecurity.showProxy($event, data.swagger);
+            security.showProxy($event, data.swagger);
         }
     });
