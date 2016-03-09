@@ -289,6 +289,6 @@ md-tab-content:not(.md-active) * {
 }
 
 md-dialog md-toolbar {
-    border-top-left-radius: 4px
-    border-top-right-radius: 4px
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
 }
