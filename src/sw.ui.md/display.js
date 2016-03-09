@@ -13,8 +13,6 @@ angular.module('sw.ui.md')
             var validatorDebug = (validatorUrl && url) ? (validatorUrl + '/debug?url=' + url) : null;
             var validatorBadge = validatorUrl + '?url=' + url;
 
-            console.log(i['x-origin'] && i['x-origin'].url);
-
             return [
                 ['Contact', 'person', (i.contact.name && !i.contact.email) ? i.contact.name : null, null],
                 ['Email', 'email', i.contact.email ? (i.contact.name || i.contact.email) : null, 'mailto:' + i.contact.email + '?subject=' + i.title],
