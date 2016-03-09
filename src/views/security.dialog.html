@@ -1,14 +1,15 @@
 <md-dialog class="sum-dialog-wide" layout="column">
-    <form ng-submit="closeDialog()">
-        <md-toolbar ng-class="style">
-            <div class="md-toolbar-tools">
-                <h2><span class="md-title">Security</span></h2>
-            </div>
-        </md-toolbar>
-        <md-dialog-content ng-class="{'sum-hide-tabs': vm.singleSecurity}" style="max-width: 800px; max-height: 810px">
-            <md-tabs md-dynamic-height md-border-bottom>
-                <md-tab label="{{s.type + (s.flow ? ' ' + s.flow + '' : '')}}" ng-repeat="(name, s) in vm.security">
-                    <div style="padding: 24px 24px 0 24px">
+    <md-toolbar ng-class="style">
+        <div class="md-toolbar-tools">
+            <h2><span class="md-title">Security</span></h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content ng-class="{'sum-hide-tabs': vm.singleSecurity}"
+                       style="margin-right: 1px; max-width: 800px; max-height: 810px">
+        <md-tabs md-no-pagination md-dynamic-height>
+            <md-tab label="{{s.flow ? s.flow : s.type}}" ng-repeat="(name, s) in vm.security">
+                <div style="padding: 24px 24px 0 24px">
+                    <form ng-submit="closeDialog()">
                         <h3 ng-if="s.type == 'apiKey'" class="md-title" style="margin-top: 0">API Key
                             Authentication</h3>
                         <div ng-if="s.type == 'apiKey'" layout="column">
@@ -33,7 +34,8 @@
                                 <input type="password" ng-model="vm.credentials[name].password">
                             </md-input-container>
                         </div>
-                        <h3 ng-if="s.type == 'oauth2'" class="md-title" style="margin-top: 0; white-space: nowrap">OAuth 2.0 Authentication
+                        <h3 ng-if="s.type == 'oauth2'" class="md-title" style="margin-top: 0; white-space: nowrap">OAuth
+                            2.0 Authentication
                             <small style="opacity: 0.5"><span ng-bind="s.flow" style="text-transform: uppercase"></span>
                             </small>
                         </h3>
@@ -69,12 +71,12 @@
                                        ng-click="s.clicked($event)">Authenticate
                             </md-button>
                         </div>
-                    </div>
-                </md-tab>
-            </md-tabs>
-        </md-dialog-content>
-        <md-dialog-actions>
-            <md-button ng-click="closeDialog()">Close</md-button>
-        </md-dialog-actions>
-    </form>
+                    </form>
+                </div>
+            </md-tab>
+        </md-tabs>
+    </md-dialog-content>
+    <md-dialog-actions>
+        <md-button ng-click="closeDialog()">Close</md-button>
+    </md-dialog-actions>
 </md-dialog>
