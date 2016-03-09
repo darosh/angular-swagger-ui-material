@@ -7,6 +7,7 @@ src/auth.json
 !src/auth.json.sample
 
 .publish/
+.architecture/
 .formatted/
 
 .idea/
