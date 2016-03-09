@@ -22,17 +22,8 @@
         }
     </style>
 </head>
-<body ng-controller="MyCtrl" layout="column" class="ng-cloak">
-<!--suppress HtmlUnknownAttribute -->
-<div layout="row"
-     flex
-     swagger-ui-material
-     url="swaggerUrl"
-     loading="isLoading"
-     api-explorer="true"
-     validator-url="false"
-     trusted-sources="false"
-     error-handler="myErrorHandler"></div>
+<body ng-controller="DetailController as vm" layout="row" class="ng-cloak sw-ui-md"
+      ng-include="'views/app.layout.html'">
 
 <!-- scripts CDN -->
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
@@ -50,13 +41,20 @@
 
 <script type="text/javascript">
     angular.module('myApp', [
-            'swaggerUiMaterial',
-            'swaggerUiMarkdown',
-            'swaggerUiSort',
-            'swaggerUiSplit',
-            'swaggerUiYaml'
+            'sw.ui.md',
+
+//            'sw.plugin.auth',
+            'sw.plugin.markdown',
+//            'sw.plugin.xmlFormater',
+            'sw.plugin.operations',
+            'sw.plugin.sort',
+            'sw.plugin.parser',
+            'sw.plugin.split',
+            'sw.plugin.transform',
+            'sw.plugin.yaml',
+//            'sw.plugin.externalReferences'
         ])
-        .config(function ($mdThemingProvider) {
+        .config(function ($mdThemingProvider, $logProvider) {
             var search = {};
             var query = window.location.search.substring(1);
             var vars = query.split('&');
@@ -78,14 +76,18 @@
                 .accentPalette('accent')
                 .warnPalette(search.warn || 'amber')
                 .foregroundPalette[3] = 'rgba(0, 0, 0, 0.4)';
+
+            $logProvider.debugEnabled(false);
         })
-        .controller('MyCtrl', function ($scope, $location, $mdToast, $log) {
-            $scope.isLoading = false;
+        .run(function ($location, $mdToast, $log, data) {
             //noinspection JSCheckFunctionSignatures
-            $scope.swaggerUrl = $location.search()['url'] || 'http://petstore.swagger.io/v2/swagger.json';
+            var swaggerUrl = $location.search()['url'] || 'http://petstore.swagger.io/v2/swagger.json';
+
+            data.setUrl(swaggerUrl);
+            // data.validatorUrl = 'http://online.swagger.io/validator';
 
             // error management
-            $scope.myErrorHandler = function (error) {
+            function myErrorHandler (error) {
                 var e = error || {};
                 var m = 'Something is wrong';
                 $mdToast.show($mdToast.simple().textContent(e.statusText || e.message || m));
