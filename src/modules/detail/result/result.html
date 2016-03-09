@@ -1,0 +1,42 @@
+<md-subheader class="md-warn md-no-sticky">Request URL</md-subheader>
+<div layout-padding>
+    <div>
+        <a class="md-button sum-link md-primary"
+           style="font-weight: normal; white-space: normal; display: inline; overflow: auto; word-wrap: break-word"
+           ng-href="{{vm.sop.explorerResult.fullUrl}}"
+           target="_blank"
+           ng-bind="vm.sop.explorerResult.fullUrl"></a>
+    </div>
+</div>
+<md-subheader class="md-warn md-no-sticky">Response status</md-subheader>
+<div layout-padding>
+    <div>
+        <div ng-repeat="resp in vm.sop.explorerResult.statusArray track by $index"
+             ng-include="'modules/detail/response.html'"></div>
+    </div>
+</div>
+<div ng-if="vm.sop.explorerResult.headerArray.length">
+    <md-subheader class="md-warn md-no-sticky">Response headers</md-subheader>
+    <div layout-padding>
+        <div>
+            <div ng-repeat="header in vm.sop.explorerResult.headerArray"
+                 ng-include="'modules/detail/header.html'"></div>
+        </div>
+    </div>
+</div>
+<div ng-if="vm.sop.explorerResult.body">
+    <div class="sum-subheader" layout="row">
+        <div flex>
+            <md-subheader class="md-warn md-no-sticky">Response body</md-subheader>
+        </div>
+        <div class="sum-tools">
+            <a href="#" target="_blank" class="md-button md-primary" ng-click="vm.openFile($event)">Open</a>
+        </div>
+    </div>
+    <div layout-padding>
+        <pre class="sum-pre"
+             style="word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 0; margin-bottom: 0"
+             truncate="1728"
+             ng-bind="vm.sop.explorerResult.body"></pre>
+    </div>
+</div>

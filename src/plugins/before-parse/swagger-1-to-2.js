@@ -6,9 +6,8 @@
  */
 'use strict';
 
-angular
-    .module('swaggerUi')
-    .factory('swagger1ToSwagger2Converter', function ($q, $http, swaggerPlugins) {
+angular.module('sw.plugin.swagger1to2', ['sw.plugins'])
+    .factory('swagger1to2', function ($q, $http, plugins) {
         return {
             /**
              * Module entry point
@@ -35,8 +34,8 @@ angular
                 method: 'GET',
                 url: url
             };
-            swaggerPlugins
-                .execute(swaggerPlugins.BEFORE_LOAD, options)
+            plugins
+                .execute(plugins.BEFORE_LOAD, options)
                 .then(function () {
                     $http(options)
                         .success(deferred.resolve)
@@ -218,6 +217,6 @@ angular
             });
         }
     })
-    .run(function (swaggerPlugins, swagger1ToSwagger2Converter) {
-        swaggerPlugins.add(swaggerPlugins.BEFORE_PARSE, swagger1ToSwagger2Converter);
+    .run(function (plugins, swagger1to2) {
+        plugins.add(plugins.BEFORE_PARSE, swagger1to2);
     });

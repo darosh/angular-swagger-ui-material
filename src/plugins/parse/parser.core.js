@@ -6,34 +6,32 @@
  */
 'use strict';
 
-angular
-    .module('swaggerUi')
-    .factory('swaggerParser', function ($q, $sce, $location, swaggerModel) {
+angular.module('sw.plugin.parser', ['sw.plugins'])
+    .factory('parser', function ($q, $sce, $location, model) {
         var trustedSources;
         var operationId;
         var paramId;
 
         return {
-            /**
-             * Module entry point
-             */
-            execute: function (parserType, url, contentType, data, isTrustedSources, parseResult) {
-                var deferred = $q.defer();
-                if (data.swagger === '2.0' && (parserType === 'json' || (parserType === 'auto' && contentType === 'application/json'))) {
-                    trustedSources = isTrustedSources;
-                    try {
-                        parseSwagger2Json(data, url, deferred, parseResult);
-                    } catch (e) {
-                        deferred.reject({
-                            message: 'failed to parse swagger: ' + e.message
-                        });
-                    }
-                } else {
-                    deferred.resolve(false);
-                }
-                return deferred.promise;
-            }
+            execute: execute
         };
+
+        function execute (parserType, url, contentType, data, isTrustedSources, parseResult) {
+            var deferred = $q.defer();
+            if (data.swagger === '2.0' && (parserType === 'json' || (parserType === 'auto' && contentType === 'application/json'))) {
+                trustedSources = isTrustedSources;
+                try {
+                    parseSwagger2Json(data, url, deferred, parseResult);
+                } catch (e) {
+                    deferred.reject({
+                        message: 'failed to parse swagger: ' + e.message
+                    });
+                }
+            } else {
+                deferred.resolve(false);
+            }
+            return deferred.promise;
+        }
 
         /**
          * parse swagger description to ease HTML generation
@@ -159,10 +157,10 @@ angular
 
             for (i = 0, l = pathParameters.length; i < l; i++) {
                 found = false;
-                pathParameter = swaggerModel.resolveReference(swagger, pathParameters[i]);
+                pathParameter = model.resolveReference(swagger, pathParameters[i]);
 
                 for (j = 0, k = operationParameters.length; j < k; j++) {
-                    operationParameter = swaggerModel.resolveReference(swagger, operationParameters[j]);
+                    operationParameter = model.resolveReference(swagger, operationParameters[j]);
                     if (pathParameter.name === operationParameter.name && pathParameter.in === operationParameter.in) {
                         // overridden parameter
                         found = true;
@@ -189,9 +187,9 @@ angular
             for (i = 0, l = parameters.length; i < l; i++) {
                 // TODO manage 'collectionFormat' (csv, multi etc.) ?
                 // TODO manage constraints (pattern, min, max etc.) ?
-                param = parameters[i] = swaggerModel.resolveReference(swagger, parameters[i]);
+                param = parameters[i] = model.resolveReference(swagger, parameters[i]);
                 param.id = paramId;
-                param.type = swaggerModel.getType(param);
+                param.type = model.getType(param);
                 param.description = trustHtml(param.description);
                 if (param.items && param.items.enum) {
                     param.enum = param.items.enum;
@@ -202,8 +200,8 @@ angular
                 form[operationId][param.name] = param.default || '';
                 if (param.schema) {
                     param.schema.display = 1; // display schema
-                    param.schema.json = swaggerModel.generateSampleJson(swagger, param.schema);
-                    param.schema.model = $sce.trustAsHtml(swaggerModel.generateModel(swagger, param.schema));
+                    param.schema.json = model.generateSampleJson(swagger, param.schema);
+                    param.schema.model = $sce.trustAsHtml(model.generateModel(swagger, param.schema));
                 }
                 if (param.in === 'body' || param.in === 'formData') {
                     operation.consumes = operation.consumes || swagger.consumes;
@@ -231,8 +229,8 @@ angular
                             // sampleJson = angular.toJson(response.examples[operation.produces[0]], true);
                             sampleObj = response.examples[operation.produces[0]];
                         } else {
-                            // sampleJson = swaggerModel.generateSampleJson(swagger, response.schema);
-                            sampleObj = swaggerModel.getSampleObj(swagger, response.schema);
+                            // sampleJson = model.generateSampleJson(swagger, response.schema);
+                            sampleObj = model.getSampleObj(swagger, response.schema);
                         }
 
                         // response.schema.json = sampleJson;
@@ -240,7 +238,7 @@ angular
 
                         if (response.schema.type === 'object' || response.schema.type === 'array' || response.schema.$ref) {
                             response.display = 1; // display schema
-                            response.schema.model = $sce.trustAsHtml(swaggerModel.generateModel(swagger, response.schema));
+                            response.schema.model = $sce.trustAsHtml(model.generateModel(swagger, response.schema));
                         } else if (response.schema.type === 'string') {
                             delete response.schema;
                         }
@@ -284,7 +282,7 @@ angular
                 return 0;
             });
 
-            swaggerModel.clearCache();
+            model.clearCache();
         }
 
         function trustHtml (text) {
@@ -306,6 +304,6 @@ angular
                 .replace(/'/g, '&#039;');
         }
     })
-    .run(function (swaggerPlugins, swaggerParser) {
-        swaggerPlugins.add(swaggerPlugins.PARSE, swaggerParser);
+    .run(function (plugins, parser) {
+        plugins.add(plugins.PARSE, parser);
     });

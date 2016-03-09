@@ -2,7 +2,7 @@ describe('all links on hub page', function () {
     it('should load', function () {
         browser.driver.manage().window().maximize();
 
-        browser.get('http://localhost:8888/angular-swagger-ui-material/src/hub.html');
+        browser.get('http://localhost:8888/angular-swagger-ui-material/demo/hub.html');
 
         var list = element.all(by.repeater('api in vm.apis track by $index'));
         expect(list.count()).toEqual(203);
@@ -31,8 +31,7 @@ describe('all links on hub page', function () {
             element.all(by.css('md-sidenav button.sum-http-method')).get(0).click();
             element(by.css('md-dialog button')).click();
 
-            element.all(by.css('md-tab-item')).get(1).click();
-            element.all(by.css('md-tab-item')).get(0).click();
+            //element.all(by.css('md-tab-item')).get(1).click();
 
             browser.navigate().back();
         }

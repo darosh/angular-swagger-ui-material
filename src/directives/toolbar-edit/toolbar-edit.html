@@ -1,0 +1,8 @@
+<md-button ng-click="toggle()" class="md-icon-button">
+    <md-icon>edit</md-icon>
+</md-button>
+<form ng-show="init && open" ng-submit="blur()" layout="row" flex><input flex ng-show="init && open"
+                                                                         ng-model="ngModel"
+                                                                         type="text"
+                                                                         class="md-input" ng-blur="blur()"/></form>
+<span ng-show="init && !open" ng-click="toggle()" ng-bind="displayTitle" tabindex="-1"></span>

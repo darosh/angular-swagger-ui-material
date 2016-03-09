@@ -6,26 +6,28 @@
  */
 'use strict';
 
-angular
-    .module('swaggerUi')
-    .factory('swaggerUiXmlFormatter', function ($q) {
-        return {
-            /**
-             * Module entry point
-             */
-            execute: function (response) {
-                var executed = false;
-                var deferred = $q.defer();
-                var contentType = response.headers && response.headers()['content-type'];
+angular.module('sw.plugin.xmlFormater', ['sw.plugins'])
+    .factory('xmlFormatter', function ($q, $log) {
+        $log.debug('sw:plugin', 'xmlFormater');
 
-                if (contentType && contentType.toLowerCase().indexOf('/xml') > 0) {
-                    response.data = formatXml(response.data);
-                    executed = true;
-                }
-                deferred.resolve(executed);
-                return deferred.promise;
-            }
+        return {
+            execute: execute
         };
+
+        function execute (response) {
+            $log.debug('sw:execute', 'xmlFormater');
+
+            var executed = false;
+            var deferred = $q.defer();
+            var contentType = response.headers && response.headers()['content-type'];
+
+            if (contentType && contentType.toLowerCase().indexOf('/xml') > 0) {
+                response.data = formatXml(response.data);
+                executed = true;
+            }
+            deferred.resolve(executed);
+            return deferred.promise;
+        }
 
         function formatXml (xml) {
             var formatted = '';
@@ -60,6 +62,6 @@ angular
             return formatted;
         }
     })
-    .run(function (swaggerPlugins, swaggerUiXmlFormatter) {
-        swaggerPlugins.add(swaggerPlugins.AFTER_EXPLORER_LOAD, swaggerUiXmlFormatter);
+    .run(function (plugins, xmlFormatter) {
+        plugins.add(plugins.AFTER_EXPLORER_LOAD, xmlFormatter);
     });

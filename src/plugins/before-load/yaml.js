@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('swaggerUiYaml', ['swaggerUi'])
-    .factory('loadYaml', function ($q, $window) {
+angular.module('sw.plugin.yaml', ['sw.plugins'])
+    .factory('yaml', function ($q, $window) {
         return {
             execute: function (options) {
                 var deferred = $q.defer();
@@ -28,6 +28,6 @@ angular.module('swaggerUiYaml', ['swaggerUi'])
             }
         };
     })
-    .run(function (swaggerPlugins, loadYaml) {
-        swaggerPlugins.add(swaggerPlugins.BEFORE_LOAD, loadYaml);
+    .run(function (plugins, yaml) {
+        plugins.add(plugins.BEFORE_LOAD, yaml);
     });

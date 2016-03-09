@@ -1,4 +1,6 @@
-angular.module('swaggerUiMaterial')
+'use strict';
+
+angular.module('sw.plugin.operations', ['sw.plugins'])
     // List ungrouped operations
     .factory('operations', function ($q) {
         return {
@@ -29,6 +31,6 @@ angular.module('swaggerUiMaterial')
             }
         };
     })
-    .run(function (swaggerPlugins, operations) {
-        swaggerPlugins.add(swaggerPlugins.BEFORE_DISPLAY, operations);
+    .run(function (plugins, operations) {
+        plugins.add(plugins.BEFORE_DISPLAY, operations);
     });

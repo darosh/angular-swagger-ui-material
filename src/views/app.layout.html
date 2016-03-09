@@ -1,0 +1,103 @@
+<div flex layout="column">
+    <div ng-include="'modules/toolbar/toolbar.html'"></div>
+    <md-content>
+        <div layout-padding layout="column" style="padding-bottom: 0">
+            <div ng-if="!vm.data.loading && !vm.data.model.groups">No API found.</div>
+            <div ng-controller="DescriptionController as vm">
+                <div ng-if="vm.description" ng-bind-html="::vm.description"
+                     class="markdown-body"></div>
+            </div>
+            <div style="padding: 4px 4px 0 4px" ng-include="'modules/meta/meta.html'"></div>
+        </div>
+        <div ng-controller="ContentController as vm">
+            <div ng-if="vm.data.ui.grouped" layout="row" layout-wrap layout-padding>
+                <div flex-xs="100"
+                     flex-sm="{{vm.data.ui.sidenavLocked ? 100 : 50}}"
+                     flex-md="{{vm.data.ui.sidenavLocked ? 50 : 33}}"
+                     flex-lg="{{vm.data.ui.sidenavLocked ? 33 : 25}}"
+                     flex-xl="{{vm.data.ui.sidenavLocked ? 25 : 20}}"
+                     ng-repeat="group in vm.data.model.groups track by $index"
+                     ng-if="(group.operations | filter:vm.data.model.search:false).length"
+                     style="padding: 12px"
+                     ng-include="'modules/group/group.html'"></div>
+            </div>
+            <!-- TODO: multi-column layout with top>bottom sort would be better? -->
+            <div ng-if="!vm.data.ui.grouped" layout="row" layout-wrap layout-padding style="margin-top: 12px;">
+                <div flex-xs="100"
+                     flex-sm="{{vm.data.ui.sidenavLocked ? 100 : 50}}"
+                     flex-md="{{vm.data.ui.sidenavLocked ? 50 : 33}}"
+                     flex-lg="{{vm.data.ui.sidenavLocked ? 33 : 25}}"
+                     flex-xl="{{vm.data.ui.sidenavLocked ? 25 : 20}}"
+                     ng-repeat="op in vm.data.model.operations | filter:vm.data.model.search:false track by op.id"
+                     style="padding-top: 0; padding-bottom: 0">
+                    <div ng-class="{'sum-selected': sop === op}"
+                         ng-include="'modules/operation/operation.html'"></div>
+                </div>
+            </div>
+        </div>
+    </md-content>
+</div>
+<md-sidenav
+    layout="column"
+    class="md-sidenav-right md-whiteframe-z2"
+    md-is-open="vm.data.ui.sidenavOpen"
+    md-is-locked-open="vm.data.ui.sidenavLocked">
+        <md-toolbar ng-if="vm.sop" class="md-accent" md-whiteframe="2">
+            <div class="md-toolbar-tools">
+                <span flex><span ng-repeat="t in vm.sop.tags">{{t}}<span ng-if="!$last">, </span></span></span>
+                <md-button hide show-gt-xs
+                           ng-click="vm.data.ui.sidenavLocked = !vm.data.ui.sidenavLocked"
+                           aria-label="toggle"
+                           class="md-icon-button md-accent md-hue-3">
+                    <md-icon ng-bind="vm.data.ui.sidenavLocked ? 'chevron_right' : 'chevron_left'"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <div ng-if="vm.sop">
+            <md-subheader class="md-warn md-no-sticky" ng-if="vm.sop.deprecated">Deprecated</md-subheader>
+            <div layout-padding>
+                <div ng-class="{'sum-deprecated': sop.deprecated}" layout="row" style="word-break: break-all">
+                    <md-button ng-class="vm.theme[vm.sop.httpMethod]"
+                               ng-click="vm.utils.method(vm.sop.httpMethod, $event)"
+                               aria-label="method"
+                               class="sum-http-method md-raised"
+                               ng-bind="vm.sop.httpMethod">
+                    </md-button>
+                    <span ng-bind="vm.sop.path" class="sum-path-wrap"></span>
+                </div>
+                <div ng-if="vm.sop.summary" class="md-body-2 markdown-body" ng-bind="vm.sop.summary"></div>
+            </div>
+        </div>
+        <md-tabs class="md-hue-2"
+                 flex
+                 md-stretch-tabs="always"
+                 md-selected="vm.sop.tab"
+                 ng-class="{'sum-slide-disabled': vm.omg}">
+            <md-tab label="Info" layout="column">
+                <div class="sum-fade" ng-hide="vm.omg" ng-include="'modules/detail/request/request.html'"></div>
+            </md-tab>
+            <md-tab label="Scripts" layout="column">
+                <div class="sum-fade" ng-hide="vm.omg" ng-include="'modules/detail/scripts/scripts.html'"></div>
+            </md-tab>
+            <md-tab class="sum-tab-result" label="Result" ng-disabled="!vm.sop.explorerResult">
+                <div class="sum-fade" ng-hide="vm.omg" ng-show="vm.sop.explorerResult"
+                     ng-include="'modules/detail/result/result.html'"></div>
+            </md-tab>
+        </md-tabs>
+        <div ng-if="!vm.sop" layout-padding>
+            <div>No endpoint method selected.</div>
+        </div>
+        <md-button class="md-fab md-fab-bottom-right md-primary md-raised"
+                   ng-disabled="vm.sop.loading || !vm.ngForm.explorerForm.$valid"
+                   ng-style="{padding: vm.sop.loading ? '1px 0 0 0' : null}"
+                   ng-if="vm.sop && vm.data.ui.explorer"
+                   ng-click="vm.submit(vm.sop)"
+                   ng-class="(vm.sop.explorerResult.response.status === -1) ? 'md-warn' : 'md-primary'"
+                   aria-label="submit">
+            <md-icon ng-if="!vm.sop.loading" ng-bind="vm.sop.explorerResult ? 'replay' : 'play_arrow'"></md-icon>
+            <md-progress-circular ng-if="vm.sop.loading"
+                                  md-diameter="56"
+                                  class="md-accent md-hue-1"
+                                  md-mode="indeterminate"></md-progress-circular>
+        </md-button>
+</md-sidenav>

@@ -1,8 +1,7 @@
 'use strict';
 
-angular
-    .module('swaggerUi')
-    .factory('swaggerAuthKey', function ($q/* , $window */) {
+angular.module('sw.plugin.auth', ['sw.plugins'])
+    .factory('auth', function ($q/* , $window */) {
         return {
             execute: function (/* options */) {
                 var deferred = $q.defer();
@@ -26,6 +25,6 @@ angular
             }
         };
     })
-    .run(function (swaggerPlugins, swaggerAuthKey) {
-        swaggerPlugins.add(swaggerPlugins.BEFORE_EXPLORER_LOAD, swaggerAuthKey);
+    .run(function (plugins, auth) {
+        plugins.add(plugins.BEFORE_EXPLORER_LOAD, auth);
     });

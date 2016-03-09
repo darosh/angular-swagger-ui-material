@@ -1,0 +1,35 @@
+<div layout="row" layout-wrap ng-if="!vm.data.loading" ng-controller="MetaController as vm">
+    <div ng-repeat="m in vm.meta"
+         ng-if="m[2]"
+         flex-xs="100"
+         layout="row"
+         flex-sm="{{sidenavLockedOpen ? 100 : 50}}"
+         flex-md="{{sidenavLockedOpen ? 50 : 33}}"
+         flex-lg="{{sidenavLockedOpen ? 33 : 25}}"
+         flex-xl="{{sidenavLockedOpen ? 25 : 20}}">
+        <md-list flex>
+            <md-list-item class="md-2-line" style="overflow: hidden" layout="row">
+                <md-icon class="md-avatar-icon" ng-bind="m[1]"></md-icon>
+                <div class="md-list-item-text" flex layout="column">
+                    <span ng-if="m[0]" ng-bind="m[0]">Contact</span>
+                    <p style="overflow: hidden; text-overflow: ellipsis; line-height: 14px"
+                       ng-if="m[0] && !m[3]" ng-bind="m[2]" flex></p>
+                    <p ng-if="m[0] && m[3]" flex>
+                        <a style="display: block; text-overflow: ellipsis; padding-left: 5px; text-align: left"
+                           class="md-button md-primary"
+                           ng-bind="m[2]"
+                           ng-href="{{m[3]}}"
+                           ng-click="m[4]($event, m[2])"
+                           target="_blank"></a>
+                    </p>
+                    <p ng-if="!m[0]">
+                        <a style="margin-top: 4px; display: inline-flex; height: 30px"
+                           target="_blank" ng-href="{{m[2]}}">
+                            <img ng-src="{{m[3]}}" style="width: 97px; height: 30px;"/>
+                        </a>
+                    </p>
+                </div>
+            </md-list-item>
+        </md-list>
+    </div>
+</div>

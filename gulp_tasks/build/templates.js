@@ -17,7 +17,7 @@ gulp.task('templates', function () {
         }))
         .pipe(angularTemplatecache({
             root: null,
-            module: 'swaggerUiMaterial'
+            module: 'sw.ui.md'
         }))
         .pipe(rename('swagger-ui-material.templates.js'))
         .pipe(gulp.dest('dist/scripts'))

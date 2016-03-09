@@ -1,0 +1,23 @@
+<div md-whiteframe="2">
+    <md-toolbar
+        ng-click="vm.toggleGroup(group, $event)"
+        tabindex="-1"
+        ng-class="{'md-whiteframe-2dp': group.open}"
+        class="md-accent">
+        <div class="md-toolbar-tools">
+            <span class="md-title" flex ng-bind="::group.name"></span>
+            <md-button ng-click="toggleApi(group, $event)"
+                       aria-label="Open/Close"
+                       class="md-icon-button md-accent md-hue-3">
+                <md-icon ng-bind="group.open ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <div ng-show="group.open && group.description" style="padding-bottom: 0" layout-padding>
+        <div style="padding-bottom: 0" ng-bind-html="::group.description" class="sum-short-md markdown-body md-body-2"></div>
+    </div>
+    <div ng-show="group.open" style="padding: 13px">
+        <div ng-class="{'sum-selected': vm.data.model.sop === op}" ng-repeat="op in group.operations | filter:vm.data.model.searchObject:false track by op.id"
+             ng-include="'modules/operation/operation.html'"></div>
+    </div>
+</div>

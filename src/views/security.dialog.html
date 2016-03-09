@@ -1,0 +1,80 @@
+<md-dialog class="sum-dialog-wide" layout="column">
+    <form ng-submit="closeDialog()">
+        <md-toolbar ng-class="style">
+            <div class="md-toolbar-tools">
+                <h2><span class="md-title">Security</span></h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content ng-class="{'sum-hide-tabs': vm.singleSecurity}" style="max-width: 800px; max-height: 810px">
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="{{s.type + (s.flow ? ' ' + s.flow + '' : '')}}" ng-repeat="(name, s) in vm.security">
+                    <div style="padding: 24px 24px 0 24px">
+                        <h3 ng-if="s.type == 'apiKey'" class="md-title" style="margin-top: 0">API Key
+                            Authentication</h3>
+                        <div ng-if="s.type == 'apiKey'" layout="column">
+                            <p ng-if="s.description" ng-bind-html="s.description"
+                               class="markdown-body sum-short-md"></p>
+                            <md-input-container class="sum-hide-spacer">
+                                <label>API key</label>
+                                <input type="text" ng-model="vm.credentials[name].apiKey">
+                            </md-input-container>
+                        </div>
+                        <h3 ng-if="s.type == 'basic'" class="md-title" style="margin-top: 0">Basic HTTP
+                            Authentication</h3>
+                        <div ng-if="s.type == 'basic'" layout="column">
+                            <p ng-if="s.description" ng-bind-html="s.description"
+                               class="markdown-body sum-short-md"></p>
+                            <md-input-container class="sum-hide-spacer">
+                                <label>Username</label>
+                                <input type="text" ng-model="vm.credentials[name].username">
+                            </md-input-container>
+                            <md-input-container class="sum-hide-spacer">
+                                <label>Password</label>
+                                <input type="password" ng-model="vm.credentials[name].password">
+                            </md-input-container>
+                        </div>
+                        <h3 ng-if="s.type == 'oauth2'" class="md-title" style="margin-top: 0; white-space: nowrap">OAuth 2.0 Authentication
+                            <small style="opacity: 0.5"><span ng-bind="s.flow" style="text-transform: uppercase"></span>
+                            </small>
+                        </h3>
+                        <p ng-if="(s.type == 'oauth2') && s.description" ng-bind-html="s.description"
+                           class="markdown-body sum-short-md"></p>
+                        <div ng-if="s.type == 'oauth2'" layout="column">
+                            <md-input-container class="sum-hide-spacer">
+                                <label>Client id</label>
+                                <input type="text" ng-model="vm.credentials[s.scopeKey].clientId">
+                            </md-input-container>
+                        </div>
+                        <div ng-if="(s.type == 'oauth2') && vm.credentials[s.scopeKey].accessToken" layout="column">
+                            <md-input-container class="sum-hide-spacer">
+                                <label>Access token</label>
+                                <input type="text" readonly ng-model="vm.credentials[s.scopeKey].accessToken">
+                            </md-input-container>
+                            <md-input-container class="sum-hide-spacer" ng-if="vm.credentials[s.scopeKey].expiresIn">
+                                <label>Expires in</label>
+                                <input type="text" readonly ng-model="s.counter">
+                            </md-input-container>
+                        </div>
+                        <div layout="column">
+                            <md-checkbox ng-repeat="(k, v) in s.scopes"
+                                         ng-model="vm.credentials[s.scopeKey].scopes[k]"
+                                         aria-label="checkbox">
+                                <span class="md-body-1" ng-bind="s.friendlyScopes[k]"></span>: <span class="md-body-2"
+                                                                                                     ng-bind="v"></span>
+                            </md-checkbox>
+                        </div>
+                        <div ng-if="s.type == 'oauth2'">
+                            <md-button class="md-raised md-primary" ng-href="{{s.link}}"
+                                       style="margin-left: 0"
+                                       ng-click="s.clicked($event)">Authenticate
+                            </md-button>
+                        </div>
+                    </div>
+                </md-tab>
+            </md-tabs>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button ng-click="closeDialog()">Close</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

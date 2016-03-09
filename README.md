@@ -30,7 +30,6 @@ Material Design ~~template~~ Swagger UI ~~for~~ based on [angular-swagger-ui](ht
 
 ## Features
 
-* [x] Compatible with [angular-swagger-ui](https://github.com/Orange-OpenSource/angular-swagger-ui) 0.3.0 (2016-02-22)
 * [x] [Material Design](https://www.google.com/design/spec/material-design/introduction.html)
 * [x] Responsible layout
 * [x] Configurable [angular-material](https://material.angularjs.org) theme colors
@@ -120,3 +119,4 @@ gulp deploy
 * [ ] Swagger 1.2
 * [ ] GFM task lists vs SCE
 * [ ] E2E tests
+* [ ] No more compatible with [angular-swagger-ui](https://github.com/Orange-OpenSource/angular-swagger-ui)

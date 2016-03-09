@@ -1,0 +1,74 @@
+<div layout="column">
+    <md-input-container ng-if="vm.data.ui.explorer && (param.in != 'body') && (param.subtype == 'file')">
+        <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
+        <input type="file" file-input ng-model="vm.form[param.name]"
+               placeholder="{{param.required?'(required)':''}}" ng-required="param.required"/>
+    </md-input-container>
+    <md-input-container
+        ng-if="vm.data.ui.explorer && (param.in != 'body') && (param.subtype != 'enum') && (param.subtype != 'file')">
+        <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
+        <input type="text" ng-model="vm.form[param.name]" ng-required="param.required"/>
+    </md-input-container>
+    <md-input-container ng-if="vm.data.ui.explorer && (param.in == 'body')">
+        <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
+        <!--suppress HtmlUnknownAttribute -->
+        <textarea ng-model="vm.form[param.name]" ng-required="param.required"></textarea>
+    </md-input-container>
+    <md-input-container ng-if="vm.data.ui.explorer && (param.subtype == 'enum')">
+        <label ng-bind="param.name + (param.required ? ' (required)' : '')"></label>
+        <md-select class="sum-no-margin"
+                   ng-required="param.required"
+                   ng-model="vm.form[param.name]">
+            <!--suppress HtmlUnknownAttribute -->
+            <md-option ng-repeat="value in param.enum" value="{{value}}" ng-selected="param.default == value"
+                       ng-bind="value + (param.default == value ? ' (default)' : '')"></md-option>
+        </md-select>
+    </md-input-container>
+    <div layout="row" style="padding-right: 4px">
+        <div class="md-body-1 sum-param-info markdown-body" flex ng-bind-html="param.description" truncate
+             style="padding-left: 2px; padding-right: 8px"></div>
+        <div class="md-body-1 sum-param-info" layout="column">
+            <div layout="row" layout-align="end">
+                <div style="padding-right: 4px">in:</div>
+                <div><em ng-bind-html="param.in"></em></div>
+            </div>
+            <div layout="row" ng-if="param.type" layout-align="end">
+                <div style="padding-right: 4px">type:</div>
+                <div ng-switch="param.type">
+                    <code ng-switch-when="array" ng-bind="'Array['+param.items.type+']'"></code>
+                    <code ng-switch-default ng-bind="param.type"></code>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="(param.in == 'body') || param.schema" layout="row" class="sum-ind" style="margin-top: 8px">
+        <md-input-container flex ng-if="param.in == 'body'" style="margin-top: 2px; padding-right: 16px">
+            <md-select aria-label="parameter type" ng-model="vm.form.contentType">
+                <!--suppress HtmlUnknownAttribute -->
+                <md-option ng-repeat="item in vm.sop.consumes track by item" value="{{item}}" ng-bind="::item">
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <div class="sum-tools-in" ng-if="param.schema">
+            <a class="md-button md-primary"
+               ng-click="vm.form[param.name] = param.schema.json">Set</a>
+            <a class="md-button md-primary"
+               ng-click="param.schema.display = !param.schema.display + 0"
+               ng-bind="param.schema.display ? 'Model' : 'Example'"></a>
+        </div>
+    </div>
+    <pre class="sum-pre sum-wrap sum-no-margin sum-ind" ng-if="param.schema.display == 0 && param.schema.model"
+         ng-bind-html="param.schema.model"></pre>
+    <pre class="sum-pre sum-no-margin sum-ind" ng-if="param.schema.display == 1 && param.schema.json"
+         ng-bind="param.schema.json"></pre>
+
+    <div ng-if="!vm.data.ui.explorer">
+        <div ng-if="param.in != 'body'">
+            <div ng-if="param.default"><span ng-bind="param.default"></span> (default)</div>
+            <div ng-if="param.enum">
+                <span ng-repeat="value in param.enum track by $index">{{value}}<span ng-if="!$last"> or </span></span>
+            </div>
+            <div ng-if="param.required">(required)</div>
+        </div>
+    </div>
+</div>

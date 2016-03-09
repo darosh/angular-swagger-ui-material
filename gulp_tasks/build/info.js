@@ -90,10 +90,10 @@ gulp.task('info', function () {
             });
     }
 
-    return gulp.src('src/services/http-data.template')
+    return gulp.src('src/sw.ui.md/http-data.template')
         .pipe(replace(/(method: ){.*}/, '$1' + stringify(method)))
         .pipe(replace(/(status: ){.*}/, '$1' + stringify(status)))
         .pipe(replace(/(header: ){.*}/, '$1' + stringify(header)))
         .pipe(rename('http-data.js'))
-        .pipe(gulp.dest('src/services'));
+        .pipe(gulp.dest('src/sw.ui.md'));
 });

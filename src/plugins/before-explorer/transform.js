@@ -1,4 +1,6 @@
-angular.module('swaggerUiMaterial')
+'use strict';
+
+angular.module('sw.plugin.transform', ['sw.plugins'])
     // Catch default transform invalid JSON parse
     .factory('transform', function ($q, $http) {
         return {
@@ -19,6 +21,6 @@ angular.module('swaggerUiMaterial')
             }
         };
     })
-    .run(function (swaggerPlugins, transform) {
-        swaggerPlugins.add(swaggerPlugins.BEFORE_EXPLORER_LOAD, transform);
+    .run(function (plugins, transform) {
+        plugins.add(plugins.BEFORE_EXPLORER_LOAD, transform);
     });

@@ -14,8 +14,8 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="../bower_components/github-markdown-css/github-markdown.css">
     <link rel="stylesheet" href="./styles/swagger-ui-material.css">
-    <link rel="stylesheet" href="./directives/toolbar-search.css">
-    <link rel="stylesheet" href="./directives/toolbar-edit.css">
+    <link rel="stylesheet" href="./directives/toolbar-search/toolbar-search.css">
+    <link rel="stylesheet" href="./directives/toolbar-edit/toolbar-edit.css">
     <!-- endinject -->
 
     <style>
@@ -24,17 +24,8 @@
         }
     </style>
 </head>
-<body ng-controller="MyCtrl" layout="column" class="ng-cloak">
-<!--suppress HtmlUnknownAttribute -->
-<div layout="row"
-     flex
-     swagger-ui-material
-     url="swaggerUrl"
-     loading="isLoading"
-     api-explorer="true"
-     validator-url="false"
-     trusted-sources="false"
-     error-handler="myErrorHandler"></div>
+<body ng-controller="DetailController as vm" layout="row" class="ng-cloak sw-ui-md"
+      ng-include="'views/app.layout.html'">
 
 <!-- scripts CDN -->
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
@@ -47,16 +38,26 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/js-yaml/3.5.3/js-yaml.min.js"></script>
 
 <!-- inject:js -->
-<script src="./scripts/swagger-ui.js"></script>
-<script src="services/client.js"></script>
-<script src="services/model.js"></script>
-<script src="services/plugins.js"></script>
-<script src="services/loader.js"></script>
-<script src="services/format.js"></script>
-<script src="plugins/parse/parser.core.js "></script>
+<script src="sw.ui/sw.ui.module.js"></script>
+<script src="sw.ui/client.js"></script>
+<script src="sw.ui/data.js"></script>
+<script src="sw.ui/format.js"></script>
+<script src="sw.ui/model.js"></script>
 
-<script src="./scripts/swagger-ui-material.js"></script>
-<script src="services/http-data.js"></script>
+<script src="sw.ui.md/sw.ui.md.module.js"></script>
+<script src="sw.ui.md/http-data.js"></script>
+<script src="sw.ui.md/dialog.js"></script>
+<script src="sw.ui.md/theme.js"></script>
+<script src="sw.ui.md/style.js"></script>
+<script src="sw.ui.md/display.js"></script>
+<script src="sw.ui.md/utils.js"></script>
+<script src="sw.ui.md/syntax.js"></script>
+<script src="sw.ui.md/security.js"></script>
+<script src="sw.ui.md/tools.js"></script>
+
+<script src="plugins/plugins.js"></script>
+<script src="plugins/after-explorer/xml-formatter.js"></script>
+<!--<script src="plugins/before-explorer/auth.sample.js"></script>-->
 <script src="plugins/before-display/sort.js"></script>
 <script src="plugins/before-display/markdown.js"></script>
 <script src="plugins/before-load/yaml.js"></script>
@@ -65,28 +66,37 @@
 <script src="plugins/before-display/operations.js"></script>
 <script src="plugins/before-parse/external-references.js"></script>
 <script src="plugins/before-parse/swagger-1-to-2.js"></script>
-<!--<script src="plugins/before-explorer/auth.sample.js"></script>-->
-<script src="./directives/toolbar-search.js"></script>
-<script src="./directives/toolbar-edit.js"></script>
-<script src="./directives/truncate.js"></script>
-<script src="services/dialog.js"></script>
-<script src="services/theme.js"></script>
-<script src="services/style.js"></script>
-<script src="services/display.js"></script>
-<script src="services/utils.js"></script>
-<script src="services/syntax.js"></script>
-<script src="services/security.js"></script>
+<script src="plugins/parse/parser.core.js "></script>
+
+<script src="./directives/directives.module.js"></script>
+<!--<script src="./directives/file-input/file-input.js"></script>-->
+<script src="./directives/toolbar-search/toolbar-search.js"></script>
+<script src="./directives/toolbar-edit/toolbar-edit.js"></script>
+<script src="./directives/truncate/truncate.js"></script>
+
+<script src="modules/toolbar/toolbar.ctrl.js"></script>
+<script src="modules/meta/meta.ctrl.js"></script>
+<script src="modules/description/description.ctrl.js"></script>
+<script src="modules/content/content.ctrl.js"></script>
+<script src="modules/detail/detail.ctrl.js"></script>
 <!-- endinject -->
 
 <script type="text/javascript">
     angular.module('myApp', [
-            'swaggerUiMaterial',
-            'swaggerUiMarkdown',
-            'swaggerUiSort',
-            'swaggerUiSplit',
-            'swaggerUiYaml'
+            'sw.ui.md',
+
+//            'sw.plugin.auth',
+            'sw.plugin.markdown',
+//            'sw.plugin.xmlFormater',
+            'sw.plugin.operations',
+            'sw.plugin.sort',
+            'sw.plugin.parser',
+            'sw.plugin.split',
+            'sw.plugin.transform',
+            'sw.plugin.yaml',
+//            'sw.plugin.externalReferences'
         ])
-        .config(function ($mdThemingProvider) {
+        .config(function ($mdThemingProvider, $logProvider) {
             var search = {};
             var query = window.location.search.substring(1);
             var vars = query.split('&');
@@ -108,14 +118,18 @@
                 .accentPalette('accent')
                 .warnPalette(search.warn || 'amber')
                 .foregroundPalette[3] = 'rgba(0, 0, 0, 0.4)';
+
+            $logProvider.debugEnabled(false);
         })
-        .controller('MyCtrl', function ($scope, $location, $mdToast, $log) {
-            $scope.isLoading = false;
+        .run(function ($location, $mdToast, $log, data) {
             //noinspection JSCheckFunctionSignatures
-            $scope.swaggerUrl = $location.search()['url'] || 'http://petstore.swagger.io/v2/swagger.json';
+            var swaggerUrl = $location.search()['url'] || 'http://petstore.swagger.io/v2/swagger.json';
+
+            data.setUrl(swaggerUrl);
+            // data.validatorUrl = 'http://online.swagger.io/validator';
 
             // error management
-            $scope.myErrorHandler = function (error) {
+            function myErrorHandler (error) {
                 var e = error || {};
                 var m = 'Something is wrong';
                 $mdToast.show($mdToast.simple().textContent(e.statusText || e.message || m));

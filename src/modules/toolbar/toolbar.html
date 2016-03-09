@@ -1,0 +1,95 @@
+<md-toolbar md-whiteframe="2" ng-controller="ToolbarController as vm" style="max-height: 64px">
+    <div class="md-toolbar-tools" ng-if="vm.loading" style="padding-left: 0">
+        <md-progress-circular class="md-accent md-hue-1" md-mode="indeterminate"
+                              md-diameter="56"></md-progress-circular>
+        <span flex>Loading&hellip;</span>
+    </div>
+    <div class="md-toolbar-tools" ng-show="!vm.loading">
+        <toolbar-edit class="sum-delay md-toolbar-tools"
+                      ng-model="vm.editUrl"
+                      ng-changed="vm.editedUrl"
+                      display-title="vm.data.model.info.title"
+                      ng-show="vm.searchOpened && vm.$mdMedia('gt-sm') || !vm.searchOpened"
+                      flex
+                      style="padding-left: 0; padding-right: 0"></toolbar-edit>
+        <toolbar-search ng-show="!vm.loading"
+                        ng-model="vm.search"
+                        ng-changed="vm.searchUpdated"
+                        open="vm.searchOpened"></toolbar-search>
+        <!--suppress HtmlUnknownAttribute -->
+        <md-button hide show-gt-sm aria-label="expand" ng-if="vm.ui.grouped" ng-click="vm.toggleGroups(true)"
+                   class="md-icon-button">
+            <md-icon>keyboard_arrow_down</md-icon>
+        </md-button>
+        <!--suppress HtmlUnknownAttribute -->
+        <md-button hide show-gt-sm aria-label="collapse" ng-if="vm.ui.grouped" ng-click="vm.toggleGroups(false)"
+                   class="md-icon-button">
+            <md-icon>keyboard_arrow_up</md-icon>
+        </md-button>
+        <!--suppress HtmlUnknownAttribute -->
+        <md-button hide show-gt-sm aria-label="view" ng-click="vm.ui.grouped = !vm.ui.grouped" class="md-icon-button">
+            <md-icon ng-bind="vm.ui.grouped ? 'view_comfy' : 'view_column'"></md-icon>
+        </md-button>
+        <!--suppress HtmlUnknownAttribute -->
+        <md-button hide show-gt-sm aria-label="description" ng-click="vm.ui.descriptions = !vm.ui.descriptions"
+                   class="md-icon-button">
+            <md-icon ng-bind="vm.ui.descriptions ? 'speaker_notes_off' : 'speaker_notes'"></md-icon>
+        </md-button>
+        <md-button hide show-gt-sm aria-label="proxy" ng-click="vm.showProxy($event)"
+                   ng-class="{'md-warn md-hue-1': proxy.url}"
+                   class="md-icon-button">
+            <md-icon>security</md-icon>
+        </md-button>
+        <md-button hide show-gt-sm aria-label="security" ng-click="vm.showSecurity($event)"
+                   ng-if="vm.data.model.hasSecurity"
+                   class="md-icon-button">
+            <md-icon>vpn_key</md-icon>
+        </md-button>
+        <md-menu>
+            <md-button hide-gt-sm aria-label="menu" ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                <md-icon>more_vert</md-icon>
+            </md-button>
+            <!--suppress HtmlUnknownTag -->
+            <md-menu-content>
+                <md-menu-item ng-if="grouped">
+                    <md-button ng-click="vm.toggleGroups(true)">
+                        <md-icon>keyboard_arrow_down</md-icon>
+                        Expand
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item ng-if="grouped">
+                    <md-button ng-click="vm.toggleGroups(false)">
+                        <md-icon>keyboard_arrow_up</md-icon>
+                        Collapse
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="vm.ui.grouped = !vm.ui.grouped">
+                        <md-icon ng-bind="vm.ui.grouped ? 'view_comfy' : 'view_column'"></md-icon>
+                        Switch view
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="vm.ui.descriptions = !vm.ui.descriptions">
+                        <md-icon ng-bind="vm.ui.descriptions ? 'speaker_notes_off' : 'speaker_notes'"></md-icon>
+                        Descriptions
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="vm.showProxy($event)"
+                               ng-class="{'md-warn': proxy.url}">
+                        <md-icon>security</md-icon>
+                        Proxy
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="vm.showSecurity($event)"
+                               ng-if="vm.data.model.hasSecurity">
+                        <md-icon>vpn_key</md-icon>
+                        Security
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+    </div>
+</md-toolbar>

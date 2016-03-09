@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('swaggerUiSort', ['swaggerUi'])
-    .factory('sortResult', function ($q) {
+angular.module('sw.plugin.sort', ['sw.plugins'])
+    .factory('sort', function ($q) {
         var order = {
             get: 1,
             head: 2,
@@ -29,6 +29,6 @@ angular.module('swaggerUiSort', ['swaggerUi'])
             }
         };
     })
-    .run(function (swaggerPlugins, sortResult) {
-        swaggerPlugins.add(swaggerPlugins.BEFORE_DISPLAY, sortResult);
+    .run(function (plugins, sort) {
+        plugins.add(plugins.BEFORE_DISPLAY, sort);
     });

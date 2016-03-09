@@ -1,0 +1,9 @@
+'use strict';
+
+// noinspection HtmlDeprecatedTag
+angular.module('sw.ui.md')
+    .value('httpData', {
+        method: {},
+        status: {},
+        header: {}
+    });

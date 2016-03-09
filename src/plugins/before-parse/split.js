@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('swaggerUiSplit', [])
+angular.module('sw.plugin.split', ['sw.plugins'])
     .factory('split', function ($q) {
         return {
             execute: function (url, swagger) {
@@ -33,6 +33,6 @@ angular.module('swaggerUiSplit', [])
             }
         };
     })
-    .run(function (swaggerPlugins, split) {
-        swaggerPlugins.add(swaggerPlugins.BEFORE_PARSE, split);
+    .run(function (plugins, split) {
+        plugins.add(plugins.BEFORE_PARSE, split);
     });

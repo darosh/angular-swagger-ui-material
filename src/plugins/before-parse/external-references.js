@@ -6,9 +6,8 @@
  */
 'use strict';
 
-angular
-    .module('swaggerUi')
-    .factory('swaggerUiExternalReferences', function ($http, $q, $window, swaggerPlugins) {
+angular.module('sw.plugin.externalReferences', ['sw.plugins'])
+    .factory('externalReferences', function ($http, $q, $window, plugins) {
         var deferred;
 
         return {
@@ -36,8 +35,8 @@ angular
                 url: externalUrl
             };
 
-            swaggerPlugins
-                .execute(swaggerPlugins.BEFORE_LOAD, options)
+            plugins
+                .execute(plugins.BEFORE_LOAD, options)
                 .then(function () {
                     $http(options).then(callback, onError);
                 })
@@ -115,6 +114,6 @@ angular
             }
         }
     })
-    .run(function (swaggerPlugins, swaggerUiExternalReferences) {
-        swaggerPlugins.add(swaggerPlugins.BEFORE_PARSE, swaggerUiExternalReferences);
+    .run(function (plugins, externalReferences) {
+        plugins.add(plugins.BEFORE_PARSE, externalReferences);
     });
