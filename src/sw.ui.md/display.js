@@ -13,6 +13,8 @@ angular.module('sw.ui.md')
             var validatorDebug = (validatorUrl && url) ? (validatorUrl + '/debug?url=' + url) : null;
             var validatorBadge = validatorUrl + '?url=' + url;
 
+            console.log(i['x-origin'] && i['x-origin'].url);
+
             return [
                 ['Contact', 'person', (i.contact.name && !i.contact.email) ? i.contact.name : null, null],
                 ['Email', 'email', i.contact.email ? (i.contact.name || i.contact.email) : null, 'mailto:' + i.contact.email + '?subject=' + i.title],
@@ -24,6 +26,7 @@ angular.module('sw.ui.md')
                 ['API version', 'developer_board', i.version, null],
                 ['JSON', 'file_download', 'swagger.json', '#', download],
                 ['YAML', 'file_download', $window.jsyaml ? 'swagger.yaml' : null, '#', download],
+                ['Origin', 'cloud_download', i['x-origin'] && i['x-origin'].url, i['x-origin'] && i['x-origin'].url],
                 [null, 'code', validatorDebug, validatorBadge]
             ];
         }
