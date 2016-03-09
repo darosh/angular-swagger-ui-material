@@ -12,6 +12,7 @@
                       ng-show="vm.searchOpened && vm.$mdMedia('gt-sm') || !vm.searchOpened"
                       flex
                       style="padding-left: 0; padding-right: 0"></toolbar-edit>
+        <span flex ng-show="vm.searchOpened"></span>
         <toolbar-search ng-show="!vm.loading"
                         ng-model="vm.search"
                         ng-changed="vm.searchUpdated"
