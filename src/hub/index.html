@@ -150,6 +150,20 @@
         ul, p {
             padding-right: 24px;
         }
+
+        ul {
+            margin-bottom: 0;
+            padding-left: 24px;
+        }
+
+        a.flink {
+            border-bottom: 1px dotted #2200CC;
+        }
+
+        a.flink:hover {
+            text-decoration: none;
+            border-bottom: 1px solid #2200CC;
+        }
     </style>
     <style>
         toolbar-search input {
@@ -270,15 +284,15 @@
                     This is testing and exploring hub for
                     <a href="https://github.com/darosh/angular-swagger-ui-material">Material Swagger UI</a>
                     demo showing live data from <a href="https://github.com/APIs-guru/api-models">API Models</a>
-                    project with additional filters.
+                    project mixed with additional properties.
                 </p>
                 <p>
                     OAuth2 APIs configured in demo:
-                    <a href="#?search=googleapis.com:blogger">Blogger</a>,
-                    <a href="#?search=googleapis.com:books">Books</a>,
-                    <a href="#?search=googleapis.com:calendar">Calendar</a>,
-                    <a href="#?search=googleapis.com:drive">Drive</a>,
-                    <a href="#?search=googleapis.com:plus">Google+</a>.
+                    <a class="flink" href="#?search=googleapis.com:blogger">Blogger</a>,
+                    <a class="flink" href="#?search=googleapis.com:books">Books</a>,
+                    <a class="flink" href="#?search=googleapis.com:calendar">Calendar</a>,
+                    <a class="flink" href="#?search=googleapis.com:drive">Drive</a>,
+                    <a class="flink" href="#?search=googleapis.com:plus">Google+</a>.
                 </p>
             </div>
             <div flex-xs="100"
@@ -289,17 +303,13 @@
                  style="padding: 12px">
                 <h2 class="md-title">Search</h2>
                 <ul>
-                    <li>Positive search example: <a href="#?search=google">google</a></li>
-                    <li>Negative search example: <a href="#?search=!google">!google</a></li>
-                    (prefixed with exclamation mark)
+                    <li>Search example: <a class="flink" href="#?search=google">google</a></li>
+                    <li>Negative search example: <a class="flink" href="#?search=!google">!google</a>
+                        <br>(prefixed with exclamation mark)
+                    </li>
                 </ul>
             </div>
-            <div flex-xs="100"
-                 flex-sm="50"
-                 flex-md="33"
-                 flex-lg="25"
-                 flex-xl="20"
-                 style="padding: 12px">
+            <div flex style="padding: 12px">
                 <h2 class="md-title">Filters</h2>
                 <ul>
                     <li><em>CORS</em> information is grabbed <a
@@ -310,12 +320,21 @@
                         href="http://swagger.io/specification/#securityDefinitionsObject">securityDefinitions</a> spec
                         (except <em>local</em> value)
                     </li>
-                    <li><em>Tested</em> filter shows manual testing success or fail</li>
-                    <li>Recommended examples to try <a
-                        href="#?cors=false&cors=none&security=accessCode&security=apiKey&security=basic&security=implicit&security=local&security=password&tested=false&tested=none">tested
-                        + with CORS + without security</a> and <a
-                        href="#?cors=false&cors=none&security=accessCode&security=none&tested=false&tested=none">tested
-                        + with CORS + without accessCode flow</a>
+                    <li><em>Tested</em> filter shows <a
+                        href="https://github.com/darosh/angular-swagger-ui-material/blob/master/test/manual/manual.json">manual
+                        testing</a> success or fail
+                    </li>
+                    <li>Recommended examples to try
+                        <ul>
+                            <li><a
+                                class="flink"
+                                href="#?cors=false&cors=none&security=accessCode&security=apiKey&security=basic&security=implicit&security=local&security=password&tested=false&tested=none">tested
+                                + with CORS + without security</a></li>
+                            <li><a
+                                class="flink"
+                                href="#?cors=false&cors=none&security=accessCode&security=none&tested=false&tested=none">tested
+                                + with CORS + without accessCode flow</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -325,18 +344,12 @@
                  flex-lg="25"
                  flex-xl="20"
                  style="padding: 12px">
-                <a class="md-whiteframe-2dp" href="http://APIs.guru"
-                   style="text-decoration: none; display: block">
-                    <div class="tools" layout="row">
-                        <md-button class="md-accent md-hue-3 powered">
-                            Powered by
-                        </md-button>
-                    </div>
-                    <md-divider></md-divider>
-                    <div style="padding: 12px 12px 0 12px; background-color: #fff">
+                <h2 class="md-title">Powered by</h2>
+                <a href="http://APIs.guru" style="text-decoration: none; display: block">
+                    <div style="padding: 0 6px 0 0; background-color: #fff">
                         <img src="https://apis-guru.github.io/api-models/branding/logo_horizontal.svg"
                              alt="logo"
-                             style="max-width: 100%">
+                             style="max-width: 100%; width: 100%">
                     </div>
                 </a>
             </div>
