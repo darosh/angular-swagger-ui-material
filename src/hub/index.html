@@ -599,7 +599,7 @@
             $scope.$on('$locationChangeSuccess', locationUpdated);
 
             function register () {
-                unregister = $scope.$watch('vm.filter', defer(safeUpdate, 300), true);
+                unregister = $scope.$watch('vm.filter', defer(safeUpdate, 200), true);
             }
 
             function locationUpdated () {
@@ -635,6 +635,8 @@
                     s.info.title = s.info.title.replace(/([^A-Z])([A-Z])/, '$1\u200b$2');
                     s.ui = '../#?url=' + s.swaggerUrl;
                     s.updatedValue = (new Date(s.updated)).getTime();
+                    s.info.titleLowerCase = s.info.title.toLowerCase();
+                    s.keyLowerCase = s.key.toLowerCase();
                     vm.apis.push(s);
                 });
 
@@ -731,13 +733,13 @@
                     a.hide = a.hide ? true : !(isShown(m.security, vm.filter.security, []) && isShown(m.tested, vm.filter.tested));
 
                     if (search && !negative) {
-                        if ((a.info.title.toLowerCase().indexOf(search) === -1) &&
-                            (a.key.toLowerCase().indexOf(search) === -1)) {
+                        if ((a.info.titleLowerCase.indexOf(search) === -1) &&
+                            (a.keyLowerCase.indexOf(search) === -1)) {
                             a.hide = true;
                         }
                     } else if (search && negative) {
-                        if ((a.info.title.toLowerCase().indexOf(search) > -1) ||
-                            (a.key.toLowerCase().indexOf(search) > -1)) {
+                        if ((a.info.titleLowerCase.indexOf(search) > -1) ||
+                            (a.keyLowerCase.indexOf(search) > -1)) {
                             a.hide = true;
                         }
                     }
@@ -749,8 +751,9 @@
                 $location.search('security', serializeFilter(vm.filterArray.security));
                 $location.search('cors', serializeFilter(vm.filterArray.cors));
                 $location.search('tested', serializeFilter(vm.filterArray.tested));
-            }
 
+                $log.debug('hub:updated');
+            }
 
             function serializeFilter (f) {
                 return f.filter(function (i) {
