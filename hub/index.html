@@ -205,28 +205,26 @@
 <body ng-controller="HubCtrl as vm" layout="row" class="ng-cloak" style="overflow: hidden">
 <div layout="column" flex>
     <md-toolbar md-whiteframe="2" class="md-accent md-hue-1" style="z-index: 3">
-        <div class="md-toolbar-tools" ng-show="vm.loading" style="padding-left: 0">
-            <md-progress-circular class="md-accent md-hue-3" md-mode="indeterminate"
+        <div class="md-toolbar-tools" ng-style="{'padding-left': (vm.loading || vm.updating) ? 0 : null}">
+            <md-progress-circular ng-show="vm.loading || vm.updating" class="md-accent md-hue-3" md-mode="indeterminate"
                                   md-diameter="56"></md-progress-circular>
-            <span>Loading&hellip;</span>
-        </div>
-        <div class="md-toolbar-tools" ng-hide="vm.loading">
-            <div hide show-gt-sm>
+            <span ng-show="vm.loading">Loading&hellip;</span>
+            <div hide show-gt-sm ng-hide="vm.loading || vm.updating">
                 <span style="opacity: 0.5"
                       ng-if="vm.apis.length && (vm.count != vm.apis.length)">{{vm.count}} of&nbsp;</span>
                 <span class="md-title">{{vm.apis.length}} APIs</span>
             </div>
             <span flex></span>
-            <toolbar-search ng-model="vm.filter.search"></toolbar-search>
-            <md-button hide show-gt-sm aria-label="expand" ng-click="vm.toggle(true)"
+            <toolbar-search ng-hide="vm.loading" ng-model="vm.filter.search"></toolbar-search>
+            <md-button ng-hide="vm.loading" hide show-gt-sm aria-label="expand" ng-click="vm.toggle(true)"
                        class="md-icon-button">
                 <md-icon>keyboard_arrow_down</md-icon>
             </md-button>
-            <md-button hide show-gt-sm aria-label="collapse" ng-click="vm.toggle(false)"
+            <md-button ng-hide="vm.loading" hide show-gt-sm aria-label="collapse" ng-click="vm.toggle(false)"
                        class="md-icon-button">
                 <md-icon>keyboard_arrow_up</md-icon>
             </md-button>
-            <md-menu>
+            <md-menu ng-hide="vm.loading">
                 <md-button aria-label="sort" ng-click="$mdOpenMenu($event)" class="md-icon-button">
                     <md-icon>sort</md-icon>
                 </md-button>
@@ -259,7 +257,8 @@
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>
-            <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button" aria-label="filter">
+            <md-button ng-hide="vm.loading" ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button"
+                       aria-label="filter">
                 <md-icon>filter_list</md-icon>
             </md-button>
         </div>
@@ -577,6 +576,7 @@
             var vm = this;
 
             vm.loading = true;
+            vm.updating = false;
             vm.count = 0;
             vm.sortBy = 0;
             vm.filterArray = {};
@@ -599,7 +599,7 @@
             $scope.$on('$locationChangeSuccess', locationUpdated);
 
             function register () {
-                unregister = $scope.$watch('vm.filter', defer(safeUpdate, 200), true);
+                unregister = $scope.$watch('vm.filter', defer(safeUpdate, 25), true);
             }
 
             function locationUpdated () {
@@ -713,7 +713,11 @@
 
                 $log.debug('hub:safeUpdate');
 
-                $q.all([data, list]).then(update)
+                vm.updating = true;
+
+                $timeout(function () {
+                    $q.all([data, list]).then(update);
+                }, 200);
             }
 
             function update () {
@@ -759,6 +763,8 @@
                 $location.search('security', serializeFilter(vm.filterArray.security));
                 $location.search('cors', serializeFilter(vm.filterArray.cors));
                 $location.search('tested', serializeFilter(vm.filterArray.tested));
+
+                vm.updating = false;
 
                 $log.debug('hub:updated');
             }
