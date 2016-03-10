@@ -159,17 +159,17 @@
                  flex-lg="25"
                  flex-xl="20"
                  ng-hide="api.hide"
-                 ng-repeat="api in vm.apis track by $index"
+                 ng-repeat="api in vm.apis track by api.key"
                  style="padding: 12px">
                 <div>
                     <div class="header" ng-class="api.open ? 'md-whiteframe-6dp' : 'md-whiteframe-2dp'"
                          ng-style="{margin: api.open ? '0-2px' : 0}"
                          style="transition: all linear 0.1s; position: relative">
-                        <a ng-href="./#?url={{api.swaggerUrl}}"
+                        <a ng-href="{{::api.ui}}"
                            style="background-color: #fff; display: block; text-decoration: none">
                             <md-toolbar class="md-accent md-hue-1"
                                         style="height: auto; max-height: none; min-height: 80px"
-                                        ng-style="{background: api.gradientLight}">
+                                        ng-style="::api.style">
                                 <!--<div style="height: 8px; border-top-left-radius: 6px; border-top-right-radius: 6px"-->
                                 <!--ng-style="{background: api.gradient}" md-whiteframe="1"></div>-->
                                 <div layout="row" layout-padding layout-align="start start"
@@ -188,13 +188,13 @@
                         </a>
                         <md-divider></md-divider>
                         <div class="tools" layout="row">
-                            <md-button class="md-accent md-hue-3" ng-href="{{api.swaggerYamlUrl}}" target="_blank">
+                            <md-button class="md-accent md-hue-3" ng-href="{{::api.ui}}" target="_blank">
                                 Open
                             </md-button>
-                            <md-button class="md-accent md-hue-2" ng-href="{{api.swaggerYamlUrl}}" target="_blank">
+                            <md-button class="md-accent md-hue-2" ng-href="{{::api.swaggerYamlUrl}}" target="_blank">
                                 YAML
                             </md-button>
-                            <md-button class="md-accent md-hue-2" ng-href="{{api.swaggerUrl}}" target="_blank">
+                            <md-button class="md-accent md-hue-2" ng-href="{{::api.swaggerUrl}}" target="_blank">
                                 JSON
                             </md-button>
                             <span flex></span>
@@ -208,39 +208,40 @@
                         <div layout="column" layout-padding class="info">
                             <div layout="row" layout-align="space-between">
                                 <div class="md-body-1">Added</div>
-                                <div class="md-body-2" ng-bind="api.added | date"></div>
+                                <div class="md-body-2" ng-bind="::api.added | date"></div>
                             </div>
                             <md-divider></md-divider>
                             <div layout="row" layout-align="space-between">
                                 <div class="md-body-1">Updated</div>
-                                <div class="md-body-2" ng-bind="api.updated | date"></div>
+                                <div class="md-body-2" ng-bind="::api.updated | date"></div>
                             </div>
                             <md-divider></md-divider>
                             <div layout="row" layout-align="space-between">
                                 <div class="md-body-1">Version</div>
-                                <div class="md-body-2" ng-bind="api.info.version"></div>
+                                <div class="md-body-2" ng-bind="::api.info.version"></div>
                             </div>
                             <md-divider></md-divider>
                             <div layout="row" layout-align="space-between">
                                 <div class="md-body-1">Operations</div>
-                                <div class="md-body-2" ng-bind="api.meta.operations"></div>
+                                <div class="md-body-2" ng-bind="::api.meta.operations"></div>
                             </div>
                             <md-divider></md-divider>
-                            <div ng-if="api.meta.security && api.meta.security.length" layout="row"
+                            <div ng-if="::(api.meta.security && api.meta.security.length)" layout="row"
                                  layout-align="space-between">
                                 <div class="md-body-1">Security</div>
-                                <div class="md-body-2" ng-bind="api.meta.security"></div>
+                                <div class="md-body-2" ng-bind="::api.meta.security"></div>
                             </div>
-                            <md-divider ng-if="api.meta.security && api.meta.security.length"></md-divider>
+                            <md-divider ng-if="::(api.meta.security && api.meta.security.length)"></md-divider>
                             <div layout="row" layout-align="space-between">
                                 <div class="md-body-1">CORS</div>
-                                <div class="md-body-2" ng-if="api.meta.cors === true">enabled
+                                <div class="md-body-2" ng-if="::(api.meta.cors === true)">enabled
                                     <md-icon>verified_user</md-icon>
                                 </div>
-                                <div class="md-body-2" ng-if="api.meta.cors === false">disabled
+                                <div class="md-body-2" ng-if="::(api.meta.cors === false)">disabled
                                     <md-icon>security</md-icon>
                                 </div>
-                                <div class="md-body-2" ng-if="api.meta.cors !== true && api.meta.cors !== false">unknown
+                                <div class="md-body-2" ng-if="::(api.meta.cors !== true && api.meta.cors !== false)">
+                                    unknown
                                     <md-icon>close</md-icon>
                                 </div>
                             </div>
@@ -450,6 +451,7 @@
                     var s = v.versions[v.preferred];
                     s.key = k;
                     s.info.title = s.info.title.replace(/([^A-Z])([A-Z])/, '$1\u200b$2');
+                    s.ui = '../#?url=' + s.swaggerUrl;
                     vm.apis.push(s);
                 });
 
@@ -482,6 +484,8 @@
                     });
 
                     api.gradientLight = 'linear-gradient(135deg, ' + rgbsLight.join(',') + ')';
+
+                    api.style = {background: api.gradientLight};
                 });
             }
 
