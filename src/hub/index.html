@@ -149,10 +149,14 @@
 
         ul, p {
             padding-right: 24px;
+            margin-bottom: 0;
+        }
+
+        p {
+            margin-top: 18px;
         }
 
         ul {
-            margin-bottom: 0;
             padding-left: 24px;
         }
 
@@ -272,7 +276,7 @@
         </div>
     </md-toolbar>
     <md-content ng-show="!vm.loading" style="background-color: #fff">
-        <div class="doc md-body-1" layout="row" layout-wrap layout-padding layout-align="end" style="margin-top: 2px">
+        <div class="doc md-body-1" layout="row" layout-wrap layout-padding layout-align="end" style="margin-top: 2px; padding-bottom: 6px">
             <div flex-xs="100"
                  flex-sm="50"
                  flex-md="33"
@@ -280,7 +284,7 @@
                  flex-xl="20"
                  style="padding: 12px">
                 <h2 class="md-title">Intro</h2>
-                <p style="margin-top: 12px">
+                <p>
                     This is testing and exploring hub for
                     <a href="https://github.com/darosh/angular-swagger-ui-material">Material Swagger UI</a>
                     demo showing live data from <a href="http://APIs.guru">APIs.guru</a> mixed with additional
