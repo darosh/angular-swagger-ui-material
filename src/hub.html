@@ -440,25 +440,17 @@
 
                     if (!meta.colors || !meta.colors.length) {
                         meta.colors = [[223, 223, 223], [223, 223, 223], [255, 255, 255]];
+                    } else if (meta.colors.length === 1) {
+                        meta.colors.push([255, 255, 255]);
                     }
 
-                    var rgbs = ['rgba(255,255,255,1)'];
-                    var rgbsAvatar = ['rgba(255,255,255,1)'];
                     var rgbsLight = [];
 
                     angular.forEach(meta.colors, function (c) {
-                        c[3] = 0.333;
-                        rgbs.push('rgba(' + c.join(',') + ')');
-                        c[3] = 1;
-                        rgbsAvatar.push('rgba(' + c.join(',') + ')');
                         c[3] = 0.222;
                         rgbsLight.push('rgba(' + c.join(',') + ')');
                     });
 
-                    rgbsAvatar.push(['rgba(255,255,255,1)']);
-
-                    api.gradient = 'linear-gradient(135deg, ' + rgbs.join(',') + ')';
-                    api.gradientAvatar = 'linear-gradient(135deg, ' + rgbsAvatar.join(',') + ')';
                     api.gradientLight = 'linear-gradient(135deg, ' + rgbsLight.join(',') + ')';
                 });
             }
