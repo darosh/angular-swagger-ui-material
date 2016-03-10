@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 
-gulp.task('demo', ['copy', 'styles:gfm'], function () {
+gulp.task('demo', ['copy', 'copy:hub', 'styles:gfm'], function () {
     var inject = require('gulp-inject');
 
     function transform () {
