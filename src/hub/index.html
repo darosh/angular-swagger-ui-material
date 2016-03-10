@@ -142,10 +142,33 @@
                        class="md-icon-button">
                 <md-icon>keyboard_arrow_up</md-icon>
             </md-button>
-            <md-button aria-label="sort" ng-click="vm.toggle(false)"
-                       class="md-icon-button">
-                <md-icon>sort</md-icon>
-            </md-button>
+            <md-menu>
+                <md-button aria-label="sort" ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                    <md-icon>sort</md-icon>
+                </md-button>
+                <md-menu-content>
+                    <md-subheader>Sort by</md-subheader>
+                    <md-divider></md-divider>
+                    <md-menu-item>
+                        <md-button ng-click="vm.sort(0)">
+                            <md-icon ng-bind="vm.sortBy === 0 ? 'done' : ''"></md-icon>
+                            Provider
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="vm.sort(1)">
+                            <md-icon ng-bind="vm.sortBy === 1 ? 'done' : ''"></md-icon>
+                            Title
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="vm.sort(2)">
+                            <md-icon ng-bind="vm.sortBy === 2 ? 'done' : ''"></md-icon>
+                            Last updated
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
             <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button" aria-label="filter">
                 <md-icon>filter_list</md-icon>
             </md-button>
@@ -170,8 +193,6 @@
                             <md-toolbar class="md-accent md-hue-1"
                                         style="height: auto; max-height: none; min-height: 80px"
                                         ng-style="::api.style">
-                                <!--<div style="height: 8px; border-top-left-radius: 6px; border-top-right-radius: 6px"-->
-                                <!--ng-style="{background: api.gradient}" md-whiteframe="1"></div>-->
                                 <div layout="row" layout-padding layout-align="start start"
                                      style="height: auto; max-height: none; min-height: 64px; padding-bottom: 4px; padding-top: 4px">
                                     <span class="md-title" flex ng-bind="::api.info.title"
@@ -181,14 +202,13 @@
                                         <small ng-bind="::api.info['x-providerName']"></small>
                                         <small ng-bind="::api.info['x-serviceName']"
                                                ng-if="::api.info['x-serviceName']"></small>
-                                        <!--<small ng-bind="::api.info.version"></small>-->
                                     </div>
                                 </div>
                             </md-toolbar>
                         </a>
                         <md-divider></md-divider>
                         <div class="tools" layout="row">
-                            <md-button class="md-accent md-hue-3" ng-href="{{::api.ui}}" target="_blank">
+                            <md-button class="md-accent md-hue-3" ng-href="{{::api.ui}}">
                                 Open
                             </md-button>
                             <md-button class="md-accent md-hue-2" ng-href="{{::api.swaggerYamlUrl}}" target="_blank">
@@ -245,29 +265,6 @@
                                     <md-icon>close</md-icon>
                                 </div>
                             </div>
-                            <!--
-                            <md-divider></md-divider>
-                            <div layout="row" layout-align="space-between">
-                                <div class="md-body-1">Provider</div>
-                                <a class="md-body-1" ng-href="http://{{api.parts[0]}}" ng-bind="api.parts[0]"></a></div>
-                            <md-divider ng-if="api.parts[1]"></md-divider>
-                            <div ng-if="api.parts[1]" layout="row" layout-align="space-between">
-                                <div class="md-body-1">Service</div>
-                                <div class="md-body-1" ng-bind="api.parts[1]"></div>
-                            </div>
-                            <md-divider ng-if="api.info['x-origin'].url"></md-divider>
-                            <div ng-if="api.info['x-origin'].url" layout="row" layout-align="space-between">
-                                <div class="md-body-1">Origin</div>
-                                <a class="md-body-1 right" ng-href="{{api.info['x-origin'].url}}"
-                                   ng-bind="api.info['x-origin'].url"></a>
-                            </div>
-                            <md-divider ng-if="api.externalDocs.url"></md-divider>
-                            <div ng-if="api.externalDocs.url" layout="row" layout-align="space-between">
-                                <div class="md-body-1">Documentation</div>
-                                <a class="md-body-1 right" ng-href="{{api.externalDocs.url}}"
-                                   ng-bind="api.externalDocs.url"></a>
-                            </div>
-                            -->
                         </div>
                     </div>
                 </div>
@@ -417,6 +414,7 @@
 
             vm.loading = true;
             vm.count = 0;
+            vm.sortBy = 0;
             vm.filter = {
                 search: '',
                 enabled: true,
@@ -430,6 +428,7 @@
             };
 
             vm.toggle = defer(toggle, 100);
+            vm.sort = defer(sort, 100);
 
             var data = loadData();
             var list = loadList();
@@ -452,6 +451,7 @@
                     s.key = k;
                     s.info.title = s.info.title.replace(/([^A-Z])([A-Z])/, '$1\u200b$2');
                     s.ui = '../#?url=' + s.swaggerUrl;
+                    s.updatedValue = (new Date(s.updated)).getTime();
                     vm.apis.push(s);
                 });
 
@@ -476,15 +476,14 @@
                         meta.colors.push([255, 255, 255]);
                     }
 
-                    var rgbsLight = [];
+                    var rgbs = [];
 
                     angular.forEach(meta.colors, function (c) {
                         c[3] = 0.222;
-                        rgbsLight.push('rgba(' + c.join(',') + ')');
+                        rgbs.push('rgba(' + c.join(',') + ')');
                     });
 
-                    api.gradientLight = 'linear-gradient(135deg, ' + rgbsLight.join(',') + ')';
-
+                    api.gradientLight = 'linear-gradient(135deg, ' + rgbs.join(',') + ')';
                     api.style = {background: api.gradientLight};
                 });
             }
@@ -540,6 +539,24 @@
 
                     vm.count += !a.hide;
                 });
+            }
+
+            function sort (by) {
+                vm.sortBy = by;
+
+                var sorters = [
+                    function (a, b) {
+                        return a.key.localeCompare(b.key);
+                    },
+                    function (a, b) {
+                        return a.info.title.localeCompare(b.info.title);
+                    },
+                    function (a, b) {
+                        return b.updatedValue - a.updatedValue;
+                    }
+                ];
+
+                vm.apis.sort(sorters[vm.sortBy]);
             }
 
             function loadData () {
