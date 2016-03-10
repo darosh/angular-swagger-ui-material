@@ -557,7 +557,9 @@
             }
 
             function update () {
-                var search = vm.filter.search.toLowerCase();
+                var negative = vm.filter.search[0] === '!';
+                var search = negative ? vm.filter.search.substring(1) : vm.filter.search;
+                search = search.toLowerCase();
 
                 vm.count = 0;
 
@@ -575,10 +577,10 @@
 
                     a.hide = a.hide ? true : !(isShown(m.security, vm.filter.security, []) && isShown(m.tested, vm.filter.tested));
 
-                    if (vm.filter.search) {
+                    if (search) {
                         if ((a.info.title.toLowerCase().indexOf(search) === -1) &&
                             (a.key.toLowerCase().indexOf(search) === -1)) {
-                            a.hide = true;
+                            a.hide = !negative;
                         }
                     }
 
