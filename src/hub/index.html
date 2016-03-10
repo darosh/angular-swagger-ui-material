@@ -341,7 +341,7 @@
                  flex-lg="25"
                  flex-xl="20"
                  ng-if="!api.hide"
-                 ng-repeat="api in ::vm.apis track by ::api.key"
+                 ng-repeat="api in vm.apis track by ::api.key"
                  style="padding: 12px">
                 <div>
                     <div class="header" ng-class="api.open ? 'md-whiteframe-6dp' : 'md-whiteframe-2dp'"
@@ -448,7 +448,7 @@
                           ng-click="vm.filter.cors.true.show = !vm.filter.cors.true.show">
                 <md-icon>verified_user</md-icon>
                 <p><span>enabled</span>
-                    <badge ng-bind="vm.filter.cors.true.count"></badge>
+                    <badge ng-bind="::vm.filter.cors.true.count"></badge>
                 </p>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.cors.true.show"></md-switch>
             </md-list-item>
@@ -456,7 +456,7 @@
                           ng-click="vm.filter.cors.false.show = !vm.filter.cors.false.show">
                 <md-icon>security</md-icon>
                 <p><span>disabled</span>
-                    <badge ng-bind="vm.filter.cors.false.count"></badge>
+                    <badge ng-bind="::vm.filter.cors.false.count"></badge>
                 </p>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.cors.false.show"></md-switch>
             </md-list-item>
@@ -464,7 +464,7 @@
                           ng-click="vm.filter.cors.none.show = !vm.filter.cors.none.show">
                 <md-icon>close</md-icon>
                 <p><span>unknown</span>
-                    <badge ng-bind="vm.filter.cors.none.count"></badge>
+                    <badge ng-bind="::vm.filter.cors.none.count"></badge>
                 </p>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.cors.none.show"></md-switch>
             </md-list-item>
@@ -475,7 +475,7 @@
                 ng-repeat="v in vm.filterArray.security"
                 ng-click="v.show = !v.show; $event.preventDefault()">
                 <p><span ng-bind="v.name"></span>
-                    <badge ng-bind="v.count"></badge>
+                    <badge ng-bind="::v.count"></badge>
                 </p>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
@@ -486,7 +486,7 @@
                 ng-repeat="v in vm.filterArray.tested"
                 ng-click="v.show = !v.show; $event.preventDefault()">
                 <p><span ng-bind="v.name"></span>
-                    <badge ng-bind="v.count"></badge>
+                    <badge ng-bind="::v.count"></badge>
                 </p>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
