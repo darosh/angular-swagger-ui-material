@@ -283,9 +283,21 @@
                  style="padding: 12px">
                 <h2 class="md-title">Filters</h2>
                 <ul>
-                    <li><em>CORS</em> information is grabbed <a href="https://github.com/darosh/angular-swagger-ui-material/blob/master/lib/api-models-meta/index.js">automatically</a> and may be incorect</li>
-                    <li>Security is extracted from global <a href="http://swagger.io/specification/#securityDefinitionsObject">securityDefinitions</a> spec (except <em>local</em> value)</li>
+                    <li><em>CORS</em> information is grabbed <a
+                        href="https://github.com/darosh/angular-swagger-ui-material/blob/master/lib/api-models-meta/index.js">automatically</a>
+                        and may be incorrect
+                    </li>
+                    <li>Security is extracted from global <a
+                        href="http://swagger.io/specification/#securityDefinitionsObject">securityDefinitions</a> spec
+                        (except <em>local</em> value)
+                    </li>
                     <li><em>Tested</em> filter shows manual testing success or fail</li>
+                    <li>Recommended examples to try <a
+                        href="#?cors=false&cors=none&security=accessCode&security=apiKey&security=basic&security=implicit&security=local&security=password&tested=false&tested=none">tested
+                        + with CORS + without security</a> and <a
+                        href="#?cors=false&cors=none&security=accessCode&security=none&tested=false&tested=none">tested
+                        + with CORS + without accessCode flow</a>
+                    </li>
                 </ul>
             </div>
             <div flex-xs="100"
@@ -632,14 +644,14 @@
                         meta.colors.push([255, 255, 255]);
                     }
 
-                    var rgbs = [];
+                    var rgb = [];
 
                     angular.forEach(meta.colors, function (c) {
                         c[3] = 0.222;
-                        rgbs.push('rgba(' + c.join(',') + ')');
+                        rgb.push('rgba(' + c.join(',') + ')');
                     });
 
-                    api.gradientLight = 'linear-gradient(135deg, ' + rgbs.join(',') + ')';
+                    api.gradientLight = 'linear-gradient(135deg, ' + rgb.join(',') + ')';
                     api.style = {background: api.gradientLight};
                 });
 
@@ -682,7 +694,7 @@
                         a.hide = true;
                     } else if ((m.cors === false) && !vm.filter.cors.false.show) {
                         a.hide = true;
-                    } else if (!vm.filter.cors.none.show) {
+                    } else if (((m.cors !== true) && (m.cors !== false)) && !vm.filter.cors.none.show) {
                         a.hide = true;
                     }
 
@@ -843,8 +855,7 @@
                     }, time);
                 }
             }
-        })
-    ;
+        });
 </script>
 <script type="text/ng-template" id="toolbar-search.html">
     <md-button ng-click="open = true; focus()" class="md-icon-button">
