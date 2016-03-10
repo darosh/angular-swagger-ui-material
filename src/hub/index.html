@@ -616,6 +616,12 @@
                 deserializeFilter(vm.filter.security, s.security);
                 deserializeFilter(vm.filter.cors, s.cors);
                 deserializeFilter(vm.filter.tested, s.tested);
+
+                var order = s.order || 0;
+
+                if (order !== vm.sortBy) {
+                    sort(order);
+                }
             }
 
             function deserializeFilter (f, s) {
@@ -673,7 +679,9 @@
                 });
 
                 buildFilters();
+                locationUpdated();
                 update();
+                sort(vm.sortBy);
                 vm.loading = false;
                 register();
             }
@@ -806,6 +814,7 @@
                 ];
 
                 vm.apis.sort(sorters[vm.sortBy]);
+                $location.search('order', vm.sortBy || null);
             }
 
             function buildFilter (member, type) {
