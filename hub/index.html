@@ -1,0 +1,898 @@
+<!doctype html>
+<html ng-app="hub">
+<head>
+    <meta charset="utf-8">
+    <title>Material Swagger UI Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <!-- styles CDN -->
+    <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css">
+
+    <style>
+        .ng-cloak {
+            display: none;
+        }
+    </style>
+    <style>
+        md-toolbar small {
+            max-width: 120px;
+            text-overflow: ellipsis;
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        a:focus {
+            outline: none;
+        }
+
+        .md-errors-spacer {
+            display: none;
+        }
+
+        a.md-button {
+            font-weight: normal;
+        }
+
+        .tools a.md-button {
+            font-weight: 500;
+        }
+
+        .tools .md-button {
+            font-weight: 500;
+            min-width: 0;
+            margin: 3px;
+            height: 28px;
+            min-height: 28px;
+            line-height: 28px;
+        }
+
+        .tools {
+            padding: 3px;
+            background-color: #fff;
+        }
+
+        .info .md-body-1,
+        .info .md-body-2 {
+            line-height: 14px;
+        }
+
+        .info {
+            padding: 12px;
+            margin: 6px;
+        }
+
+        .info md-divider {
+            padding: 0;
+            margin: 6px 6px;
+        }
+
+        .show-hide {
+            transition: all ease-in-out 0.2s;
+            max-height: 290px;
+            overflow: hidden;
+            position: relative;
+            top: 0;
+            z-index: 1;
+            /*margin: 0 2px;*/
+        }
+
+        .show-hide.ng-hide {
+            /*opacity: 0;*/
+            max-height: 0;
+            top: -100px;
+            /*margin: 0;*/
+        }
+
+        .powered {
+            text-align: left;
+        }
+
+        .powered:hover {
+            background-color: transparent;
+        }
+
+        .info a,
+        p a,
+        ul a {
+            color: #2200CC;
+            text-decoration: none;
+        }
+
+        .info a:hover,
+        p a:hover,
+        ul a:hover {
+            text-decoration: underline;
+        }
+
+        .info md-icon {
+            margin: -5px 0 -5px 5px;
+        }
+
+        .info .md-body-2,
+        .info .right {
+            text-align: right;
+            word-break: break-all;
+            padding-left: 24px;
+        }
+
+        .header {
+            z-index: 2;
+        }
+
+        md-list-item .md-list-item-inner > md-icon:first-child:not(.md-avatar-icon) {
+            margin-right: 12px;
+        }
+
+        badge {
+            position: relative;
+            top: -1px;
+            margin: 0 6px 0 6px;
+            display: inline-block;
+            background-color: #bbbbbb;
+            color: #fff;
+            border-radius: 8px;
+            line-height: 12px;
+            font-size: 12px;
+            height: 12px;
+            padding: 2px 6px;
+            font-weight: 500;
+            min-width: 6px;
+            text-align: center;
+        }
+
+        .doc h2 {
+            margin-top: 6px;
+        }
+
+        ul, p {
+            padding-right: 24px;
+            margin-bottom: 0;
+        }
+
+        p {
+            margin-top: 18px;
+        }
+
+        ul {
+            padding-left: 24px;
+        }
+
+        a.flink {
+            border-bottom: 1px dotted #2200CC;
+        }
+
+        a.flink:hover {
+            text-decoration: none;
+            border-bottom: 1px solid #2200CC;
+        }
+    </style>
+    <style>
+        toolbar-search input {
+            background: transparent;
+            border: none;
+            width: 120px;
+            margin-top: 4px;
+            vertical-align: middle;
+            margin-left: -6px;
+            margin-right: -12px;
+            position: relative;
+            top: -2px;
+        }
+
+        toolbar-search input:focus {
+            outline: none;
+        }
+
+        toolbar-search .input-show-hide {
+            -webkit-transition: all ease-out 0.25s;
+            transition: all ease-out 0.25s;
+        }
+
+        toolbar-search .input-show-hide.ng-hide {
+            -webkit-transition: all ease-in 0.25s;
+            transition: all ease-in 0.25s;
+            width: 0;
+            opacity: 0;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        @media screen and (min-width: 540px) {
+            toolbar-search input {
+                width: 180px;
+            }
+        }
+
+        @media screen and (min-width: 720px) {
+            toolbar-search input {
+                width: 240px;
+            }
+        }
+    </style>
+</head>
+<body ng-controller="HubCtrl as vm" layout="row" class="ng-cloak" style="overflow: hidden">
+<div layout="column" flex>
+    <md-toolbar md-whiteframe="2" class="md-accent md-hue-1" style="z-index: 3">
+        <div class="md-toolbar-tools" ng-show="vm.loading" style="padding-left: 0">
+            <md-progress-circular class="md-accent md-hue-3" md-mode="indeterminate"
+                                  md-diameter="56"></md-progress-circular>
+            <span>Loading&hellip;</span>
+        </div>
+        <div class="md-toolbar-tools" ng-hide="vm.loading">
+            <div hide show-gt-sm>
+                <span style="opacity: 0.5"
+                      ng-if="vm.apis.length && (vm.count != vm.apis.length)">{{vm.count}} of&nbsp;</span>
+                <span class="md-title">{{vm.apis.length}} APIs</span>
+            </div>
+            <span flex></span>
+            <toolbar-search ng-model="vm.filter.search"></toolbar-search>
+            <md-button hide show-gt-sm aria-label="expand" ng-click="vm.toggle(true)"
+                       class="md-icon-button">
+                <md-icon>keyboard_arrow_down</md-icon>
+            </md-button>
+            <md-button hide show-gt-sm aria-label="collapse" ng-click="vm.toggle(false)"
+                       class="md-icon-button">
+                <md-icon>keyboard_arrow_up</md-icon>
+            </md-button>
+            <md-menu>
+                <md-button aria-label="sort" ng-click="$mdOpenMenu($event)" class="md-icon-button">
+                    <md-icon>sort</md-icon>
+                </md-button>
+                <md-menu-content>
+                    <md-subheader>Sort by</md-subheader>
+                    <md-divider></md-divider>
+                    <md-menu-item>
+                        <md-button ng-click="vm.sort(0)">
+                            <md-icon ng-bind="vm.sortBy === 0 ? 'done' : ''"></md-icon>
+                            Provider
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="vm.sort(1)">
+                            <md-icon ng-bind="vm.sortBy === 1 ? 'done' : ''"></md-icon>
+                            Title
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="vm.sort(2)">
+                            <md-icon ng-bind="vm.sortBy === 2 ? 'done' : ''"></md-icon>
+                            Last updated
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="vm.sort(3)">
+                            <md-icon ng-bind="vm.sortBy === 3 ? 'done' : ''"></md-icon>
+                            Operations
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+            <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button" aria-label="filter">
+                <md-icon>filter_list</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-content ng-show="!vm.loading" style="background-color: #fff">
+        <div class="doc md-body-1" layout="row" layout-wrap layout-padding layout-align="end" style="margin-top: 2px; padding-bottom: 6px">
+            <div flex-xs="100"
+                 flex-sm="50"
+                 flex-md="33"
+                 flex-lg="25"
+                 flex-xl="20"
+                 style="padding: 12px">
+                <h2 class="md-title">Intro</h2>
+                <p>
+                    This is testing and exploring hub for
+                    <a href="https://github.com/darosh/angular-swagger-ui-material">Material Swagger UI</a>
+                    demo showing live data from <a href="http://APIs.guru">APIs.guru</a> mixed with additional
+                    properties.
+                </p>
+                <p>
+                    OAuth2 APIs configured in demo:
+                    <a class="flink" href="#?search=googleapis.com:blogger">Blogger</a>,
+                    <a class="flink" href="#?search=googleapis.com:books">Books</a>,
+                    <a class="flink" href="#?search=googleapis.com:calendar">Calendar</a>,
+                    <a class="flink" href="#?search=googleapis.com:drive">Drive</a>,
+                    <a class="flink" href="#?search=googleapis.com:plus">Google+</a>.
+                </p>
+            </div>
+            <div flex-xs="100"
+                 flex-sm="50"
+                 flex-md="33"
+                 flex-lg="25"
+                 flex-xl="20"
+                 style="padding: 12px">
+                <h2 class="md-title">Search</h2>
+                <ul>
+                    <li>Search example: <a class="flink" href="#?search=google">google</a></li>
+                    <li>Negative search example: <a class="flink" href="#?search=!google">!google</a>
+                        <br>(prefixed with exclamation mark)
+                    </li>
+                </ul>
+            </div>
+            <div flex style="padding: 12px">
+                <h2 class="md-title">Filters</h2>
+                <ul>
+                    <li><em>CORS</em> information is grabbed <a
+                        href="https://github.com/darosh/angular-swagger-ui-material/blob/master/lib/api-models-meta/index.js">automatically</a>
+                        and may be incorrect
+                    </li>
+                    <li>Security is extracted from global <a
+                        href="http://swagger.io/specification/#securityDefinitionsObject">securityDefinitions</a> spec
+                        (except <em>local</em> value)
+                    </li>
+                    <li><em>Tested</em> filter shows <a
+                        href="https://github.com/darosh/angular-swagger-ui-material/blob/master/test/manual/manual.json">manual
+                        testing</a> success or fail
+                    </li>
+                    <li>Recommended examples to try
+                        <ul>
+                            <li><a
+                                class="flink"
+                                href="#?cors=false&cors=none&security=accessCode&security=apiKey&security=basic&security=implicit&security=local&security=password&tested=false&tested=none">tested
+                                + with CORS + without security</a></li>
+                            <li><a
+                                class="flink"
+                                href="#?cors=false&cors=none&security=accessCode&security=none&tested=false&tested=none">tested
+                                + with CORS + without accessCode flow</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <md-divider ng-show="vm.count" style="margin: 4px 0 2px 0"></md-divider>
+        <div ng-show="vm.count" layout="row" layout-wrap layout-padding style="margin-top: 2px">
+            <div flex-xs="100"
+                 flex-sm="50"
+                 flex-md="33"
+                 flex-lg="25"
+                 flex-xl="20"
+                 ng-hide="api.hide"
+                 ng-repeat="api in vm.apis track by api.key"
+                 style="padding: 12px">
+                <div>
+                    <div class="header" ng-class="api.open ? 'md-whiteframe-6dp' : 'md-whiteframe-2dp'"
+                         ng-style="{margin: api.open ? '0-2px' : 0}"
+                         style="transition: all linear 0.1s; position: relative">
+                        <a ng-href="{{::api.ui}}"
+                           style="background-color: #fff; display: block; text-decoration: none">
+                            <md-toolbar class="md-accent md-hue-1"
+                                        style="height: auto; max-height: none; min-height: 80px"
+                                        ng-style="::api.style">
+                                <div layout="row" layout-padding layout-align="start start"
+                                     style="height: auto; max-height: none; min-height: 64px; padding-bottom: 4px; padding-top: 4px">
+                                    <span class="md-title" flex ng-bind="::api.info.title"
+                                          style="line-height: 28px"></span>
+                                    <div layout="column" layout-align="start end"
+                                         style="line-height: 28px; text-align:right; opacity: 0.8">
+                                        <small ng-bind="::api.info['x-providerName']"></small>
+                                        <small ng-bind="::api.info['x-serviceName']"
+                                               ng-if="::api.info['x-serviceName']"></small>
+                                    </div>
+                                </div>
+                            </md-toolbar>
+                        </a>
+                        <md-divider></md-divider>
+                        <div class="tools" layout="row">
+                            <md-button class="md-accent md-hue-3" ng-href="{{::api.ui}}">
+                                Open
+                            </md-button>
+                            <md-button class="md-accent md-hue-2" ng-href="{{::api.swaggerYamlUrl}}" target="_blank">
+                                YAML
+                            </md-button>
+                            <md-button class="md-accent md-hue-2" ng-href="{{::api.swaggerUrl}}" target="_blank">
+                                JSON
+                            </md-button>
+                            <span flex></span>
+                            <md-button ng-click="api.open = !api.open" aria-label="toggle">
+                                <md-icon ng-bind="api.open ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"></md-icon>
+                            </md-button>
+                        </div>
+                    </div>
+                    <div ng-show="api.open" class="show-hide" ng-class="api.open ? 'md-whiteframe-1dp' : ''"
+                         style="background-color: #fcfcfc">
+                        <div layout="column" layout-padding class="info">
+                            <div layout="row" layout-align="space-between">
+                                <div class="md-body-1">Added</div>
+                                <div class="md-body-2" ng-bind="::api.added | date"></div>
+                            </div>
+                            <md-divider></md-divider>
+                            <div layout="row" layout-align="space-between">
+                                <div class="md-body-1">Updated</div>
+                                <div class="md-body-2" ng-bind="::api.updated | date"></div>
+                            </div>
+                            <md-divider></md-divider>
+                            <div layout="row" layout-align="space-between">
+                                <div class="md-body-1">Version</div>
+                                <div class="md-body-2" ng-bind="::api.info.version"></div>
+                            </div>
+                            <md-divider></md-divider>
+                            <div layout="row" layout-align="space-between">
+                                <div class="md-body-1">Operations</div>
+                                <div class="md-body-2" ng-bind="::api.meta.operations"></div>
+                            </div>
+                            <md-divider></md-divider>
+                            <div ng-if="::(api.meta.security && api.meta.security.length)" layout="row"
+                                 layout-align="space-between">
+                                <div class="md-body-1">Security</div>
+                                <div class="md-body-2" ng-bind="::api.meta.security"></div>
+                            </div>
+                            <md-divider ng-if="::(api.meta.security && api.meta.security.length)"></md-divider>
+                            <div layout="row" layout-align="space-between">
+                                <div class="md-body-1">CORS</div>
+                                <div class="md-body-2" ng-if="::(api.meta.cors === true)">enabled
+                                    <md-icon>verified_user</md-icon>
+                                </div>
+                                <div class="md-body-2" ng-if="::(api.meta.cors === false)">disabled
+                                    <md-icon>security</md-icon>
+                                </div>
+                                <div class="md-body-2" ng-if="::(api.meta.cors !== true && api.meta.cors !== false)">
+                                    unknown
+                                    <md-icon>close</md-icon>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </md-content>
+</div>
+<md-sidenav md-is-open="vm.sidenav" class="md-sidenav-right" layout="column">
+    <md-toolbar md-whiteframe="2" class="md-accent md-hue-1">
+        <div class="md-toolbar-tools">
+            <span>Filters</span>
+            <span flex></span>
+            <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button">
+                <md-icon>close</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-content md-scroll-y flex>
+        <md-list>
+            <md-subheader class="md-no-sticky">CORS</md-subheader>
+            <md-list-item aria-label="switch" ng-if="vm.filter.cors.true"
+                          ng-click="vm.filter.cors.true.show = !vm.filter.cors.true.show">
+                <md-icon>verified_user</md-icon>
+                <p><span>enabled</span>
+                    <badge ng-bind="vm.filter.cors.true.count"></badge>
+                </p>
+                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.cors.true.show"></md-switch>
+            </md-list-item>
+            <md-list-item aria-label="switch" ng-if="vm.filter.cors.false"
+                          ng-click="vm.filter.cors.false.show = !vm.filter.cors.false.show">
+                <md-icon>security</md-icon>
+                <p><span>disabled</span>
+                    <badge ng-bind="vm.filter.cors.false.count"></badge>
+                </p>
+                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.cors.false.show"></md-switch>
+            </md-list-item>
+            <md-list-item aria-label="switch" ng-if="vm.filter.cors.none"
+                          ng-click="vm.filter.cors.none.show = !vm.filter.cors.none.show">
+                <md-icon>close</md-icon>
+                <p><span>unknown</span>
+                    <badge ng-bind="vm.filter.cors.none.count"></badge>
+                </p>
+                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.cors.none.show"></md-switch>
+            </md-list-item>
+            <md-divider></md-divider>
+            <md-subheader class="md-no-sticky">Security</md-subheader>
+            <md-list-item
+                aria-label="switch"
+                ng-repeat="v in vm.filterArray.security"
+                ng-click="v.show = !v.show; $event.preventDefault()">
+                <p><span ng-bind="v.name"></span>
+                    <badge ng-bind="v.count"></badge>
+                </p>
+                <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
+            </md-list-item>
+            <md-divider></md-divider>
+            <md-subheader class="md-no-sticky">Tested</md-subheader>
+            <md-list-item
+                aria-label="switch"
+                ng-repeat="v in vm.filterArray.tested"
+                ng-click="v.show = !v.show; $event.preventDefault()">
+                <p><span ng-bind="v.name"></span>
+                    <badge ng-bind="v.count"></badge>
+                </p>
+                <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
+            </md-list-item>
+            <md-divider></md-divider>
+            <div layout="row" layout-align="end" layout-padding>
+                <md-button ng-click="vm.reset()">Reset Filters</md-button>
+            </div>
+        </md-list>
+    </md-content>
+</md-sidenav>
+
+<!-- scripts CDN -->
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-aria.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
+
+<script type="text/javascript">
+    angular.module('hub', ['ngMaterial'])
+        .config(function ($mdThemingProvider) {
+            $mdThemingProvider
+                .theme('default')
+                .primaryPalette('teal')
+                .accentPalette('grey')
+                .warnPalette('amber');
+        })
+        // from http://embed.plnkr.co/CaZAVeC90qxQP1E4Z5Fb/preview
+        .factory('HubCache', function ($cacheFactory, $window) {
+            var cache = $cacheFactory('someCache', {});
+            var PREFIX = 'swaggerHub:';
+            var storage = $window.sessionStorage;
+
+            cache.get = function (key) {
+                var lruEntry = storage.getItem(PREFIX + key);
+
+                if (!lruEntry) {
+                    return;
+                }
+
+                lruEntry = JSON.parse(lruEntry);
+
+                return lruEntry.data;
+            };
+
+            cache.put = function (key, value) {
+                if (angular.isFunction(value.then)) {
+                    value.then(function (value) {
+                        storage.setItem(PREFIX + key, JSON.stringify(value));
+                    });
+                } else {
+                    storage.setItem(PREFIX + key, JSON.stringify(value));
+                }
+            };
+
+            return cache;
+        })
+        .directive('toolbarSearch', function ($timeout) {
+            return {
+                restrict: 'E',
+                templateUrl: 'toolbar-search.html',
+                scope: {
+                    ngModel: '=',
+                    ngChanged: '=?',
+                    open: '=?'
+                },
+                link: function (scope, element) {
+                    $timeout(function () {
+                        scope.init = true;
+                    }, 200);
+
+                    scope.focus = function () {
+                        $timeout(function () {
+                            element.children()[1].focus();
+                        }, 200);
+                    };
+
+                    scope.$watch('ngModel', function () {
+                        if (scope.ngModel) {
+                            scope.open = true;
+                        }
+                    });
+                }
+            };
+        })
+        .controller('HubCtrl', function ($scope, $http, $timeout, $location, HubCache) {
+            var vm = this;
+
+            vm.loading = true;
+            vm.count = 0;
+            vm.sortBy = 0;
+            vm.filterArray = {};
+            vm.filter = {
+                search: ''
+            };
+
+            vm.toggle = defer(toggle, 100);
+            vm.sort = defer(sort, 100);
+            vm.reset = defer(reset, 100);
+
+            var data = loadData();
+            var list = loadList();
+
+            list.then(processList);
+
+            $scope.$watch(function () {
+                return vm.filter
+            }, defer(update, 300), true);
+
+            $scope.$on('$locationChangeSuccess', locationUpdated);
+
+            function locationUpdated () {
+                var s = $location.search();
+
+                vm.filter.search = s.search;
+                deserializeFilter(vm.filter.security, s.security);
+                deserializeFilter(vm.filter.cors, s.cors);
+                deserializeFilter(vm.filter.tested, s.tested);
+            }
+
+            function deserializeFilter (f, s) {
+                angular.forEach(f, function (i) {
+                    i.show = (s || []).indexOf(i.name) === -1;
+                });
+            }
+
+            function processList (response) {
+                vm.loading = false;
+                vm.table = false;
+                vm.apis = [];
+
+                angular.forEach(response.data, function (v, k) {
+                    var s = v.versions[v.preferred];
+                    s.key = k;
+                    s.info.title = s.info.title.replace(/([^A-Z])([A-Z])/, '$1\u200b$2');
+                    s.ui = '../#?url=' + s.swaggerUrl;
+                    s.updatedValue = (new Date(s.updated)).getTime();
+                    vm.apis.push(s);
+                });
+
+                vm.count = vm.apis.length;
+
+                vm.apis.sort(function (a, b) {
+                    return (a.key).localeCompare(b.key);
+                });
+
+                data.then(processData);
+            }
+
+            function processData (response) {
+                angular.forEach(vm.apis, function (api) {
+                    var meta = response.data[api.key];
+
+                    api.meta = meta || {};
+
+                    if (!meta.colors || !meta.colors.length) {
+                        meta.colors = [[223, 223, 223], [223, 223, 223], [255, 255, 255]];
+                    } else if (meta.colors.length === 1) {
+                        meta.colors.push([255, 255, 255]);
+                    }
+
+                    var rgb = [];
+
+                    angular.forEach(meta.colors, function (c) {
+                        c[3] = 0.222;
+                        rgb.push('rgba(' + c.join(',') + ')');
+                    });
+
+                    api.gradientLight = 'linear-gradient(135deg, ' + rgb.join(',') + ')';
+                    api.style = {background: api.gradientLight};
+                });
+
+                buildFilters();
+            }
+
+            function buildFilters () {
+                vm.filter.security = buildFilter(function (api) {
+                    return api.meta.security;
+                }, []);
+
+                vm.filterArray.security = filterArray(vm.filter.security);
+
+                vm.filter.tested = buildFilter(function (api) {
+                    return api.meta.tested;
+                });
+
+                vm.filterArray.tested = filterArray(vm.filter.tested);
+
+                vm.filter.cors = buildFilter(function (api) {
+                    return api.meta.cors;
+                });
+
+                vm.filterArray.cors = filterArray(vm.filter.cors);
+            }
+
+            function update () {
+                var search = vm.filter.search || '';
+                var negative = search.length && (search[0] === '!');
+                search = negative ? search.substring(1) : search;
+                search = search.toLowerCase();
+
+                vm.count = 0;
+
+                angular.forEach(vm.apis, function (a) {
+                    var m = a.meta || {};
+                    a.hide = false;
+
+                    if ((m.cors === true) && !vm.filter.cors.true.show) {
+                        a.hide = true;
+                    } else if ((m.cors === false) && !vm.filter.cors.false.show) {
+                        a.hide = true;
+                    } else if (((m.cors !== true) && (m.cors !== false)) && !vm.filter.cors.none.show) {
+                        a.hide = true;
+                    }
+
+                    a.hide = a.hide ? true : !(isShown(m.security, vm.filter.security, []) && isShown(m.tested, vm.filter.tested));
+
+                    if (search && !negative) {
+                        if ((a.info.title.toLowerCase().indexOf(search) === -1) &&
+                            (a.key.toLowerCase().indexOf(search) === -1)) {
+                            a.hide = true;
+                        }
+                    } else if (search && negative) {
+                        if ((a.info.title.toLowerCase().indexOf(search) > -1) ||
+                            (a.key.toLowerCase().indexOf(search) > -1)) {
+                            a.hide = true;
+                        }
+                    }
+
+                    vm.count += !a.hide;
+                });
+
+                $location.search('search', vm.filter.search || null);
+                $location.search('security', serializeFilter(vm.filterArray.security));
+                $location.search('cors', serializeFilter(vm.filterArray.cors));
+                $location.search('tested', serializeFilter(vm.filterArray.tested));
+            }
+
+
+            function serializeFilter (f) {
+                return f.filter(function (i) {
+                    return !i.show;
+                }).map(function (i) {
+                    return i.name;
+                });
+            }
+
+            function isShown (value, filter, type) {
+                var show = false;
+
+                var val = value || type;
+
+                angular.forEach(filter, function (v, k) {
+                    if (angular.isArray(type)) {
+                        if (v.show && (k === 'none') && !val.length) {
+                            show = true;
+                        } else if (v.show && (val.indexOf(k) > -1)) {
+                            show = true;
+                        }
+                    } else {
+                        if (v.show && (k === 'none') && angular.isUndefined(val)) {
+                            show = true;
+                        } else if (v.show && !angular.isUndefined(val) && (val.toString() === k)) {
+                            show = true;
+                        }
+                    }
+                });
+
+                return show;
+            }
+
+            function sort (by) {
+                vm.sortBy = by;
+
+                var sorters = [
+                    function (a, b) {
+                        return a.key.localeCompare(b.key);
+                    },
+                    function (a, b) {
+                        return a.info.title.localeCompare(b.info.title);
+                    },
+                    function (a, b) {
+                        return b.updatedValue - a.updatedValue;
+                    },
+                    function (a, b) {
+                        return (a.meta.operations || 0) - (b.meta.operations || 0);
+                    }
+                ];
+
+                vm.apis.sort(sorters[vm.sortBy]);
+            }
+
+            function buildFilter (member, type) {
+                var stat = {};
+
+                angular.forEach(vm.apis, function (api) {
+                    var m = member(api);
+
+                    m = angular.isUndefined(m) ? type : m;
+
+                    if (angular.isArray(type)) {
+                        if (!m.length) {
+                            stat['none'] = (stat['none'] || 0) + 1;
+                        }
+
+                        angular.forEach(m, function (sec) {
+                            stat[sec] = stat[sec] || 0;
+                            stat[sec]++;
+                        });
+                    } else {
+                        var sec = (m === true || m === false) ? m.toString() : 'none';
+
+                        stat[sec] = stat[sec] || 0;
+                        stat[sec]++;
+                    }
+                });
+
+                angular.forEach(stat, function (v, k) {
+                    stat[k] = {
+                        count: v,
+                        show: true
+                    };
+                });
+
+                return stat;
+            }
+
+            function filterArray (obj) {
+                var arr = [];
+
+                angular.forEach(obj, function (v, k) {
+                    v.name = k;
+                    arr.push(v);
+                });
+
+                arr.sort(function (a, b) {
+                    return a.name.localeCompare(b.name);
+                });
+
+                return arr;
+            }
+
+            function reset () {
+                angular.forEach(vm.filter, function (f) {
+                    if (angular.isObject(f)) {
+                        angular.forEach(f, function (i) {
+                            i.show = true;
+                        });
+                    }
+                });
+            }
+
+            function loadData () {
+                return $http({
+                    method: 'GET',
+                    url: 'hub.json',
+                    cache: HubCache
+                });
+            }
+
+            function loadList () {
+                return $http({
+                    method: 'GET',
+                    url: 'https://apis-guru.github.io/api-models/api/v1/list.json',
+                    cache: HubCache
+                });
+            }
+
+            function toggle (open) {
+                angular.forEach(vm.apis, function (api) {
+                    if (!api.hide) {
+                        api.open = open;
+                    }
+                });
+            }
+
+            function defer (fnc, time) {
+                return function () {
+                    var args = arguments;
+
+                    $timeout(function () {
+                        fnc.apply(this, args);
+                    }, time);
+                }
+            }
+        });
+</script>
+<script type="text/ng-template" id="toolbar-search.html">
+    <md-button ng-click="open = true; focus()" class="md-icon-button">
+        <md-icon>search</md-icon>
+    </md-button>
+    <input ng-show="open" ng-model="ngModel" type="text" class="md-input" ng-class="{'input-show-hide': init}"
+           ng-model-options="{debounce: {default: 500, blur: 0}}"/>
+    <md-button ng-show="open" ng-click="ngModel = ''; open = false" class="md-icon-button"
+               ng-class="{'input-show-hide': init}">
+        <md-icon>close</md-icon>
+    </md-button>
+</script>
+</body>
+</html>
