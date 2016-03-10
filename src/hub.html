@@ -54,6 +54,7 @@
 
         .tools {
             padding: 3px;
+            background-color: #fff;
         }
 
         .info .md-body-1,
@@ -72,15 +73,19 @@
         }
 
         .show-hide {
-            transition: all ease-out 0.2s;
-            max-height: 372px;
+            transition: all ease-in-out 0.2s;
+            max-height: 290px;
             overflow: hidden;
+            position: relative;
+            top: 0;
+            z-index: 1;
             /*margin: 0 2px;*/
         }
 
         .show-hide.ng-hide {
             /*opacity: 0;*/
             max-height: 0;
+            top: -100px;
             /*margin: 0;*/
         }
 
@@ -105,14 +110,21 @@
             margin: -5px 0 -5px 5px;
         }
 
-        .info .md-body-2 {
+        .info .md-body-2,
+        .info .right {
             text-align: right;
+            word-break: break-all;
+            padding-left: 24px;
+        }
+
+        .header {
+            z-index: 2;
         }
     </style>
 </head>
 <body ng-controller="HubCtrl as vm" layout="row" class="ng-cloak" style="overflow: hidden">
 <div layout="column" flex>
-    <md-toolbar md-whiteframe="2" class="md-accent md-hue-1">
+    <md-toolbar md-whiteframe="2" class="md-accent md-hue-1" style="z-index: 3">
         <div class="md-toolbar-tools" ng-show="vm.loading" style="padding-left: 0">
             <md-progress-circular class="md-accent md-hue-3" md-mode="indeterminate"
                                   md-diameter="56"></md-progress-circular>
@@ -130,6 +142,10 @@
                        class="md-icon-button">
                 <md-icon>keyboard_arrow_up</md-icon>
             </md-button>
+            <md-button aria-label="sort" ng-click="vm.toggle(false)"
+                       class="md-icon-button">
+                <md-icon>sort</md-icon>
+            </md-button>
             <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button" aria-label="filter">
                 <md-icon>filter_list</md-icon>
             </md-button>
@@ -146,7 +162,7 @@
                  ng-repeat="api in vm.apis track by $index"
                  style="padding: 12px">
                 <div>
-                    <div ng-class="api.open ? 'md-whiteframe-6dp' : 'md-whiteframe-2dp'"
+                    <div class="header" ng-class="api.open ? 'md-whiteframe-6dp' : 'md-whiteframe-2dp'"
                          ng-style="{margin: api.open ? '0-2px' : 0}"
                          style="transition: all linear 0.1s; position: relative">
                         <a ng-href="./#?url={{api.swaggerUrl}}"
@@ -162,8 +178,9 @@
                                           style="line-height: 28px"></span>
                                     <div layout="column" layout-align="start end"
                                          style="line-height: 28px; text-align:right; opacity: 0.8">
-                                        <small ng-bind="::api.parts[0]"></small>
-                                        <small ng-bind="::api.parts[1]" ng-if="api.parts[1]"></small>
+                                        <small ng-bind="::api.info['x-providerName']"></small>
+                                        <small ng-bind="::api.info['x-serviceName']"
+                                               ng-if="::api.info['x-serviceName']"></small>
                                         <!--<small ng-bind="::api.info.version"></small>-->
                                     </div>
                                 </div>
@@ -227,6 +244,7 @@
                                     <md-icon>close</md-icon>
                                 </div>
                             </div>
+                            <!--
                             <md-divider></md-divider>
                             <div layout="row" layout-align="space-between">
                                 <div class="md-body-1">Provider</div>
@@ -236,6 +254,19 @@
                                 <div class="md-body-1">Service</div>
                                 <div class="md-body-1" ng-bind="api.parts[1]"></div>
                             </div>
+                            <md-divider ng-if="api.info['x-origin'].url"></md-divider>
+                            <div ng-if="api.info['x-origin'].url" layout="row" layout-align="space-between">
+                                <div class="md-body-1">Origin</div>
+                                <a class="md-body-1 right" ng-href="{{api.info['x-origin'].url}}"
+                                   ng-bind="api.info['x-origin'].url"></a>
+                            </div>
+                            <md-divider ng-if="api.externalDocs.url"></md-divider>
+                            <div ng-if="api.externalDocs.url" layout="row" layout-align="space-between">
+                                <div class="md-body-1">Documentation</div>
+                                <a class="md-body-1 right" ng-href="{{api.externalDocs.url}}"
+                                   ng-bind="api.externalDocs.url"></a>
+                            </div>
+                            -->
                         </div>
                     </div>
                 </div>
@@ -418,7 +449,6 @@
                 angular.forEach(response.data, function (v, k) {
                     var s = v.versions[v.preferred];
                     s.key = k;
-                    s.parts = k.split(':');
                     s.info.title = s.info.title.replace(/([^A-Z])([A-Z])/, '$1\u200b$2');
                     vm.apis.push(s);
                 });
