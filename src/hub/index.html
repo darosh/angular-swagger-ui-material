@@ -623,8 +623,6 @@
             }
 
             function processList (response) {
-                vm.loading = false;
-                vm.table = false;
                 vm.apis = [];
 
                 angular.forEach(response.data, function (v, k) {
@@ -669,6 +667,9 @@
                 });
 
                 buildFilters();
+                locationUpdated();
+                update();
+                vm.loading = false;
             }
 
             function buildFilters () {
