@@ -436,7 +436,7 @@
 <md-sidenav md-is-open="vm.sidenav" class="md-sidenav-right" layout="column">
     <md-toolbar md-whiteframe="2" class="md-accent md-hue-1">
         <div class="md-toolbar-tools">
-            <span>Filter</span>
+            <span>Filters</span>
             <span flex></span>
             <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button">
                 <md-icon>close</md-icon>
@@ -492,6 +492,10 @@
                 </p>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
+            <md-divider></md-divider>
+            <div layout="row" layout-align="end">
+                <md-button ng-click="vm.reset()">Reset Filters</md-button>
+            </div>
         </md-list>
     </md-content>
 </md-sidenav>
@@ -582,6 +586,7 @@
 
             vm.toggle = defer(toggle, 100);
             vm.sort = defer(sort, 100);
+            vm.reset = defer(reset, 100);
 
             var data = loadData();
             var list = loadList();
@@ -820,6 +825,16 @@
                 });
 
                 return arr;
+            }
+
+            function reset () {
+                angular.forEach(vm.filter, function (f) {
+                    if (angular.isObject(f)) {
+                        angular.forEach(f, function (i) {
+                            i.show = true;
+                        });
+                    }
+                });
             }
 
             function loadData () {
