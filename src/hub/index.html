@@ -10,9 +10,6 @@
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.css">
 
-    <!-- inject:css -->
-    <!-- endinject -->
-
     <style>
         .ng-cloak {
             display: none;
@@ -127,6 +124,23 @@
 
         md-list-item .md-list-item-inner > md-icon:first-child:not(.md-avatar-icon) {
             margin-right: 12px;
+        }
+
+        badge {
+            position: relative;
+            top: -1px;
+            margin: 0 6px 0 6px;
+            display: inline-block;
+            background-color: #bbbbbb;
+            color: #fff;
+            border-radius: 8px;
+            line-height: 12px;
+            font-size: 12px;
+            height: 12px;
+            padding: 2px 6px;
+            font-weight: 500;
+            min-width: 6px;
+            text-align: center;
         }
     </style>
     <style>
@@ -386,43 +400,37 @@
     <md-content md-scroll-y flex>
         <md-list>
             <md-subheader class="md-no-sticky">CORS</md-subheader>
-            <md-list-item ng-if="vm.filter.cors.true" ng-click="vm.filter.enabled = !vm.filter.enabled">
+            <md-list-item aria-label="switch" ng-if="vm.filter.cors.true" ng-click="vm.filter.enabled = !vm.filter.enabled">
                 <md-icon>verified_user</md-icon>
-                <p>enabled
-                    <small>(<span ng-bind="vm.filter.cors.true.count"></span>)</small>
-                </p>
+                <p><span>enabled</span><badge ng-bind="vm.filter.cors.true.count"></badge></p>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.enabled"></md-switch>
             </md-list-item>
-            <md-list-item ng-if="vm.filter.cors.false" ng-click="vm.filter.disabled = !vm.filter.disabled">
+            <md-list-item aria-label="switch" ng-if="vm.filter.cors.false" ng-click="vm.filter.disabled = !vm.filter.disabled">
                 <md-icon>security</md-icon>
-                <p>disabled
-                    <small>(<span ng-bind="vm.filter.cors.false.count"></span>)</small>
-                </p>
+                <p><span>disabled</span><badge ng-bind="vm.filter.cors.false.count"></badge></p>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.disabled"></md-switch>
             </md-list-item>
-            <md-list-item ng-if="vm.filter.cors.none" ng-click="vm.filter.unknown = !vm.filter.unknown">
+            <md-list-item aria-label="switch" ng-if="vm.filter.cors.none" ng-click="vm.filter.unknown = !vm.filter.unknown">
                 <md-icon>close</md-icon>
-                <p>unknown
-                    <small>(<span ng-bind="vm.filter.cors.none.count"></span>)</small>
-                </p>
+                <p><span>unknown</span><badge ng-bind="vm.filter.cors.none.count"></badge></p>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.unknown"></md-switch>
             </md-list-item>
             <md-divider></md-divider>
             <md-subheader class="md-no-sticky">Security</md-subheader>
             <md-list-item
+                aria-label="switch"
                 ng-repeat="v in vm.filterArray.security"
                 ng-click="v.show = !v.show; $event.preventDefault()">
-                <span ng-bind="v.name"></span> &nbsp;
-                <small>(<span ng-bind="v.count"></span>)</small>
+                <p><span ng-bind="v.name"></span><badge ng-bind="v.count"></badge></p>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
             <md-divider></md-divider>
             <md-subheader class="md-no-sticky">Tested</md-subheader>
             <md-list-item
+                aria-label="switch"
                 ng-repeat="v in vm.filterArray.tested"
                 ng-click="v.show = !v.show; $event.preventDefault()">
-                <span ng-bind="v.name"></span> &nbsp;
-                <small>(<span ng-bind="v.count"></span>)</small>
+                <p><span ng-bind="v.name"></span><badge ng-bind="v.count"></badge></p>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
             <md-divider></md-divider>
@@ -435,9 +443,6 @@
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-aria.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
-
-<!-- inject:js -->
-<!-- endinject -->
 
 <script type="text/javascript">
     angular.module('hub', ['ngMaterial'])
@@ -612,8 +617,9 @@
             }
 
             function update () {
-                var negative = vm.filter.search[0] === '!';
-                var search = negative ? vm.filter.search.substring(1) : vm.filter.search;
+                var search = vm.filter.search || '';
+                var negative = search.length && (search[0] === '!');
+                search = negative ? search.substring(1) : search;
                 search = search.toLowerCase();
 
                 vm.count = 0;
