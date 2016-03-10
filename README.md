@@ -13,7 +13,7 @@ Material Design ~~template~~ Swagger UI ~~for~~ based on [angular-swagger-ui](ht
 | Demo  | Server | Notes |
 | --- | --- | --- |
 | [Pet Store](http://darosh.github.io/angular-swagger-ui-material) | [petstore.swagger.io](http://petstore.swagger.io) | Markdown in API info |
-| [Hub](http://darosh.github.io/angular-swagger-ui-material/hub.html) | | powered by [APIs.guru](http://APIs.guru) |
+| [Hub](http://darosh.github.io/angular-swagger-ui-material/hub/) | | powered by [APIs.guru](http://APIs.guru) |
 | [Theming Demo](http://darosh.github.io/angular-swagger-ui-material/?primary=blue-grey&accent=grey&warn=pink) | [petstore.swagger.io](http://petstore.swagger.io) | *primary:* blue-grey, *accent:* grey, *warn:* pink |
 
 ### Development demos
