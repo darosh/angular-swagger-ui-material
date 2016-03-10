@@ -76,22 +76,11 @@
             position: relative;
             top: 0;
             z-index: 1;
-            /*margin: 0 2px;*/
         }
 
         .show-hide.ng-hide {
-            /*opacity: 0;*/
             max-height: 0;
             top: -100px;
-            /*margin: 0;*/
-        }
-
-        .powered {
-            text-align: left;
-        }
-
-        .powered:hover {
-            background-color: transparent;
         }
 
         .info a,
@@ -275,8 +264,9 @@
             </md-button>
         </div>
     </md-toolbar>
-    <md-content ng-show="!vm.loading" style="background-color: #fff">
-        <div class="doc md-body-1" layout="row" layout-wrap layout-padding layout-align="end" style="margin-top: 2px; padding-bottom: 6px">
+    <md-content style="background-color: #fff">
+        <div ng-show="!vm.loading" class="doc md-body-1" layout="row" layout-wrap layout-padding layout-align="end"
+             style="margin-top: 2px; padding-bottom: 6px">
             <div flex-xs="100"
                  flex-sm="50"
                  flex-md="33"
@@ -343,19 +333,19 @@
                 </ul>
             </div>
         </div>
-        <md-divider ng-show="vm.count" style="margin: 4px 0 2px 0"></md-divider>
-        <div ng-show="vm.count" layout="row" layout-wrap layout-padding style="margin-top: 2px">
+        <md-divider ng-show="!vm.loading && vm.count" style="margin: 4px 0 2px 0"></md-divider>
+        <div ng-show="!vm.loading && vm.count" layout="row" layout-wrap layout-padding style="margin-top: 2px">
             <div flex-xs="100"
                  flex-sm="50"
                  flex-md="33"
                  flex-lg="25"
                  flex-xl="20"
-                 ng-hide="api.hide"
-                 ng-repeat="api in vm.apis track by api.key"
+                 ng-if="!api.hide"
+                 ng-repeat="api in ::vm.apis track by ::api.key"
                  style="padding: 12px">
                 <div>
                     <div class="header" ng-class="api.open ? 'md-whiteframe-6dp' : 'md-whiteframe-2dp'"
-                         ng-style="{margin: api.open ? '0-2px' : 0}"
+                         ng-style="{margin: api.open ? '0 -2px' : 0}"
                          style="transition: all linear 0.1s; position: relative">
                         <a ng-href="{{::api.ui}}"
                            style="background-color: #fff; display: block; text-decoration: none">
@@ -516,12 +506,14 @@
 
 <script type="text/javascript">
     angular.module('hub', ['ngMaterial'])
-        .config(function ($mdThemingProvider) {
+        .config(function ($mdThemingProvider, $logProvider) {
             $mdThemingProvider
                 .theme('default')
                 .primaryPalette('teal')
                 .accentPalette('grey')
                 .warnPalette('amber');
+
+            $logProvider.debugEnabled(false);
         })
         // from http://embed.plnkr.co/CaZAVeC90qxQP1E4Z5Fb/preview
         .factory('HubCache', function ($cacheFactory, $window) {
@@ -581,7 +573,7 @@
                 }
             };
         })
-        .controller('HubCtrl', function ($scope, $http, $timeout, $location, HubCache) {
+        .controller('HubCtrl', function ($scope, $http, $timeout, $location, $q, $log, HubCache) {
             var vm = this;
 
             vm.loading = true;
@@ -596,18 +588,28 @@
             vm.sort = defer(sort, 100);
             vm.reset = defer(reset, 100);
 
-            var data = loadData();
-            var list = loadList();
+            var data = deferPromise(loadData, 25);
+            var list = deferPromise(loadList, 25);
 
             list.then(processList);
 
-            $scope.$watch(function () {
-                return vm.filter
-            }, defer(update, 300), true);
+            var unregister;
+            var updatingLocation;
 
             $scope.$on('$locationChangeSuccess', locationUpdated);
 
+            function register () {
+                unregister = $scope.$watch('vm.filter', defer(safeUpdate, 300), true);
+            }
+
             function locationUpdated () {
+                if (updatingLocation) {
+                    updatingLocation = false;
+                    return;
+                }
+
+                $log.debug('hub:locationUpdated');
+
                 var s = $location.search();
 
                 vm.filter.search = s.search;
@@ -623,6 +625,8 @@
             }
 
             function processList (response) {
+                $log.debug('hub:processList');
+
                 vm.apis = [];
 
                 angular.forEach(response.data, function (v, k) {
@@ -634,8 +638,6 @@
                     vm.apis.push(s);
                 });
 
-                vm.count = vm.apis.length;
-
                 vm.apis.sort(function (a, b) {
                     return (a.key).localeCompare(b.key);
                 });
@@ -644,6 +646,8 @@
             }
 
             function processData (response) {
+                $log.debug('hub:processData');
+
                 angular.forEach(vm.apis, function (api) {
                     var meta = response.data[api.key];
 
@@ -667,9 +671,9 @@
                 });
 
                 buildFilters();
-                locationUpdated();
                 update();
                 vm.loading = false;
+                register();
             }
 
             function buildFilters () {
@@ -692,7 +696,19 @@
                 vm.filterArray.cors = filterArray(vm.filter.cors);
             }
 
+            function safeUpdate (n, o) {
+                if (angular.toJson(n) === angular.toJson(o)) {
+                    return;
+                }
+
+                $log.debug('hub:safeUpdate');
+
+                $q.all([data, list]).then(update)
+            }
+
             function update () {
+                $log.debug('hub:update');
+
                 var search = vm.filter.search || '';
                 var negative = search.length && (search[0] === '!');
                 search = negative ? search.substring(1) : search;
@@ -871,6 +887,18 @@
                         api.open = open;
                     }
                 });
+            }
+
+            function deferPromise (fnc, time) {
+                var deferred = $q.defer();
+
+                $timeout(function () {
+                    fnc().then(function (val) {
+                        deferred.resolve(val);
+                    });
+                }, time);
+
+                return deferred.promise;
             }
 
             function defer (fnc, time) {
