@@ -156,7 +156,9 @@
   "googleapis.com:manager": {},
   "googleapis.com:mirror": {},
   "googleapis.com:oauth2": {},
-  "googleapis.com:pagespeedonline": {},
+  "googleapis.com:pagespeedonline": {
+    "tested": true
+  },
   "googleapis.com:partners": {},
   "googleapis.com:people": {},
   "googleapis.com:playmoviespartner": {},

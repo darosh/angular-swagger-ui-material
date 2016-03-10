@@ -38,11 +38,81 @@
         a.md-button {
             font-weight: normal;
         }
+
+        .tools a.md-button {
+            font-weight: 500;
+        }
+
+        .tools .md-button {
+            font-weight: 500;
+            min-width: 0;
+            margin: 3px;
+            height: 28px;
+            min-height: 28px;
+            line-height: 28px;
+        }
+
+        .tools {
+            padding: 3px;
+        }
+
+        .info .md-body-1,
+        .info .md-body-2 {
+            line-height: 14px;
+        }
+
+        .info {
+            padding: 12px;
+            margin: 6px;
+        }
+
+        .info md-divider {
+            padding: 0;
+            margin: 6px 6px;
+        }
+
+        .show-hide {
+            transition: all ease-out 0.2s;
+            max-height: 372px;
+            overflow: hidden;
+            /*margin: 0 2px;*/
+        }
+
+        .show-hide.ng-hide {
+            /*opacity: 0;*/
+            max-height: 0;
+            /*margin: 0;*/
+        }
+
+        .powered {
+            text-align: left;
+        }
+
+        .powered:hover {
+            background-color: transparent;
+        }
+
+        .info a {
+            color: #2200CC;
+            text-decoration: none;
+        }
+
+        .info a:hover {
+            text-decoration: underline;
+        }
+
+        .info md-icon {
+            margin: -5px 0 -5px 5px;
+        }
+
+        .info .md-body-2 {
+            text-align: right;
+        }
     </style>
 </head>
 <body ng-controller="HubCtrl as vm" layout="row" class="ng-cloak" style="overflow: hidden">
 <div layout="column" flex>
-    <md-toolbar md-whiteframe="2" class="md-accent md-hue-1" style="z-index: 20;">
+    <md-toolbar md-whiteframe="2" class="md-accent md-hue-1">
         <div class="md-toolbar-tools" ng-show="vm.loading" style="padding-left: 0">
             <md-progress-circular class="md-accent md-hue-3" md-mode="indeterminate"
                                   md-diameter="56"></md-progress-circular>
@@ -52,8 +122,13 @@
             <span ng-if="vm.apis.length && (vm.count != vm.apis.length)">{{vm.count}} of&nbsp;</span>
             <span class="md-title">{{vm.apis.length}} APIs</span>
             <span flex></span>
-            <md-button ng-click="vm.table = !vm.table" class="md-icon-button" aria-label="view">
-                <md-icon ng-bind="vm.table ? 'view_comfy' : 'view_list'"></md-icon>
+            <md-button aria-label="expand" ng-click="vm.toggle(true)"
+                       class="md-icon-button">
+                <md-icon>keyboard_arrow_down</md-icon>
+            </md-button>
+            <md-button aria-label="collapse" ng-click="vm.toggle(false)"
+                       class="md-icon-button">
+                <md-icon>keyboard_arrow_up</md-icon>
             </md-button>
             <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button" aria-label="filter">
                 <md-icon>filter_list</md-icon>
@@ -61,55 +136,7 @@
         </div>
     </md-toolbar>
     <md-content ng-show="!vm.loading" style="background-color: #fff">
-        <div ng-if="vm.table"
-             ng-show="vm.count"
-             layout="row"
-             layout-padding
-             layout-align="center"
-             style="margin-top: 2px">
-            <md-list flex="100" flex-gt-md="50">
-                <md-list-item ng-href="./#?url={{api.swaggerUrl}}"
-                              ng-hide="api.hide"
-                              aria-label="item"
-                              ng-repeat-start="api in vm.apis track by $index">
-                    <span md-whiteframe="1" class="md-avatar" ng-style="{background: api.gradientAvatar}"
-                          style="opacity: 0.666"></span>
-                    <span class="md-title" flex ng-bind="::api.info.title"
-                          style="line-height: 28px; max-width: 360px"></span>
-
-                    <div hide show-gt-sm class="md-secondary" layout="row" layout-align="start center">
-                        <div>
-                            <div style="text-align: right">
-                                <small style="line-height: 24px" ng-bind="::api.parts[0]"></small>
-                                <small style="line-height: 24px" ng-if="::api.parts[1]"
-                                       ng-bind="::api.parts[1]"></small>
-                            </div>
-                        </div>
-                        <div style="margin-left: 16px; min-width: 64px; text-align: center">
-                            <small ng-bind="::api.info.version" style="max-width: 60px"></small>
-                        </div>
-                        <div style="margin-left: 16px; min-width: 64px">
-                            <div style="line-height: 24px" ng-repeat="s in api.meta.security track by $index"
-                                 ng-bind="s"></div>
-                        </div>
-                        <div style="margin-left: 16px">
-                            <md-icon ng-if="api.meta.cors === true">verified_user</md-icon>
-                            <md-icon ng-if="api.meta.cors === false">security</md-icon>
-                            <md-icon ng-if="api.meta.cors !== true && api.meta.cors !== false">close
-                            </md-icon>
-                        </div>
-                        <!--<div style="margin-left: 16px">-->
-                        <!--<img ng-src="http://online.swagger.io/validator?url={{api.swaggerUrl}}" style="width: 97px; height: 30px; display: block"/>-->
-                        <!--</div>-->
-                    </div>
-                </md-list-item>
-                <md-divider ng-repeat-end
-                            style="margin: 0 8px"
-                            ng-hide="api.hide"
-                            ng-if="!$last"></md-divider>
-            </md-list>
-        </div>
-        <div ng-if="!vm.table" ng-show="vm.count" layout="row" layout-wrap layout-padding style="margin-top: 2px">
+        <div ng-show="vm.count" layout="row" layout-wrap layout-padding style="margin-top: 2px">
             <div flex-xs="100"
                  flex-sm="50"
                  flex-md="33"
@@ -118,26 +145,100 @@
                  ng-hide="api.hide"
                  ng-repeat="api in vm.apis track by $index"
                  style="padding: 12px">
-
-                <a ng-href="./#?url={{api.swaggerUrl}}"
-                   style="background-color: #fff; display: block; text-decoration: none">
-                    <md-toolbar class="md-whiteframe-2dp md-accent md-hue-1"
-                                style="height: auto; max-height: none; border-top-left-radius: 6px; border-top-right-radius: 6px"
-                                md-whiteframe="2" ng-style="{background: api.gradientLight}">
-                        <div style="height: 8px; border-top-left-radius: 6px; border-top-right-radius: 6px"
-                             ng-style="{background: api.gradient}" md-whiteframe="1"></div>
-                        <div layout="row" layout-padding layout-align="start start"
-                             style="height: auto; max-height: none; min-height: 64px; padding-bottom: 4px; padding-top: 4px">
-                            <span class="md-title" flex ng-bind="::api.info.title" style="line-height: 28px"></span>
-                            <div layout="column" layout-align="start end"
-                                 style="line-height: 28px; text-align:right; opacity: 0.8">
-                                <small ng-bind="::api.parts[0]"></small>
-                                <small ng-bind="::api.parts[1]" ng-if="api.parts[1]"></small>
-                                <small ng-bind="::api.info.version"></small>
+                <div>
+                    <div ng-class="api.open ? 'md-whiteframe-6dp' : 'md-whiteframe-2dp'"
+                         ng-style="{margin: api.open ? '0-2px' : 0}"
+                         style="transition: all linear 0.1s; position: relative">
+                        <a ng-href="./#?url={{api.swaggerUrl}}"
+                           style="background-color: #fff; display: block; text-decoration: none">
+                            <md-toolbar class="md-accent md-hue-1"
+                                        style="height: auto; max-height: none; min-height: 80px"
+                                        ng-style="{background: api.gradientLight}">
+                                <!--<div style="height: 8px; border-top-left-radius: 6px; border-top-right-radius: 6px"-->
+                                <!--ng-style="{background: api.gradient}" md-whiteframe="1"></div>-->
+                                <div layout="row" layout-padding layout-align="start start"
+                                     style="height: auto; max-height: none; min-height: 64px; padding-bottom: 4px; padding-top: 4px">
+                                    <span class="md-title" flex ng-bind="::api.info.title"
+                                          style="line-height: 28px"></span>
+                                    <div layout="column" layout-align="start end"
+                                         style="line-height: 28px; text-align:right; opacity: 0.8">
+                                        <small ng-bind="::api.parts[0]"></small>
+                                        <small ng-bind="::api.parts[1]" ng-if="api.parts[1]"></small>
+                                        <!--<small ng-bind="::api.info.version"></small>-->
+                                    </div>
+                                </div>
+                            </md-toolbar>
+                        </a>
+                        <md-divider></md-divider>
+                        <div class="tools" layout="row">
+                            <md-button class="md-accent md-hue-3" ng-href="{{api.swaggerYamlUrl}}" target="_blank">
+                                Open
+                            </md-button>
+                            <md-button class="md-accent md-hue-2" ng-href="{{api.swaggerYamlUrl}}" target="_blank">
+                                YAML
+                            </md-button>
+                            <md-button class="md-accent md-hue-2" ng-href="{{api.swaggerUrl}}" target="_blank">
+                                JSON
+                            </md-button>
+                            <span flex></span>
+                            <md-button ng-click="api.open = !api.open" aria-label="toggle">
+                                <md-icon ng-bind="api.open ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"></md-icon>
+                            </md-button>
+                        </div>
+                    </div>
+                    <div ng-show="api.open" class="show-hide" ng-class="api.open ? 'md-whiteframe-1dp' : ''"
+                         style="background-color: #fcfcfc">
+                        <div layout="column" layout-padding class="info">
+                            <div layout="row" layout-align="space-between">
+                                <div class="md-body-1">Added</div>
+                                <div class="md-body-2" ng-bind="api.added | date"></div>
+                            </div>
+                            <md-divider></md-divider>
+                            <div layout="row" layout-align="space-between">
+                                <div class="md-body-1">Updated</div>
+                                <div class="md-body-2" ng-bind="api.updated | date"></div>
+                            </div>
+                            <md-divider></md-divider>
+                            <div layout="row" layout-align="space-between">
+                                <div class="md-body-1">Version</div>
+                                <div class="md-body-2" ng-bind="api.info.version"></div>
+                            </div>
+                            <md-divider></md-divider>
+                            <div layout="row" layout-align="space-between">
+                                <div class="md-body-1">Operations</div>
+                                <div class="md-body-2" ng-bind="api.meta.operations"></div>
+                            </div>
+                            <md-divider></md-divider>
+                            <div ng-if="api.meta.security && api.meta.security.length" layout="row"
+                                 layout-align="space-between">
+                                <div class="md-body-1">Security</div>
+                                <div class="md-body-2" ng-bind="api.meta.security"></div>
+                            </div>
+                            <md-divider ng-if="api.meta.security && api.meta.security.length"></md-divider>
+                            <div layout="row" layout-align="space-between">
+                                <div class="md-body-1">CORS</div>
+                                <div class="md-body-2" ng-if="api.meta.cors === true">enabled
+                                    <md-icon>verified_user</md-icon>
+                                </div>
+                                <div class="md-body-2" ng-if="api.meta.cors === false">disabled
+                                    <md-icon>security</md-icon>
+                                </div>
+                                <div class="md-body-2" ng-if="api.meta.cors !== true && api.meta.cors !== false">unknown
+                                    <md-icon>close</md-icon>
+                                </div>
+                            </div>
+                            <md-divider></md-divider>
+                            <div layout="row" layout-align="space-between">
+                                <div class="md-body-1">Provider</div>
+                                <a class="md-body-1" ng-href="http://{{api.parts[0]}}" ng-bind="api.parts[0]"></a></div>
+                            <md-divider ng-if="api.parts[1]"></md-divider>
+                            <div ng-if="api.parts[1]" layout="row" layout-align="space-between">
+                                <div class="md-body-1">Service</div>
+                                <div class="md-body-1" ng-bind="api.parts[1]"></div>
                             </div>
                         </div>
-                    </md-toolbar>
-                </a>
+                    </div>
+                </div>
             </div>
         </div>
         <md-divider ng-show="vm.count" style="margin: 4px 0 2px 0"></md-divider>
@@ -150,11 +251,11 @@
                  style="padding: 12px">
                 <a class="md-whiteframe-2dp" href="http://APIs.guru"
                    style="text-decoration: none; display: block">
-                    <md-toolbar class="md-accent md-hue-1">
-                        <div class="md-toolbar-tools">
-                            <span class="md-title">Powered by</span>
-                        </div>
-                    </md-toolbar>
+                    <div class="tools" layout="row">
+                        <md-button class="md-accent md-hue-3 powered">
+                            Powered by
+                        </md-button>
+                    </div>
                     <md-divider></md-divider>
                     <div style="padding: 12px 12px 0 12px; background-color: #fff">
                         <img src="https://apis-guru.github.io/api-models/branding/logo_horizontal.svg"
@@ -296,16 +397,20 @@
                 unknownSecurity: true
             };
 
-            var data = $http({
-                method: 'GET',
-                url: 'hub.json'
-            });
+            vm.toggle = defer(toggle, 100);
 
-            $http({
-                method: 'GET',
-                url: 'https://apis-guru.github.io/api-models/api/v1/list.json',
-                cache: HubCache
-            }).then(function (response) {
+            var data = loadData();
+            var list = loadList();
+
+            list.then(processList);
+
+            $scope.$watch(function () {
+                return vm.filter
+            }, function () {
+                $timeout(update, 200);
+            }, true);
+
+            function processList (response) {
                 vm.loading = false;
                 vm.table = false;
                 vm.apis = [];
@@ -324,97 +429,126 @@
                     return (a.key).localeCompare(b.key);
                 });
 
-                data.then(function (response) {
-                    angular.forEach(vm.apis, function (api) {
-                        var meta = response.data[api.key];
+                data.then(processData);
+            }
 
-                        if (!meta) {
-                            return;
-                        }
+            function processData (response) {
+                angular.forEach(vm.apis, function (api) {
+                    var meta = response.data[api.key];
 
-                        api.meta = meta;
+                    api.meta = meta || {};
 
-                        if (meta.colors) {
-                            var rgbs = ['rgba(255,255,255,1)'];
-                            var rgbsAvatar = ['rgba(255,255,255,1)'];
-                            var rgbsLight = [];
+                    if (!meta.colors || !meta.colors.length) {
+                        meta.colors = [[223, 223, 223], [223, 223, 223], [255, 255, 255]];
+                    }
 
-                            angular.forEach(meta.colors, function (c) {
-                                c[3] = 0.333;
-                                rgbs.push('rgba(' + c.join(',') + ')');
-                                c[3] = 1;
-                                rgbsAvatar.push('rgba(' + c.join(',') + ')');
-                                c[3] = 0.222;
-                                rgbsLight.push('rgba(' + c.join(',') + ')');
-                            });
+                    var rgbs = ['rgba(255,255,255,1)'];
+                    var rgbsAvatar = ['rgba(255,255,255,1)'];
+                    var rgbsLight = [];
 
-                            rgbsAvatar.push(['rgba(255,255,255,1)']);
-
-                            api.gradient = 'linear-gradient(135deg, ' + rgbs.join(',') + ')';
-                            api.gradientAvatar = 'linear-gradient(135deg, ' + rgbsAvatar.join(',') + ')';
-                            api.gradientLight = 'linear-gradient(135deg, ' + rgbsLight.join(',') + ')';
-                        }
+                    angular.forEach(meta.colors, function (c) {
+                        c[3] = 0.333;
+                        rgbs.push('rgba(' + c.join(',') + ')');
+                        c[3] = 1;
+                        rgbsAvatar.push('rgba(' + c.join(',') + ')');
+                        c[3] = 0.222;
+                        rgbsLight.push('rgba(' + c.join(',') + ')');
                     });
 
-                    $scope.$watch(function () {
-                        return vm.filter
-                    }, function () {
-                        $timeout(update, 200);
-                    }, true);
+                    rgbsAvatar.push(['rgba(255,255,255,1)']);
 
-                    function update () {
-                        var search = vm.filter.search.toLowerCase();
+                    api.gradient = 'linear-gradient(135deg, ' + rgbs.join(',') + ')';
+                    api.gradientAvatar = 'linear-gradient(135deg, ' + rgbsAvatar.join(',') + ')';
+                    api.gradientLight = 'linear-gradient(135deg, ' + rgbsLight.join(',') + ')';
+                });
+            }
 
-                        vm.count = 0;
+            function update () {
+                return;
+                var search = vm.filter.search.toLowerCase();
 
-                        angular.forEach(vm.apis, function (a) {
-                            var m = a.meta || {};
-                            a.hide = false;
+                vm.count = 0;
 
-                            if ((m.cors === true) && !vm.filter.enabled) {
-                                a.hide = true;
-                            } else if ((m.cors === false) && !vm.filter.disabled) {
-                                a.hide = true;
-                            } else if (((m.cors === null) || angular.isUndefined(m.cors)) && !vm.filter.unknown) {
-                                a.hide = true;
-                            }
+                angular.forEach(vm.apis, function (a) {
+                    var m = a.meta || {};
+                    a.hide = false;
 
-                            var show = false;
+                    if ((m.cors === true) && !vm.filter.enabled) {
+                        a.hide = true;
+                    } else if ((m.cors === false) && !vm.filter.disabled) {
+                        a.hide = true;
+                    } else if (((m.cors === null) || angular.isUndefined(m.cors)) && !vm.filter.unknown) {
+                        a.hide = true;
+                    }
 
-                            if ((m.security && !m.security.length) && vm.filter.none) {
-                                show = true;
-                            }
+                    var show = false;
 
-                            if (m.security && (m.security.indexOf('basic') > -1) && vm.filter.basic) {
-                                show = true;
-                            }
+                    if ((m.security && !m.security.length) && vm.filter.none) {
+                        show = true;
+                    }
 
-                            if ((m.security && m.security.indexOf('apiKey') > -1) && vm.filter.apiKey) {
-                                show = true;
-                            }
+                    if (m.security && (m.security.indexOf('basic') > -1) && vm.filter.basic) {
+                        show = true;
+                    }
 
-                            if ((m.security && m.security.indexOf('oauth2') > -1) && vm.filter.oauth2) {
-                                show = true;
-                            }
+                    if ((m.security && m.security.indexOf('apiKey') > -1) && vm.filter.apiKey) {
+                        show = true;
+                    }
 
-                            if (angular.isUndefined(m.security) && vm.filter.unknownSecurity) {
-                                show = true;
-                            }
+                    if ((m.security && m.security.indexOf('oauth2') > -1) && vm.filter.oauth2) {
+                        show = true;
+                    }
 
-                            a.hide = a.hide ? true : !show;
+                    if (angular.isUndefined(m.security) && vm.filter.unknownSecurity) {
+                        show = true;
+                    }
 
-                            if (vm.filter.search) {
-                                if ((a.info.title.toLowerCase().indexOf(search) === -1) &&
-                                    (a.key.toLowerCase().indexOf(search) === -1)) {
-                                    a.hide = true;
-                                }
-                            }
+                    a.hide = a.hide ? true : !show;
 
-                            vm.count += !a.hide;
-                        });
+                    if (vm.filter.search) {
+                        if ((a.info.title.toLowerCase().indexOf(search) === -1) &&
+                            (a.key.toLowerCase().indexOf(search) === -1)) {
+                            a.hide = true;
+                        }
+                    }
+
+                    vm.count += !a.hide;
+                });
+            }
+
+            function loadData () {
+                return $http({
+                    method: 'GET',
+                    url: 'hub.json',
+                    cache: HubCache
+                });
+            }
+
+            function loadList () {
+                return $http({
+                    method: 'GET',
+                    url: 'https://apis-guru.github.io/api-models/api/v1/list.json',
+                    cache: HubCache
+                });
+            }
+
+            function toggle (open) {
+                angular.forEach(vm.apis, function (api) {
+                    if (!api.hide) {
+                        api.open = open;
                     }
                 });
-            });
+            }
+
+            function defer (fnc, time) {
+                return function () {
+                    var args = arguments;
+
+                    $timeout(function () {
+                        fnc.apply(this, args);
+                    }, time);
+                }
+            }
         });
 </script>
 </body>
