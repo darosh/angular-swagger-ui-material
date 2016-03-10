@@ -369,18 +369,18 @@
             <md-divider></md-divider>
             <md-subheader class="md-no-sticky">Security</md-subheader>
             <md-list-item
-                ng-repeat="(k, v) in vm.filter.security"
+                ng-repeat="v in vm.filterArray.security"
                 ng-click="v.show = !v.show; $event.preventDefault()">
-                <span ng-bind="k"></span> &nbsp;
+                <span ng-bind="v.name"></span> &nbsp;
                 <small>(<span ng-bind="v.count"></span>)</small>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
             <md-divider></md-divider>
             <md-subheader class="md-no-sticky">Tested</md-subheader>
             <md-list-item
-                ng-repeat="(k, v) in vm.filter.tested"
+                ng-repeat="v in vm.filterArray.tested"
                 ng-click="v.show = !v.show; $event.preventDefault()">
-                <span ng-bind="k"></span> &nbsp;
+                <span ng-bind="v.name"></span> &nbsp;
                 <small>(<span ng-bind="v.count"></span>)</small>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
@@ -467,6 +467,7 @@
             vm.loading = true;
             vm.count = 0;
             vm.sortBy = 0;
+            vm.filterArray = {};
             vm.filter = {
                 search: '',
                 enabled: true,
@@ -534,13 +535,21 @@
                     api.style = {background: api.gradientLight};
                 });
 
+                buildFilters();
+            }
+
+            function buildFilters () {
                 vm.filter.security = buildFilter(function (api) {
                     return api.meta.security;
                 }, []);
 
+                vm.filterArray.security = filterArray(vm.filter.security);
+
                 vm.filter.tested = buildFilter(function (api) {
                     return api.meta.tested;
                 });
+
+                vm.filterArray.tested = filterArray(vm.filter.tested);
 
                 vm.filter.cors = buildFilter(function (api) {
                     return api.meta.cors;
@@ -639,12 +648,9 @@
                     } else {
                         var sec = (m === true || m === false) ? m.toString() : 'none';
 
-                        console.log(m);
-
                         stat[sec] = stat[sec] || 0;
                         stat[sec]++;
                     }
-
                 });
 
                 angular.forEach(stat, function (v, k) {
@@ -655,6 +661,21 @@
                 });
 
                 return stat;
+            }
+
+            function filterArray (obj) {
+                var arr = [];
+
+                angular.forEach(obj, function (v, k) {
+                    v.name = k;
+                    arr.push(v);
+                });
+
+                arr.sort(function (a, b) {
+                    return a.name.localeCompare(b.name);
+                });
+
+                return arr;
             }
 
             function loadData () {
