@@ -97,12 +97,14 @@
             background-color: transparent;
         }
 
-        .info a {
+        .info a,
+        p a {
             color: #2200CC;
             text-decoration: none;
         }
 
-        .info a:hover {
+        .info a:hover,
+        p a:hover {
             text-decoration: underline;
         }
 
@@ -211,6 +213,37 @@
         </div>
     </md-toolbar>
     <md-content ng-show="!vm.loading" style="background-color: #fff">
+        <div layout="row" layout-wrap layout-padding style="margin-top: 2px">
+            <div flex>
+                <p>This is testing and exploring hub for
+                    <a href="https://github.com/darosh/angular-swagger-ui-material">angular-swagger-ui-material</a>
+                    project
+                    showing live data from <a href="#">api-models</a> project.
+                </p>
+            </div>
+            <div flex-xs="100"
+                 flex-sm="50"
+                 flex-md="33"
+                 flex-lg="25"
+                 flex-xl="20"
+                 style="padding: 12px">
+                <a class="md-whiteframe-2dp" href="http://APIs.guru"
+                   style="text-decoration: none; display: block">
+                    <div class="tools" layout="row">
+                        <md-button class="md-accent md-hue-3 powered">
+                            Powered by
+                        </md-button>
+                    </div>
+                    <md-divider></md-divider>
+                    <div style="padding: 12px 12px 0 12px; background-color: #fff">
+                        <img src="https://apis-guru.github.io/api-models/branding/logo_horizontal.svg"
+                             alt="logo"
+                             style="max-width: 100%">
+                    </div>
+                </a>
+            </div>
+        </div>
+        <md-divider ng-show="vm.count" style="margin: 4px 0 2px 0"></md-divider>
         <div ng-show="vm.count" layout="row" layout-wrap layout-padding style="margin-top: 2px">
             <div flex-xs="100"
                  flex-sm="50"
@@ -304,30 +337,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <md-divider ng-show="vm.count" style="margin: 4px 0 2px 0"></md-divider>
-        <div flex="100" layout="row" layout-padding layout-align="end end" style="margin-top: 2px">
-            <div flex-xs="100"
-                 flex-sm="50"
-                 flex-md="33"
-                 flex-lg="25"
-                 flex-xl="20"
-                 style="padding: 12px">
-                <a class="md-whiteframe-2dp" href="http://APIs.guru"
-                   style="text-decoration: none; display: block">
-                    <div class="tools" layout="row">
-                        <md-button class="md-accent md-hue-3 powered">
-                            Powered by
-                        </md-button>
-                    </div>
-                    <md-divider></md-divider>
-                    <div style="padding: 12px 12px 0 12px; background-color: #fff">
-                        <img src="https://apis-guru.github.io/api-models/branding/logo_horizontal.svg"
-                             alt="logo"
-                             style="max-width: 100%">
-                    </div>
-                </a>
             </div>
         </div>
     </md-content>
