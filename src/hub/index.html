@@ -142,12 +142,20 @@
             min-width: 6px;
             text-align: center;
         }
+
+        .doc h2 {
+            margin-top: 6px;
+        }
+
+        ul, p {
+            padding-right: 24px;
+        }
     </style>
     <style>
         toolbar-search input {
             background: transparent;
             border: none;
-            width: 100px;
+            width: 120px;
             margin-top: 4px;
             vertical-align: middle;
             margin-left: -6px;
@@ -173,6 +181,18 @@
             margin-left: 0;
             margin-right: 0;
         }
+
+        @media screen and (min-width: 540px) {
+            toolbar-search input {
+                width: 180px;
+            }
+        }
+
+        @media screen and (min-width: 720px) {
+            toolbar-search input {
+                width: 240px;
+            }
+        }
     </style>
 </head>
 <body ng-controller="HubCtrl as vm" layout="row" class="ng-cloak" style="overflow: hidden">
@@ -184,16 +204,18 @@
             <span>Loading&hellip;</span>
         </div>
         <div class="md-toolbar-tools" ng-hide="vm.loading">
-            <span style="opacity: 0.5"
-                  ng-if="vm.apis.length && (vm.count != vm.apis.length)">{{vm.count}} of&nbsp;</span>
-            <span class="md-title">{{vm.apis.length}} APIs</span>
+            <div hide show-gt-sm>
+                <span style="opacity: 0.5"
+                      ng-if="vm.apis.length && (vm.count != vm.apis.length)">{{vm.count}} of&nbsp;</span>
+                <span class="md-title">{{vm.apis.length}} APIs</span>
+            </div>
             <span flex></span>
             <toolbar-search ng-model="vm.filter.search"></toolbar-search>
-            <md-button aria-label="expand" ng-click="vm.toggle(true)"
+            <md-button hide show-gt-sm aria-label="expand" ng-click="vm.toggle(true)"
                        class="md-icon-button">
                 <md-icon>keyboard_arrow_down</md-icon>
             </md-button>
-            <md-button aria-label="collapse" ng-click="vm.toggle(false)"
+            <md-button hide show-gt-sm aria-label="collapse" ng-click="vm.toggle(false)"
                        class="md-icon-button">
                 <md-icon>keyboard_arrow_up</md-icon>
             </md-button>
@@ -230,7 +252,7 @@
         </div>
     </md-toolbar>
     <md-content ng-show="!vm.loading" style="background-color: #fff">
-        <div layout="row" layout-wrap layout-padding style="margin-top: 2px">
+        <div class="doc md-body-1" layout="row" layout-wrap layout-padding style="margin-top: 2px">
             <div flex-xs="100"
                  flex-sm="50"
                  flex-md="33"
@@ -259,11 +281,11 @@
                  flex-lg="25"
                  flex-xl="20"
                  style="padding: 12px">
-                <h2 class="md-title">Search</h2>
+                <h2 class="md-title">Filters</h2>
                 <ul>
-                    <li>Positive search example: <a href="#?search=google">google</a></li>
-                    <li>Negative search example: <a href="#?search=!google">!google</a></li>
-                    (prefixed with exclamation mark)
+                    <li><em>CORS</em> information is grabbed <a href="https://github.com/darosh/angular-swagger-ui-material/blob/master/lib/api-models-meta/index.js">automatically</a> and may be incorect</li>
+                    <li>Security is extracted from global <a href="http://swagger.io/specification/#securityDefinitionsObject">securityDefinitions</a> spec (except <em>local</em> value)</li>
+                    <li><em>Tested</em> filter shows manual testing success or fail</li>
                 </ul>
             </div>
             <div flex-xs="100"
@@ -272,9 +294,12 @@
                  flex-lg="25"
                  flex-xl="20"
                  style="padding: 12px">
-                <h2 class="md-title">Filters</h2>
-                <p style="margin-top: 12px">
-                </p>
+                <h2 class="md-title">Search</h2>
+                <ul>
+                    <li>Positive search example: <a href="#?search=google">google</a></li>
+                    <li>Negative search example: <a href="#?search=!google">!google</a></li>
+                    (prefixed with exclamation mark)
+                </ul>
             </div>
             <div flex-xs="100"
                  flex-sm="50"
@@ -524,7 +549,11 @@
                         }, 200);
                     };
 
-                    scope.$watch('ngModel', scope.ngChanged);
+                    scope.$watch('ngModel', function () {
+                        if (scope.ngModel) {
+                            scope.open = true;
+                        }
+                    });
                 }
             };
         })
@@ -549,9 +578,7 @@
 
             $scope.$watch(function () {
                 return vm.filter
-            }, function () {
-                $timeout(update, 200);
-            }, true);
+            }, defer(update, 300), true);
 
             $scope.$on('$locationChangeSuccess', locationUpdated);
 
@@ -676,7 +703,7 @@
                     vm.count += !a.hide;
                 });
 
-                $location.search('search', vm.filter.search);
+                $location.search('search', vm.filter.search || null);
                 $location.search('security', serializeFilter(vm.filterArray.security));
                 $location.search('cors', serializeFilter(vm.filterArray.cors));
                 $location.search('tested', serializeFilter(vm.filterArray.tested));
