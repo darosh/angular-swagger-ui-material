@@ -19,7 +19,7 @@
         }
     </style>
     <style>
-        small {
+        md-toolbar small {
             max-width: 120px;
             text-overflow: ellipsis;
             display: block;
@@ -120,6 +120,41 @@
         .header {
             z-index: 2;
         }
+
+        md-list-item .md-list-item-inner > md-icon:first-child:not(.md-avatar-icon) {
+            margin-right: 12px;
+        }
+    </style>
+    <style>
+        toolbar-search input {
+            background: transparent;
+            border: none;
+            width: 100px;
+            margin-top: 4px;
+            vertical-align: middle;
+            margin-left: -6px;
+            margin-right: -12px;
+            position: relative;
+            top: -2px;
+        }
+
+        toolbar-search input:focus {
+            outline: none;
+        }
+
+        toolbar-search .input-show-hide {
+            -webkit-transition: all ease-out 0.25s;
+            transition: all ease-out 0.25s;
+        }
+
+        toolbar-search .input-show-hide.ng-hide {
+            -webkit-transition: all ease-in 0.25s;
+            transition: all ease-in 0.25s;
+            width: 0;
+            opacity: 0;
+            margin-left: 0;
+            margin-right: 0;
+        }
     </style>
 </head>
 <body ng-controller="HubCtrl as vm" layout="row" class="ng-cloak" style="overflow: hidden">
@@ -134,6 +169,7 @@
             <span ng-if="vm.apis.length && (vm.count != vm.apis.length)">{{vm.count}} of&nbsp;</span>
             <span class="md-title">{{vm.apis.length}} APIs</span>
             <span flex></span>
+            <toolbar-search ng-model="vm.filter.search"></toolbar-search>
             <md-button aria-label="expand" ng-click="vm.toggle(true)"
                        class="md-icon-button">
                 <md-icon>keyboard_arrow_down</md-icon>
@@ -299,7 +335,7 @@
 <md-sidenav md-is-open="vm.sidenav" class="md-sidenav-right" layout="column">
     <md-toolbar md-whiteframe="2" class="md-accent md-hue-1">
         <div class="md-toolbar-tools">
-            <span>Filter and Search</span>
+            <span>Filter</span>
             <span flex></span>
             <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button">
                 <md-icon>close</md-icon>
@@ -307,54 +343,46 @@
         </div>
     </md-toolbar>
     <md-content md-scroll-y flex>
-        <div layout="row" layout-padding>
-            <div flex>
-                <md-input-container style="width: 100%; margin-bottom: 0">
-                    <label>Search</label>
-                    <input type="text" ng-model="vm.filter.search"
-                           ng-model-options="{debounce: {default: 100, blur: 0}}">
-                </md-input-container>
-            </div>
-        </div>
         <md-list>
-            <md-divider></md-divider>
-            <md-subheader class="md-no-sticky">CORS Support</md-subheader>
-            <md-list-item ng-click="vm.filter.enabled = !vm.filter.enabled">
+            <md-subheader class="md-no-sticky">CORS</md-subheader>
+            <md-list-item ng-if="vm.filter.cors.true" ng-click="vm.filter.enabled = !vm.filter.enabled">
                 <md-icon>verified_user</md-icon>
-                <p>Probably enabled</p>
-                <md-switch class="md-secondary" ng-model="vm.filter.enabled"></md-switch>
+                <p>enabled
+                    <small>(<span ng-bind="vm.filter.cors.true.count"></span>)</small>
+                </p>
+                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.enabled"></md-switch>
             </md-list-item>
-            <md-list-item ng-click="vm.filter.disabled = !vm.filter.disabled">
+            <md-list-item ng-if="vm.filter.cors.false" ng-click="vm.filter.disabled = !vm.filter.disabled">
                 <md-icon>security</md-icon>
-                <p>Probably disabled</p>
-                <md-switch class="md-secondary" ng-model="vm.filter.disabled"></md-switch>
+                <p>disabled
+                    <small>(<span ng-bind="vm.filter.cors.false.count"></span>)</small>
+                </p>
+                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.disabled"></md-switch>
             </md-list-item>
-            <md-list-item ng-click="vm.filter.unknown = !vm.filter.unknown">
+            <md-list-item ng-if="vm.filter.cors.none" ng-click="vm.filter.unknown = !vm.filter.unknown">
                 <md-icon>close</md-icon>
-                <p>Unknown</p>
-                <md-switch class="md-secondary" ng-model="vm.filter.unknown"></md-switch>
+                <p>unknown
+                    <small>(<span ng-bind="vm.filter.cors.none.count"></span>)</small>
+                </p>
+                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.unknown"></md-switch>
             </md-list-item>
             <md-divider></md-divider>
             <md-subheader class="md-no-sticky">Security</md-subheader>
-            <md-list-item ng-click="vm.filter.none = !vm.filter.none">
-                <p>None</p>
-                <md-switch class="md-secondary" ng-model="vm.filter.none"></md-switch>
+            <md-list-item
+                ng-repeat="(k, v) in vm.filter.security"
+                ng-click="v.show = !v.show; $event.preventDefault()">
+                <span ng-bind="k"></span> &nbsp;
+                <small>(<span ng-bind="v.count"></span>)</small>
+                <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
-            <md-list-item ng-click="vm.filter.basic = !vm.filter.basic">
-                <p>Basic</p>
-                <md-switch class="md-secondary" ng-model="vm.filter.basic"></md-switch>
-            </md-list-item>
-            <md-list-item ng-click="vm.filter.apiKey = !vm.filter.apiKey">
-                <p>API key</p>
-                <md-switch class="md-secondary" ng-model="vm.filter.apiKey"></md-switch>
-            </md-list-item>
-            <md-list-item ng-click="vm.filter.oauth2 = !vm.filter.oauth2">
-                <p>OAuth 2.0</p>
-                <md-switch class="md-secondary" ng-model="vm.filter.oauth2"></md-switch>
-            </md-list-item>
-            <md-list-item ng-click="vm.filter.unknownSecurity = !vm.filter.unknownSecurity">
-                <p>Unknown</p>
-                <md-switch class="md-secondary" ng-model="vm.filter.unknownSecurity"></md-switch>
+            <md-divider></md-divider>
+            <md-subheader class="md-no-sticky">Tested</md-subheader>
+            <md-list-item
+                ng-repeat="(k, v) in vm.filter.tested"
+                ng-click="v.show = !v.show; $event.preventDefault()">
+                <span ng-bind="k"></span> &nbsp;
+                <small>(<span ng-bind="v.count"></span>)</small>
+                <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
             <md-divider></md-divider>
         </md-list>
@@ -409,6 +437,30 @@
 
             return cache;
         })
+        .directive('toolbarSearch', function ($timeout) {
+            return {
+                restrict: 'E',
+                templateUrl: 'toolbar-search.html',
+                scope: {
+                    ngModel: '=',
+                    ngChanged: '=?',
+                    open: '=?'
+                },
+                link: function (scope, element) {
+                    $timeout(function () {
+                        scope.init = true;
+                    }, 200);
+
+                    scope.focus = function () {
+                        $timeout(function () {
+                            element.children()[1].focus();
+                        }, 200);
+                    };
+
+                    scope.$watch('ngModel', scope.ngChanged);
+                }
+            };
+        })
         .controller('HubCtrl', function ($scope, $http, $timeout, HubCache) {
             var vm = this;
 
@@ -419,12 +471,7 @@
                 search: '',
                 enabled: true,
                 disabled: true,
-                unknown: true,
-                none: true,
-                basic: true,
-                apiKey: true,
-                oauth2: true,
-                unknownSecurity: true
+                unknown: true
             };
 
             vm.toggle = defer(toggle, 100);
@@ -486,10 +533,21 @@
                     api.gradientLight = 'linear-gradient(135deg, ' + rgbs.join(',') + ')';
                     api.style = {background: api.gradientLight};
                 });
+
+                vm.filter.security = buildFilter(function (api) {
+                    return api.meta.security;
+                }, []);
+
+                vm.filter.tested = buildFilter(function (api) {
+                    return api.meta.tested;
+                });
+
+                vm.filter.cors = buildFilter(function (api) {
+                    return api.meta.cors;
+                });
             }
 
             function update () {
-                return;
                 var search = vm.filter.search.toLowerCase();
 
                 vm.count = 0;
@@ -502,33 +560,11 @@
                         a.hide = true;
                     } else if ((m.cors === false) && !vm.filter.disabled) {
                         a.hide = true;
-                    } else if (((m.cors === null) || angular.isUndefined(m.cors)) && !vm.filter.unknown) {
+                    } else if (!vm.filter.unknown) {
                         a.hide = true;
                     }
 
-                    var show = false;
-
-                    if ((m.security && !m.security.length) && vm.filter.none) {
-                        show = true;
-                    }
-
-                    if (m.security && (m.security.indexOf('basic') > -1) && vm.filter.basic) {
-                        show = true;
-                    }
-
-                    if ((m.security && m.security.indexOf('apiKey') > -1) && vm.filter.apiKey) {
-                        show = true;
-                    }
-
-                    if ((m.security && m.security.indexOf('oauth2') > -1) && vm.filter.oauth2) {
-                        show = true;
-                    }
-
-                    if (angular.isUndefined(m.security) && vm.filter.unknownSecurity) {
-                        show = true;
-                    }
-
-                    a.hide = a.hide ? true : !show;
+                    a.hide = a.hide ? true : !(isShown(m.security, vm.filter.security, []) && isShown(m.tested, vm.filter.tested));
 
                     if (vm.filter.search) {
                         if ((a.info.title.toLowerCase().indexOf(search) === -1) &&
@@ -539,6 +575,30 @@
 
                     vm.count += !a.hide;
                 });
+            }
+
+            function isShown (value, filter, type) {
+                var show = false;
+
+                var val = value || type;
+
+                angular.forEach(filter, function (v, k) {
+                    if (angular.isArray(type)) {
+                        if (v.show && (k === 'none') && !val.length) {
+                            show = true;
+                        } else if (v.show && (val.indexOf(k) > -1)) {
+                            show = true;
+                        }
+                    } else {
+                        if (v.show && (k === 'none') && angular.isUndefined(val)) {
+                            show = true;
+                        } else if (v.show && !angular.isUndefined(val) && (val.toString() === k)) {
+                            show = true;
+                        }
+                    }
+                });
+
+                return show;
             }
 
             function sort (by) {
@@ -557,6 +617,44 @@
                 ];
 
                 vm.apis.sort(sorters[vm.sortBy]);
+            }
+
+            function buildFilter (member, type) {
+                var stat = {};
+
+                angular.forEach(vm.apis, function (api) {
+                    var m = member(api);
+
+                    m = angular.isUndefined(m) ? type : m;
+
+                    if (angular.isArray(type)) {
+                        if (!m.length) {
+                            stat['none'] = (stat['none'] || 0) + 1;
+                        }
+
+                        angular.forEach(m, function (sec) {
+                            stat[sec] = stat[sec] || 0;
+                            stat[sec]++;
+                        });
+                    } else {
+                        var sec = (m === true || m === false) ? m.toString() : 'none';
+
+                        console.log(m);
+
+                        stat[sec] = stat[sec] || 0;
+                        stat[sec]++;
+                    }
+
+                });
+
+                angular.forEach(stat, function (v, k) {
+                    stat[k] = {
+                        count: v,
+                        show: true
+                    };
+                });
+
+                return stat;
             }
 
             function loadData () {
@@ -593,6 +691,17 @@
                 }
             }
         });
+</script>
+<script type="text/ng-template" id="toolbar-search.html">
+    <md-button ng-click="open = true; focus()" class="md-icon-button">
+        <md-icon>search</md-icon>
+    </md-button>
+    <input ng-show="open" ng-model="ngModel" type="text" class="md-input" ng-class="{'input-show-hide': init}"
+           ng-model-options="{debounce: {default: 500, blur: 0}}"/>
+    <md-button ng-show="open" ng-click="ngModel = ''; open = false" class="md-icon-button"
+               ng-class="{'input-show-hide': init}">
+        <md-icon>close</md-icon>
+    </md-button>
 </script>
 </body>
 </html>
