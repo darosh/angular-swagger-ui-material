@@ -244,6 +244,12 @@
                             Last updated
                         </md-button>
                     </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="vm.sort(3)">
+                            <md-icon ng-bind="vm.sortBy === 3 ? 'done' : ''"></md-icon>
+                            Operations
+                        </md-button>
+                    </md-menu-item>
                 </md-menu-content>
             </md-menu>
             <md-button ng-click="vm.sidenav = !vm.sidenav" class="md-icon-button" aria-label="filter">
@@ -252,7 +258,7 @@
         </div>
     </md-toolbar>
     <md-content ng-show="!vm.loading" style="background-color: #fff">
-        <div class="doc md-body-1" layout="row" layout-wrap layout-padding style="margin-top: 2px">
+        <div class="doc md-body-1" layout="row" layout-wrap layout-padding layout-align="end" style="margin-top: 2px">
             <div flex-xs="100"
                  flex-sm="50"
                  flex-md="33"
@@ -264,7 +270,7 @@
                     This is testing and exploring hub for
                     <a href="https://github.com/darosh/angular-swagger-ui-material">Material Swagger UI</a>
                     demo showing live data from <a href="https://github.com/APIs-guru/api-models">API Models</a>
-                    project with some additional experimental data and filters.
+                    project with additional filters.
                 </p>
                 <p>
                     OAuth2 APIs configured in demo:
@@ -274,6 +280,19 @@
                     <a href="#?search=googleapis.com:drive">Drive</a>,
                     <a href="#?search=googleapis.com:plus">Google+</a>.
                 </p>
+            </div>
+            <div flex-xs="100"
+                 flex-sm="50"
+                 flex-md="33"
+                 flex-lg="25"
+                 flex-xl="20"
+                 style="padding: 12px">
+                <h2 class="md-title">Search</h2>
+                <ul>
+                    <li>Positive search example: <a href="#?search=google">google</a></li>
+                    <li>Negative search example: <a href="#?search=!google">!google</a></li>
+                    (prefixed with exclamation mark)
+                </ul>
             </div>
             <div flex-xs="100"
                  flex-sm="50"
@@ -298,19 +317,6 @@
                         href="#?cors=false&cors=none&security=accessCode&security=none&tested=false&tested=none">tested
                         + with CORS + without accessCode flow</a>
                     </li>
-                </ul>
-            </div>
-            <div flex-xs="100"
-                 flex-sm="50"
-                 flex-md="33"
-                 flex-lg="25"
-                 flex-xl="20"
-                 style="padding: 12px">
-                <h2 class="md-title">Search</h2>
-                <ul>
-                    <li>Positive search example: <a href="#?search=google">google</a></li>
-                    <li>Negative search example: <a href="#?search=!google">!google</a></li>
-                    (prefixed with exclamation mark)
                 </ul>
             </div>
             <div flex-xs="100"
@@ -493,7 +499,7 @@
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
             <md-divider></md-divider>
-            <div layout="row" layout-align="end">
+            <div layout="row" layout-align="end" layout-padding>
                 <md-button ng-click="vm.reset()">Reset Filters</md-button>
             </div>
         </md-list>
@@ -771,6 +777,9 @@
                     },
                     function (a, b) {
                         return b.updatedValue - a.updatedValue;
+                    },
+                    function (a, b) {
+                        return (a.meta.operations || 0) - (b.meta.operations || 0);
                     }
                 ];
 
