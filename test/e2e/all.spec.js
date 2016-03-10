@@ -2,9 +2,9 @@ describe('all links on hub page', function () {
     it('should load', function () {
         browser.driver.manage().window().maximize();
 
-        browser.get('http://localhost:8888/angular-swagger-ui-material/demo/hub.html');
+        browser.get('http://localhost:8888/angular-swagger-ui-material/demo/hub/');
 
-        var list = element.all(by.repeater('api in vm.apis track by $index'));
+        var list = element.all(by.repeater('api in vm.apis track by api.key'));
         expect(list.count()).toEqual(203);
 
         for (var i = 0; i < 203; i++) {
