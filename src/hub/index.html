@@ -184,7 +184,8 @@
             <span>Loading&hellip;</span>
         </div>
         <div class="md-toolbar-tools" ng-hide="vm.loading">
-            <span ng-if="vm.apis.length && (vm.count != vm.apis.length)">{{vm.count}} of&nbsp;</span>
+            <span style="opacity: 0.5"
+                  ng-if="vm.apis.length && (vm.count != vm.apis.length)">{{vm.count}} of&nbsp;</span>
             <span class="md-title">{{vm.apis.length}} APIs</span>
             <span flex></span>
             <toolbar-search ng-model="vm.filter.search"></toolbar-search>
@@ -400,20 +401,29 @@
     <md-content md-scroll-y flex>
         <md-list>
             <md-subheader class="md-no-sticky">CORS</md-subheader>
-            <md-list-item aria-label="switch" ng-if="vm.filter.cors.true" ng-click="vm.filter.enabled = !vm.filter.enabled">
+            <md-list-item aria-label="switch" ng-if="vm.filter.cors.true"
+                          ng-click="vm.filter.cors.true.show = !vm.filter.cors.true.show">
                 <md-icon>verified_user</md-icon>
-                <p><span>enabled</span><badge ng-bind="vm.filter.cors.true.count"></badge></p>
-                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.enabled"></md-switch>
+                <p><span>enabled</span>
+                    <badge ng-bind="vm.filter.cors.true.count"></badge>
+                </p>
+                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.cors.true.show"></md-switch>
             </md-list-item>
-            <md-list-item aria-label="switch" ng-if="vm.filter.cors.false" ng-click="vm.filter.disabled = !vm.filter.disabled">
+            <md-list-item aria-label="switch" ng-if="vm.filter.cors.false"
+                          ng-click="vm.filter.cors.false.show = !vm.filter.cors.false.show">
                 <md-icon>security</md-icon>
-                <p><span>disabled</span><badge ng-bind="vm.filter.cors.false.count"></badge></p>
-                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.disabled"></md-switch>
+                <p><span>disabled</span>
+                    <badge ng-bind="vm.filter.cors.false.count"></badge>
+                </p>
+                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.cors.false.show"></md-switch>
             </md-list-item>
-            <md-list-item aria-label="switch" ng-if="vm.filter.cors.none" ng-click="vm.filter.unknown = !vm.filter.unknown">
+            <md-list-item aria-label="switch" ng-if="vm.filter.cors.none"
+                          ng-click="vm.filter.cors.none.show = !vm.filter.cors.none.show">
                 <md-icon>close</md-icon>
-                <p><span>unknown</span><badge ng-bind="vm.filter.cors.none.count"></badge></p>
-                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.unknown"></md-switch>
+                <p><span>unknown</span>
+                    <badge ng-bind="vm.filter.cors.none.count"></badge>
+                </p>
+                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.cors.none.show"></md-switch>
             </md-list-item>
             <md-divider></md-divider>
             <md-subheader class="md-no-sticky">Security</md-subheader>
@@ -421,7 +431,9 @@
                 aria-label="switch"
                 ng-repeat="v in vm.filterArray.security"
                 ng-click="v.show = !v.show; $event.preventDefault()">
-                <p><span ng-bind="v.name"></span><badge ng-bind="v.count"></badge></p>
+                <p><span ng-bind="v.name"></span>
+                    <badge ng-bind="v.count"></badge>
+                </p>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
             <md-divider></md-divider>
@@ -430,10 +442,11 @@
                 aria-label="switch"
                 ng-repeat="v in vm.filterArray.tested"
                 ng-click="v.show = !v.show; $event.preventDefault()">
-                <p><span ng-bind="v.name"></span><badge ng-bind="v.count"></badge></p>
+                <p><span ng-bind="v.name"></span>
+                    <badge ng-bind="v.count"></badge>
+                </p>
                 <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
-            <md-divider></md-divider>
         </md-list>
     </md-content>
 </md-sidenav>
@@ -515,10 +528,7 @@
             vm.sortBy = 0;
             vm.filterArray = {};
             vm.filter = {
-                search: '',
-                enabled: true,
-                disabled: true,
-                unknown: true
+                search: ''
             };
 
             vm.toggle = defer(toggle, 100);
@@ -541,11 +551,14 @@
                 var s = $location.search();
 
                 vm.filter.search = s.search;
+                deserializeFilter(vm.filter.security, s.security);
+                deserializeFilter(vm.filter.cors, s.cors);
+                deserializeFilter(vm.filter.tested, s.tested);
+            }
 
-                console.log(s.security, vm.filter.security);
-
-                angular.forEach(vm.filter.security, function (i) {
-                    i.show = (s.security || []).indexOf(i.name) === -1;
+            function deserializeFilter (f, s) {
+                angular.forEach(f, function (i) {
+                    i.show = (s || []).indexOf(i.name) === -1;
                 });
             }
 
@@ -614,6 +627,8 @@
                 vm.filter.cors = buildFilter(function (api) {
                     return api.meta.cors;
                 });
+
+                vm.filterArray.cors = filterArray(vm.filter.cors);
             }
 
             function update () {
@@ -628,11 +643,11 @@
                     var m = a.meta || {};
                     a.hide = false;
 
-                    if ((m.cors === true) && !vm.filter.enabled) {
+                    if ((m.cors === true) && !vm.filter.cors.true.show) {
                         a.hide = true;
-                    } else if ((m.cors === false) && !vm.filter.disabled) {
+                    } else if ((m.cors === false) && !vm.filter.cors.false.show) {
                         a.hide = true;
-                    } else if (!vm.filter.unknown) {
+                    } else if (!vm.filter.cors.none.show) {
                         a.hide = true;
                     }
 
@@ -654,11 +669,18 @@
                 });
 
                 $location.search('search', vm.filter.search);
-                $location.search('security', vm.filterArray.security.filter(function (i) {
+                $location.search('security', serializeFilter(vm.filterArray.security));
+                $location.search('cors', serializeFilter(vm.filterArray.cors));
+                $location.search('tested', serializeFilter(vm.filterArray.tested));
+            }
+
+
+            function serializeFilter (f) {
+                return f.filter(function (i) {
                     return !i.show;
                 }).map(function (i) {
                     return i.name;
-                }));
+                });
             }
 
             function isShown (value, filter, type) {
@@ -786,7 +808,8 @@
                     }, time);
                 }
             }
-        });
+        })
+    ;
 </script>
 <script type="text/ng-template" id="toolbar-search.html">
     <md-button ng-click="open = true; focus()" class="md-icon-button">
