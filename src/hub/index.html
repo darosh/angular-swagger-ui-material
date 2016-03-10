@@ -98,13 +98,15 @@
         }
 
         .info a,
-        p a {
+        p a,
+        ul a {
             color: #2200CC;
             text-decoration: none;
         }
 
         .info a:hover,
-        p a:hover {
+        p a:hover,
+        ul a:hover {
             text-decoration: underline;
         }
 
@@ -214,11 +216,41 @@
     </md-toolbar>
     <md-content ng-show="!vm.loading" style="background-color: #fff">
         <div layout="row" layout-wrap layout-padding style="margin-top: 2px">
-            <div flex>
-                <p>This is testing and exploring hub for
-                    <a href="https://github.com/darosh/angular-swagger-ui-material">angular-swagger-ui-material</a>
-                    project
-                    showing live data from <a href="#">api-models</a> project.
+            <div flex-xs="100"
+                 flex-sm="50"
+                 flex-md="33"
+                 flex-lg="25"
+                 flex-xl="20"
+                 style="padding: 12px">
+                <h2 class="md-title">Intro</h2>
+                <p style="margin-top: 12px">
+                    This is testing and exploring hub for
+                    <a href="https://github.com/darosh/angular-swagger-ui-material">Material Swagger UI</a>
+                    demo showing live data from <a href="https://github.com/APIs-guru/api-models">API Models</a>
+                    project with some additional experimental data and filters.
+                </p>
+            </div>
+            <div flex-xs="100"
+                 flex-sm="50"
+                 flex-md="33"
+                 flex-lg="25"
+                 flex-xl="20"
+                 style="padding: 12px">
+                <h2 class="md-title">Search</h2>
+                <ul>
+                    <li>Positive search example: <a href="#?search=google">google</a></li>
+                    <li>Negative search example (prefixed with `!` exclamation mark): <a
+                        href="#?search=!google">!google</a></li>
+                </ul>
+            </div>
+            <div flex-xs="100"
+                 flex-sm="50"
+                 flex-md="33"
+                 flex-lg="25"
+                 flex-xl="20"
+                 style="padding: 12px">
+                <h2 class="md-title">Filters</h2>
+                <p style="margin-top: 12px">
                 </p>
             </div>
             <div flex-xs="100"
@@ -470,7 +502,7 @@
                 }
             };
         })
-        .controller('HubCtrl', function ($scope, $http, $timeout, HubCache) {
+        .controller('HubCtrl', function ($scope, $http, $timeout, $location, HubCache) {
             var vm = this;
 
             vm.loading = true;
@@ -497,6 +529,20 @@
             }, function () {
                 $timeout(update, 200);
             }, true);
+
+            $scope.$on('$locationChangeSuccess', locationUpdated);
+
+            function locationUpdated () {
+                var s = $location.search();
+
+                vm.filter.search = s.search;
+
+                console.log(s.security, vm.filter.security);
+
+                angular.forEach(vm.filter.security, function (i) {
+                    i.show = (s.security || []).indexOf(i.name) === -1;
+                });
+            }
 
             function processList (response) {
                 vm.loading = false;
@@ -586,15 +632,27 @@
 
                     a.hide = a.hide ? true : !(isShown(m.security, vm.filter.security, []) && isShown(m.tested, vm.filter.tested));
 
-                    if (search) {
+                    if (search && !negative) {
                         if ((a.info.title.toLowerCase().indexOf(search) === -1) &&
                             (a.key.toLowerCase().indexOf(search) === -1)) {
-                            a.hide = !negative;
+                            a.hide = true;
+                        }
+                    } else if (search && negative) {
+                        if ((a.info.title.toLowerCase().indexOf(search) > -1) ||
+                            (a.key.toLowerCase().indexOf(search) > -1)) {
+                            a.hide = true;
                         }
                     }
 
                     vm.count += !a.hide;
                 });
+
+                $location.search('search', vm.filter.search);
+                $location.search('security', vm.filterArray.security.filter(function (i) {
+                    return !i.show;
+                }).map(function (i) {
+                    return i.name;
+                }));
             }
 
             function isShown (value, filter, type) {
