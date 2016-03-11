@@ -76,8 +76,7 @@ angular.module('sw.ui.md')
 
             operation.loading = true;
 
-            client
-                .send(data.model.info, operation, data.model.form[operation.id])
+            client.send(data.model.info, operation, data.model.form[operation.id])
                 .then(function (response) {
                     clientDone(operation, response);
                 });

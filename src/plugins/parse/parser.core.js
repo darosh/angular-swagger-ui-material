@@ -64,6 +64,9 @@ angular.module('sw.plugin.parser', ['sw.plugins'])
         function parseInfo (swagger, url, info, defaultContentType) {
             // build URL params
             var a = angular.element('<a href="' + url + '"></a>')[0];
+            swagger.schemes = swagger.schemes || [];
+            swagger.schemes.sort();
+            swagger.schemes.reverse();
             swagger.schemes = [swagger.schemes && swagger.schemes[0] || a.protocol.replace(':', '')];
             swagger.host = swagger.host || a.host;
             swagger.consumes = swagger.consumes || [defaultContentType];
