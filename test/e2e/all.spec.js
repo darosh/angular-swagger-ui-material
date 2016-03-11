@@ -59,8 +59,6 @@ describe('all links on hub page', function () {
             // Close dialog
             element(by.css('md-dialog button')).click();
 
-            // element.all(by.css('md-tab-item')).get(1).click();
-
             // Go back to hub
             browser.navigate().back();
         }
