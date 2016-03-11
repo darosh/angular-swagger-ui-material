@@ -18,7 +18,7 @@ angular
         /**
          * Send API explorer request
          */
-        function send (swagger, operation, values) {
+        function send (swagger, operation, values, mock) {
             var deferred = $q.defer();
             var baseUrl = base(swagger);
             var options = configure(operation, values, baseUrl);
@@ -36,10 +36,14 @@ angular
             plugins
                 .execute(plugins.BEFORE_EXPLORER_LOAD, options)
                 .then(function () {
-                    checkMixedContent(options).then(function () {
-                        // send request
-                        $http(options).then(done, done);
-                    }, done);
+                    if (mock) {
+                        deferred.resolve(options);
+                    } else {
+                        checkMixedContent(options).then(function () {
+                            // send request
+                            $http(options).then(done, done);
+                        }, done);
+                    }
                 });
 
             return deferred.promise;
