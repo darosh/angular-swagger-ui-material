@@ -43,20 +43,21 @@
     angular.module('myApp', [
             'sw.ui.md',
 
-//            'sw.plugin.auth',
+            // 'sw.plugin.auth',
             'sw.plugin.markdown',
-//            'sw.plugin.xmlFormater',
+            // 'sw.plugin.xmlFormater',
             'sw.plugin.operations',
             'sw.plugin.sort',
             'sw.plugin.parser',
             'sw.plugin.split',
             'sw.plugin.transform',
             'sw.plugin.yaml',
-//            'sw.plugin.externalReferences'
+            // 'sw.plugin.externalReferences'
         ])
-        .config(function ($mdThemingProvider, $logProvider) {
+        .config(function ($mdThemingProvider, $logProvider, $windowProvider) {
+            var $window = $windowProvider.$get();
             var search = {};
-            var query = window.location.search.substring(1);
+            var query = $window.location.search.substring(1);
             var vars = query.split('&');
 
             for (var i = 0; i < vars.length; i++) {
@@ -77,7 +78,9 @@
                 .warnPalette(search.warn || 'amber')
                 .foregroundPalette[3] = 'rgba(0, 0, 0, 0.4)';
 
-            $logProvider.debugEnabled(false);
+            if ($window.location.hostname !== 'localhost') {
+                $logProvider.debugEnabled(false);
+            }
         })
         .run(function ($location, $mdToast, $log, data) {
             //noinspection JSCheckFunctionSignatures
@@ -92,7 +95,7 @@
                 var m = 'Something is wrong';
                 $mdToast.show($mdToast.simple().textContent(e.statusText || e.message || m));
                 $log.error(error || m);
-            };
+            }
         });
 </script>
 </body>
