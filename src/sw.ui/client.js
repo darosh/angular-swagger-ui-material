@@ -36,8 +36,10 @@ angular
             plugins
                 .execute(plugins.BEFORE_EXPLORER_LOAD, options)
                 .then(function () {
-                    // send request
-                    $http(options).then(done, done);
+                    checkMixedContent(options).then(function () {
+                        // send request
+                        $http(options).then(done, done);
+                    }, done);
                 });
 
             return deferred.promise;
@@ -102,5 +104,21 @@ angular
                 swaggerInfo.host,
                 (swaggerInfo.basePath === '/' ? '' : swaggerInfo.basePath) || ''
             ].join('');
+        }
+
+        function protocol (url) {
+            return angular.element('<a href="' + url + '"></a>')[0].protocol.replace(':');
+        }
+
+        function checkMixedContent (options) {
+            var deferred = $q.defer();
+
+            if ((protocol($window.location.href) === 'https') && (protocol(options.url) === 'http')) {
+                deferred.reject({config: options, status: -1, statusText: 'HTTPS mixed with HTTP content'});
+            } else {
+                deferred.resolve();
+            }
+
+            return deferred.promise;
         }
     });
