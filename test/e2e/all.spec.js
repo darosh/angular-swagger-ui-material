@@ -54,23 +54,33 @@ describe('all links on hub page', function () {
                 // Close proxy dialog
                 element(by.css('md-dialog button')).click();
 
-                // Click first operations
-                element.all(by.css('button.sum-http-method')).get(0).click();
+                element.all(by.buttonText('vpn_key')).count().then(function (count) {
+                    if (count) {
+                        // Open security dialog
+                        element(by.buttonText('vpn_key')).click();
 
-                // Pin sidenav locked open
-                element(by.buttonText('chevron_left')).click();
+                        // Close security dialog
+                        element(by.css('md-dialog button')).click();
+                    }
 
-                // Scripts tab
-                element.all(by.css('md-tab-item')).get(1).click();
+                    // Click first operations
+                    element.all(by.css('button.sum-http-method')).get(0).click();
 
-                // Open HTTP method info dialog
-                element.all(by.css('md-sidenav button.sum-http-method')).get(0).click();
+                    // Pin sidenav locked open
+                    element(by.buttonText('chevron_left')).click();
 
-                // Close dialog
-                element(by.css('md-dialog button')).click();
+                    // Scripts tab
+                    element.all(by.css('md-tab-item')).get(1).click();
 
-                // Go back to hub
-                browser.navigate().back();
+                    // Open HTTP method info dialog
+                    element.all(by.css('md-sidenav button.sum-http-method')).get(0).click();
+
+                    // Close dialog
+                    element(by.css('md-dialog button')).click();
+
+                    // Go back to hub
+                    browser.navigate().back();
+                });
             }
         });
     }, 1000 * 60 * 60);
