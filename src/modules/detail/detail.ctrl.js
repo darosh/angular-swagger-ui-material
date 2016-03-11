@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sw.ui.md')
-    .controller('DetailController', function ($rootScope, $timeout, $log, data, theme, tools, utils, syntax, client, format) {
+    .controller('DetailController', function ($scope, $rootScope, $timeout, $log, data, theme, tools, utils, syntax, client, format) {
         var vm = this;
 
         vm.data = data;
@@ -13,11 +13,18 @@ angular.module('sw.ui.md')
         vm.form = null;
 
         vm.submit = submit;
+        vm.changed = changed;
         vm.openFile = tools.openFile;
 
         vm.dummy = $rootScope.$on('sw:operation', selectedOperation);
 
+        var deregister;
+
         function selectedOperation () {
+            if (deregister) {
+                deregister();
+            }
+
             var op = vm.sop = data.model.sop;
 
             vm.form = data.model.form[vm.sop.id];
@@ -64,6 +71,23 @@ angular.module('sw.ui.md')
 
             op.responseArray.sort(function (a, b) {
                 a.code.toString().localeCompare(b.code.toString());
+            });
+
+            deregister = $scope.$watch('vm.form', function () {
+                changed(op);
+            }, true);
+        }
+
+        function mockRequest (operation, done) {
+            client.send(data.model.info, operation, data.model.form[operation.id], true)
+                .then(done);
+        }
+
+        function changed (op) {
+            mockRequest(op, function (options) {
+                $log.debug('sw:mocked', options);
+
+                op.mock = options;
             });
         }
 

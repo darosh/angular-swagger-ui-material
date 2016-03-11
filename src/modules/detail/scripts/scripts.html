@@ -1,3 +1,4 @@
+<!--
 <md-subheader class="md-warn md-no-sticky">cURL</md-subheader>
 <div layout-padding>
     <div>
@@ -16,12 +17,26 @@
         ...
     </div>
 </div>
-<md-subheader class="md-warn md-no-sticky">AngularJS</md-subheader>
-<div layout-padding>
-    <div>
-        ...
+-->
+<div layout="row">
+    <div flex>
+        <md-subheader class="md-warn md-no-sticky">AngularJS</md-subheader>
+    </div>
+    <div class="sum-tools" ng-if="vm.sop.responseClass.display != -1">
+        <a class="md-button md-primary"
+           href="https://docs.angularjs.org/api/ng/service/$http" target="_blank">Reference</a>
     </div>
 </div>
+<div layout-padding class="sum-top">
+<pre class="sum-pre sum-wrap sum-no-margin">$http({{vm.sop.mock | json}})
+.then(
+    function success(response) {
+    },
+    function error(response) {
+    }
+)</pre>
+</div>
+<!--
 <md-subheader class="md-warn md-no-sticky">LoopBack Angular SDK</md-subheader>
 <div layout-padding>
     <div>
@@ -40,3 +55,4 @@
         ...
     </div>
 </div>
+-->

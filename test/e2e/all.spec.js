@@ -53,7 +53,10 @@ describe('all links on hub page', function () {
             // Pin sidenav locked open
             element(by.buttonText('chevron_left')).click();
 
-            // Open HTTO method info dialog
+            // Scripts tab
+            element.all(by.css('md-tab-item')).get(1).click();
+
+            // Open HTTP method info dialog
             element.all(by.css('md-sidenav button.sum-http-method')).get(0).click();
 
             // Close dialog
