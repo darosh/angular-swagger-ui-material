@@ -233,25 +233,25 @@
                     <md-divider></md-divider>
                     <md-menu-item>
                         <md-button ng-click="vm.sort(0)">
-                            <md-icon ng-bind="vm.sortBy === 0 ? 'done' : ''"></md-icon>
+                            <md-icon ng-bind="vm.sortBy == 0 ? 'done' : ''"></md-icon>
                             Provider
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
                         <md-button ng-click="vm.sort(1)">
-                            <md-icon ng-bind="vm.sortBy === 1 ? 'done' : ''"></md-icon>
+                            <md-icon ng-bind="vm.sortBy == 1 ? 'done' : ''"></md-icon>
                             Title
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
                         <md-button ng-click="vm.sort(2)">
-                            <md-icon ng-bind="vm.sortBy === 2 ? 'done' : ''"></md-icon>
+                            <md-icon ng-bind="vm.sortBy == 2 ? 'done' : ''"></md-icon>
                             Last updated
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
                         <md-button ng-click="vm.sort(3)">
-                            <md-icon ng-bind="vm.sortBy === 3 ? 'done' : ''"></md-icon>
+                            <md-icon ng-bind="vm.sortBy == 3 ? 'done' : ''"></md-icon>
                             Operations
                         </md-button>
                     </md-menu-item>
@@ -333,14 +333,14 @@
             </div>
         </div>
         <md-divider ng-show="!vm.loading && vm.count" style="margin: 4px 0 2px 0"></md-divider>
-        <div ng-show="!vm.loading && vm.count" layout="row" layout-wrap layout-padding style="margin-top: 2px">
+        <div ng-show="!vm.loading && vm.count" layout="row" class="app-optimized" layout-wrap layout-padding
+             style="margin-top: 2px">
             <div flex-xs="100"
                  flex-sm="50"
                  flex-md="33"
                  flex-lg="25"
                  flex-xl="20"
-                 ng-if="!api.hide"
-                 ng-repeat="api in vm.apis track by ::api.key"
+                 ng-repeat="api in vm.apisDelayed track by api.key"
                  style="padding: 12px">
                 <div>
                     <div class="header" ng-class="api.open ? 'md-whiteframe-6dp' : 'md-whiteframe-2dp'"
@@ -505,14 +505,18 @@
 
 <script type="text/javascript">
     angular.module('hub', ['ngMaterial'])
-        .config(function ($mdThemingProvider, $logProvider) {
+        .config(function ($mdThemingProvider, $logProvider, $windowProvider) {
             $mdThemingProvider
                 .theme('default')
                 .primaryPalette('teal')
                 .accentPalette('grey')
                 .warnPalette('amber');
 
-            $logProvider.debugEnabled(false);
+            var $window = $windowProvider.$get();
+
+            if ($window.location.hostname !== 'localhost') {
+                $logProvider.debugEnabled(false);
+            }
         })
         // from http://embed.plnkr.co/CaZAVeC90qxQP1E4Z5Fb/preview
         .factory('HubCache', function ($cacheFactory, $window) {
@@ -578,7 +582,9 @@
             vm.loading = true;
             vm.updating = false;
             vm.count = 0;
-            vm.sortBy = 0;
+            vm.sortBy = -1;
+            vm.apisFiltered = [];
+            vm.apisDelayed = [];
             vm.filterArray = {};
             vm.filter = {
                 search: ''
@@ -594,7 +600,6 @@
             list.then(processList);
 
             var unregister;
-            var updatingLocation;
 
             $scope.$on('$locationChangeSuccess', locationUpdated);
 
@@ -603,21 +608,16 @@
             }
 
             function locationUpdated () {
-                if (updatingLocation) {
-                    updatingLocation = false;
-                    return;
-                }
-
                 $log.debug('hub:locationUpdated');
 
                 var s = $location.search();
 
-                vm.filter.search = s.search;
+                vm.filter.search = s.search || '';
                 deserializeFilter(vm.filter.security, s.security);
                 deserializeFilter(vm.filter.cors, s.cors);
                 deserializeFilter(vm.filter.tested, s.tested);
 
-                var order = s.order || 0;
+                var order = parseInt(s.order || 0);
 
                 if (order !== vm.sortBy) {
                     sort(order);
@@ -707,6 +707,8 @@
             }
 
             function safeUpdate (n, o) {
+                $log.debug('hub:safe', n, o);
+
                 if (angular.toJson(n) === angular.toJson(o)) {
                     return;
                 }
@@ -728,6 +730,8 @@
                 search = negative ? search.substring(1) : search;
                 search = search.toLowerCase();
 
+                vm.apisFiltered = [];
+                vm.apisDelayed = [];
                 vm.count = 0;
 
                 angular.forEach(vm.apis, function (a) {
@@ -757,6 +761,10 @@
                     }
 
                     vm.count += !a.hide;
+
+                    if (!a.hide) {
+                        vm.apisFiltered.push(a);
+                    }
                 });
 
                 $location.search('search', vm.filter.search || null);
@@ -766,7 +774,27 @@
 
                 vm.updating = false;
 
+                addDelayed();
+
                 $log.debug('hub:updated');
+            }
+
+            function addDelayed () {
+                var i = 0;
+                var limit = 10;
+
+                if (!vm.apisDelayed.length) {
+                    limit = 25;
+                }
+
+                while (vm.apisDelayed.length < vm.apisFiltered.length && i < limit) {
+                    vm.apisDelayed.push(vm.apisFiltered[vm.apisDelayed.length]);
+                    i++;
+                }
+
+                if (vm.apisDelayed.length < vm.apisFiltered.length) {
+                    $timeout(addDelayed, 5);
+                }
             }
 
             function serializeFilter (f) {
@@ -802,6 +830,12 @@
             }
 
             function sort (by) {
+                if ((by === vm.sortBy) || !vm.apis) {
+                    return
+                }
+
+                $log.debug('hub:sort', by);
+
                 vm.sortBy = by;
 
                 var sorters = [
@@ -820,6 +854,9 @@
                 ];
 
                 vm.apis.sort(sorters[vm.sortBy]);
+                vm.apisFiltered.sort(sorters[vm.sortBy]);
+                vm.apisDelayed.sort(sorters[vm.sortBy]);
+
                 $location.search('order', vm.sortBy || null);
             }
 
