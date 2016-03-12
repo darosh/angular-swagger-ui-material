@@ -17,8 +17,6 @@ describe('all links on hub page', function () {
         // Iterate links
         hub.listCount().then(function (count) {
             for (var i = 0; i < count; i++) {
-                console.log('link #' + (i + 1));
-
                 // Open ui
                 hub.listItemToolbar(i).click();
 
