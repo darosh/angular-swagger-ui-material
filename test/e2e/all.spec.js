@@ -8,6 +8,12 @@ beforeEach(function () {
 
 describe('all links on hub page', function () {
     it('should load and work', function () {
+        // Show filters
+        hub.filters.click();
+
+        // Close filters
+        hub.close.click();
+
         // Filter non Google
         hub.exampleNotGoogle();
 
@@ -34,13 +40,7 @@ describe('all links on hub page', function () {
 
                 // Filter get methods
                 ui.searchInput.sendKeys('get');
-                browser.driver.sleep(750);
-
-                // Open proxy dialog
-                ui.proxy.click();
-
-                // Close proxy dialog
-                ui.closeDialog.click();
+                browser.driver.sleep(200);
 
                 ui.operations.count().then(function (countGetOperations) {
                     var firstOperationIsGet = countGetOperations > 1;
@@ -48,7 +48,7 @@ describe('all links on hub page', function () {
                     if (!firstOperationIsGet) {
                         // Close search edit
                         ui.closeSearch.click();
-                        browser.driver.sleep(750);
+                        browser.driver.sleep(200);
                     }
 
                     // Click collapse all
@@ -59,6 +59,12 @@ describe('all links on hub page', function () {
 
                     // Click show description
                     ui.description.click();
+
+                    // Open proxy dialog
+                    ui.proxy.click();
+
+                    // Close proxy dialog
+                    ui.closeDialog.click();
 
                     ui.security.count().then(function (count) {
                         if (count) {

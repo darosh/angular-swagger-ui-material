@@ -6,6 +6,9 @@ module.exports = function Hub () {
     var list = element.all(by.repeater('api in vm.apis track by ::api.key'));
     var exampleNotGoogle = element(by.linkText('!google'));
 
+    this.filters = element(by.buttonText('filter_list'));
+    this.close = element(by.css('md-sidenav md-toolbar button'));
+
     this.get = function () {
         browser.get(HUB);
         browser.driver.wait(protractor.until.elementIsVisible(menu));
