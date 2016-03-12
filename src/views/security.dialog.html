@@ -1,11 +1,11 @@
 <md-dialog class="sum-dialog-wide" layout="column">
-    <md-toolbar ng-class="style">
-        <div class="md-toolbar-tools">
-            <h2><span class="md-title">Security</span></h2>
-        </div>
-    </md-toolbar>
     <md-dialog-content ng-class="{'sum-hide-tabs': vm.singleSecurity}"
-                       style="margin-right: 1px; max-width: 800px; max-height: 810px">
+                       style="max-width: 800px; max-height: 810px">
+        <md-toolbar ng-class="style">
+            <div class="md-toolbar-tools">
+                <h2><span class="md-title">Security</span></h2>
+            </div>
+        </md-toolbar>
         <md-tabs md-no-pagination md-dynamic-height>
             <md-tab label="{{s.flow ? s.flow : s.type}}" ng-repeat="(name, s) in vm.security">
                 <div style="padding: 24px 24px 0 24px">

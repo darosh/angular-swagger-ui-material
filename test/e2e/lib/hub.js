@@ -3,7 +3,7 @@ var HUB = 'http://localhost:8888/angular-swagger-ui-material/demo/hub/';
 module.exports = function Hub () {
     var menu = element(by.css('md-menu'));
     var menuLastUpdate = element(by.buttonText('Last updated'));
-    var list = element.all(by.repeater('api in vm.apis track by ::api.key'));
+    var list = element.all(by.repeater('api in vm.apisDelayed track by api.key'));
     var exampleNotGoogle = element(by.linkText('!google'));
 
     this.filters = element(by.buttonText('filter_list'));
