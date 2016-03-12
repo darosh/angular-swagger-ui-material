@@ -30,7 +30,7 @@
                      flex-xl="{{vm.data.ui.sidenavLocked ? 25 : 20}}"
                      ng-repeat="op in vm.data.model.operations | filter:vm.data.model.search:false track by op.id"
                      style="padding-top: 0; padding-bottom: 0">
-                    <div ng-class="{'sum-selected': sop === op}"
+                    <div ng-class="{'sum-selected': vm.data.model.sop === op}"
                          ng-include="'modules/operation/operation.html'"></div>
                 </div>
             </div>

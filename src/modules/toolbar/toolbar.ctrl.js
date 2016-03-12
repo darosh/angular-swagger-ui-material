@@ -38,14 +38,16 @@ angular.module('sw.ui.md')
             if (!vm.search) {
                 data.model.search = {};
             } else {
-                var t = vm.search.toLowerCase().trim();
-                var s = t.split(' ');
-                var isMethod = (s.length) === 1 && theme[s[0]];
-                var method = (s.length > 1) ? s[0] : (isMethod ? s[0] : '');
-                var path = (s.length > 1) ? s[1] : (isMethod ? '' : s[0]);
+                var trimmed = vm.search.toLowerCase().trim();
+                var parts = trimmed.split(' ');
+                var isMethod = ['get', 'post', 'put', 'patch', 'head', 'options', 'delete'].indexOf(parts[0]) > -1;
+                var method = (parts.length > 1) ? parts[0] : (isMethod ? parts[0] : '');
+                var path = (parts.length > 1) ? parts[1] : (isMethod ? '' : parts[0]);
 
                 data.model.search = {httpMethod: method, path: path};
             }
+
+            $log.debug('sw:changed:searching', data.model.search);
         }
 
         function toggleGroups (open) {

@@ -17,7 +17,7 @@
         <div style="padding-bottom: 0" ng-bind-html="::group.description" class="sum-short-md markdown-body md-body-2"></div>
     </div>
     <div ng-show="group.open" style="padding: 13px">
-        <div ng-class="{'sum-selected': vm.data.model.sop === op}" ng-repeat="op in group.operations | filter:vm.data.model.searchObject:false track by op.id"
+        <div ng-class="{'sum-selected': vm.data.model.sop === op}" ng-repeat="op in group.operations | filter:vm.data.model.search:false track by op.id"
              ng-include="'modules/operation/operation.html'"></div>
     </div>
 </div>
