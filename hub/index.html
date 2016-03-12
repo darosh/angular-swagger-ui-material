@@ -935,7 +935,7 @@
         <md-icon>search</md-icon>
     </md-button>
     <input ng-show="open" ng-model="ngModel" type="text" class="md-input" ng-class="{'input-show-hide': init}"
-           ng-model-options="{debounce: {default: 500, blur: 0}}"/>
+           ng-model-options="{debounce: {default: 200, blur: 0}}"/>
     <md-button ng-show="open" ng-click="ngModel = ''; open = false" class="md-icon-button"
                ng-class="{'input-show-hide': init}">
         <md-icon>close</md-icon>
