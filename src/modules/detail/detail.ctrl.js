@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('sw.ui.md')
-    .controller('DetailController', function ($scope, $rootScope, $timeout, $log, data, theme, tools, utils, syntax, client, format) {
+    .controller('DetailController', function ($scope, $rootScope, $timeout, $log, data, theme, style, tools, utils, syntax, client, format) {
         var vm = this;
 
         vm.data = data;
         vm.theme = theme;
+        vm.style = style;
         vm.utils = utils;
         vm.sop = null;
         vm.omg = false;
