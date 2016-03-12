@@ -4,6 +4,7 @@ var ui = new (require('./lib/ui'))();
 beforeEach(function () {
     browser.driver.manage().window().maximize();
     hub.get();
+    // browser.driver.sleep(10000);
 });
 
 describe('all links on hub page', function () {
