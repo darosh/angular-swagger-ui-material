@@ -67,12 +67,18 @@ describe('all links on hub page', function () {
                             // Open security dialog
                             ui.security.click();
 
+                            ui.dialogTabs.count().then(function (count) {
+                                for (var i = 1; i < count; i++) {
+                                    ui.dialogTabs.get(i).click();
+                                }
+                            });
+
                             // Close security dialog
                             ui.closeDialog.click();
                         }
 
                         // Click first operations
-                        ui.operations.get(0).click();
+                        ui.operations.first().click();
 
                         // Pin sidenav locked open
                         // TODO: layout bug inside sidenav + opened dialog

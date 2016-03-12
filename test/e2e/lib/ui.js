@@ -24,6 +24,7 @@ module.exports = function Ui () {
     this.resultHeader = element.all(by.css('#tab-content-2 button.sum-http-header:not([disabled])'));
     this.model = element.all(by.binding('vm.sop.responseClass.display ? \'Model\' : \'Example\''));
     this.set = element.all(by.linkText('Set'));
+    this.dialogTabs = element.all(by.css('md-dialog md-tab-item'));
 
     this.get = function () {
         browser.get(UI);
