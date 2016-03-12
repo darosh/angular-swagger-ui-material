@@ -1,85 +1,145 @@
-var HUB = 'http://localhost:8888/angular-swagger-ui-material/demo/hub/';
+var hub = new (require('./lib/hub'))();
+var ui = new (require('./lib/ui'))();
+
+beforeEach(function () {
+    browser.driver.manage().window().maximize();
+    hub.get();
+});
 
 describe('all links on hub page', function () {
-    it('should load', function () {
-        browser.driver.manage().window().maximize();
-
-        // Open hub
-        browser.get(HUB);
+    it('should load and work', function () {
+        // Filter non Google
+        hub.exampleNotGoogle();
 
         // Sort by last updated
-        var el = element(by.css('md-menu'));
-        browser.driver.wait(protractor.until.elementIsVisible(el));
-        el.click();
-        element(by.buttonText('Last updated')).click();
+        hub.sortByLastUpdate();
 
-        // Count specs
-        var list = element.all(by.repeater('api in vm.apis track by ::api.key'));
-        var count = list.count();
-        expect(count).toBeGreaterThan(0);
-
-        count.then(function (count) {
+        // Iterate links
+        hub.listCount().then(function (count) {
             for (var i = 0; i < count; i++) {
+                console.log('link #' + (i + 1));
+
                 // Open ui
-                list.get(i).element(by.css('md-toolbar')).click();
+                hub.listItemToolbar(i).click();
 
                 // Count groups
-                var apis = element.all(by.repeater('api in resources track by $index'));
-                expect(apis.count()).toBeGreaterThan(0);
+                // expect(ui.apis.count()).toBeGreaterThan(0);
 
                 // Click title edit
-                element(by.binding('displayTitle')).click();
+                ui.displayTitle.click();
+
+                // Click expand all
+                ui.expand.click();
 
                 // Click search edit
-                element(by.buttonText('search')).click();
+                ui.search.click();
 
-                // Close search edit
-                element(by.buttonText('close')).click();
-
-                // Click expland all
-                element.all(by.buttonText('keyboard_arrow_down')).get(0).click();
-
-                // Click collapse all
-                element.all(by.buttonText('keyboard_arrow_up')).get(0).click();
-
-                // Click switch view
-                element(by.buttonText('view_comfy')).click();
-
-                // Click show description
-                element(by.buttonText('speaker_notes')).click();
+                // Filter get methods
+                ui.searchInput.sendKeys('get');
+                browser.driver.sleep(750);
 
                 // Open proxy dialog
-                element(by.buttonText('security')).click();
+                ui.proxy.click();
 
                 // Close proxy dialog
-                element(by.css('md-dialog button')).click();
+                ui.closeDialog.click();
 
-                element.all(by.buttonText('vpn_key')).count().then(function (count) {
-                    if (count) {
-                        // Open security dialog
-                        element(by.buttonText('vpn_key')).click();
+                ui.operations.count().then(function (countGetOperations) {
+                    var firstOperationIsGet = countGetOperations > 1;
 
-                        // Close security dialog
-                        element(by.css('md-dialog button')).click();
+                    if (!firstOperationIsGet) {
+                        // Close search edit
+                        ui.closeSearch.click();
+                        browser.driver.sleep(750);
                     }
 
-                    // Click first operations
-                    element.all(by.css('button.sum-http-method')).get(0).click();
+                    // Click collapse all
+                    ui.collapse.click();
 
-                    // Pin sidenav locked open
-                    element(by.buttonText('chevron_left')).click();
+                    // Click switch view
+                    ui.view.click();
 
-                    // Scripts tab
-                    element.all(by.css('md-tab-item')).get(1).click();
+                    // Click show description
+                    ui.description.click();
 
-                    // Open HTTP method info dialog
-                    element.all(by.css('md-sidenav button.sum-http-method')).get(0).click();
+                    ui.security.count().then(function (count) {
+                        if (count) {
+                            // Open security dialog
+                            ui.security.click();
 
-                    // Close dialog
-                    element(by.css('md-dialog button')).click();
+                            // Close security dialog
+                            ui.closeDialog.click();
+                        }
 
-                    // Go back to hub
-                    browser.navigate().back();
+                        // Click first operations
+                        ui.operations.get(0).click();
+
+                        // Pin sidenav locked open
+                        // TODO: layout bug inside sidenav + opened dialog
+                        // ui.pin.click();
+
+                        // Open HTTP method info dialog
+                        ui.method.click();
+
+                        // Close dialog
+                        ui.closeDialog.click();
+
+                        ui.model.count().then(function (count) {
+                            for (var i = 0; i < count; i++) {
+                                ui.model.get(i).click();
+                            }
+                        });
+
+                        ui.set.count().then(function (count) {
+                            for (var i = 0; i < count; i++) {
+                                ui.set.get(i).click();
+                            }
+                        });
+
+                        // Status codes
+                        ui.status.count().then(function (count) {
+                            for (var i = 0; i < count; i++) {
+                                ui.status.get(i).click();
+                                ui.closeDialog.click();
+                            }
+                        });
+
+                        // Scripts tab
+                        ui.tab.get(1).click();
+
+                        if (firstOperationIsGet) {
+                            ui.play.count().then(function (count) {
+                                if (count) {
+                                    // Submit
+                                    ui.play.click();
+
+                                    ui.waitForResult();
+
+                                    ui.resultStatus.count().then(function (count) {
+                                        if (count) {
+                                            ui.resultStatus.first().click();
+                                            ui.closeDialog.click();
+                                        }
+                                    });
+
+                                    ui.resultHeader.count().then(function (count) {
+                                        for (var i = 0; i < count; i++) {
+                                            ui.resultHeader.get(i).click();
+                                            ui.closeDialog.click();
+                                        }
+                                    });
+                                }
+
+                                // Go back to hub
+                                browser.navigate().back();
+                            });
+                        } else {
+                            ui.waitForScripts();
+
+                            // Go back to hub
+                            browser.navigate().back();
+                        }
+                    });
                 });
             }
         });

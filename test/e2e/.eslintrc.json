@@ -1,0 +1,26 @@
+{
+  "extends": "standard",
+  "rules": {
+    "semi": [
+      2,
+      "always"
+    ],
+    "indent": [
+      2,
+      4,
+      {
+        "SwitchCase": 1
+      }
+    ]
+  },
+  "globals": {
+    "browser": true,
+    "protractor": true,
+    "beforeEach": true,
+    "describe": true,
+    "it": true,
+    "expect": true,
+    "element": true,
+    "by": true
+  }
+}
