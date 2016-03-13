@@ -86,7 +86,7 @@
         .info a,
         p a,
         ul a {
-            color: #2200CC;
+            color: rgb(61, 90, 254);
             text-decoration: none;
         }
 
@@ -204,15 +204,42 @@
             }
         }
     </style>
+    <style>
+        .no-transform md-tab-item {
+            text-transform: none;
+        }
+
+        .bg {
+            background-color: #fcfcfc;
+        }
+
+        .short-buttons .md-button {
+            min-width: 0;
+            width: inherit;
+            font-weight: 500;
+        }
+
+        .pre {
+            overflow: auto;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+
+        .md {
+            overflow: auto;
+            white-space: pre-wrap;
+        }
+    </style>
 </head>
 <body ng-controller="HubCtrl as vm" layout="row" class="ng-cloak" style="overflow: hidden">
 <div layout="column" flex>
-    <md-toolbar md-whiteframe="2" class="md-accent md-hue-1" style="z-index: 3">
-        <div class="md-toolbar-tools" ng-style="{'padding-left': (vm.loading || vm.updating) ? 0 : null}">
-            <md-progress-circular ng-show="vm.loading || vm.updating" class="md-accent md-hue-3" md-mode="indeterminate"
+    <md-toolbar md-whiteframe="2" class="md-hue-3" style="z-index: 3" no-ng-style="vm.path && vm.apiStyle">
+        <div ng-show="!vm.path" class="md-toolbar-tools"
+             ng-style="{'padding-left': (vm.loading) ? 0 : null}">
+            <md-progress-circular ng-show="vm.loading" class="md-primary md-hue-2" md-mode="indeterminate"
                                   md-diameter="56"></md-progress-circular>
             <span ng-show="vm.loading">Loading&hellip;</span>
-            <div hide show-gt-sm ng-hide="vm.loading || vm.updating">
+            <div hide show-gt-sm ng-hide="vm.loading">
                 <span style="opacity: 0.5"
                       ng-if="vm.apis.length && (vm.count != vm.apis.length)">{{vm.count}} of</span>
                 <span class="md-title">{{vm.apis.length}} APIs</span>
@@ -265,8 +292,27 @@
                 <md-icon>filter_list</md-icon>
             </md-button>
         </div>
+        <div ng-show="vm.path" class="md-toolbar-tools"
+             ng-style="{'padding-left': (vm.loading || vm.updating) ? 0 : null}">
+            <md-progress-circular ng-show="vm.loading" class="md-primary md-hue-2" md-mode="indeterminate"
+                                  md-diameter="56"></md-progress-circular>
+            <span ng-show="vm.loading">Loading&hellip;</span>
+
+            <md-button ng-hide="vm.loading || vm.updating" style="margin-left: -6px" ng-click="vm.back()"
+                       class="md-icon-button">
+                <md-icon>keyboard_backspace</md-icon>
+            </md-button>
+
+            <div ng-hide="vm.loading || vm.updating">
+                <span class="md-title" ng-bind="vm.prefered.info.title || vm.path"></span>
+            </div>
+        </div>
     </md-toolbar>
-    <md-content style="background-color: #fff">
+    <md-progress-linear md-mode='indeterminate'
+                        class="md-primary"
+                        ng-show="vm.updating"
+                        style="position: relative; z-index: 59; margin-top: -5px;"></md-progress-linear>
+    <md-content flex ng-show="!vm.path">
         <div ng-show="!vm.loading" class="doc md-body-1" layout="row" layout-wrap layout-padding layout-align="end"
              style="margin-top: 2px; padding-bottom: 6px">
             <div flex-xs="100"
@@ -369,12 +415,12 @@
                         </a>
                         <md-divider></md-divider>
                         <div class="tools" layout="row">
-                            <md-button class="md-accent md-hue-3" ng-href="{{::api.ui}}">
+                            <md-button class="md-primary" ng-href="{{::api.ui}}">
                                 Open
                             </md-button>
-                            <!--<md-button class="md-accent md-hue-3" ng-href="{{::api.view}}">-->
-                                <!--View-->
-                            <!--</md-button>-->
+                            <md-button class="md-primary" ng-href="{{::api.view}}">
+                                View
+                            </md-button>
                             <!--<md-button class="md-accent md-hue-2" ng-href="{{::api.swaggerYamlUrl}}" target="_blank">
                                 YAML
                             </md-button>
@@ -387,8 +433,7 @@
                             </md-button>
                         </div>
                     </div>
-                    <div ng-show="api.open" class="show-hide" ng-class="api.open ? 'md-whiteframe-1dp' : ''"
-                         style="background-color: #fcfcfc">
+                    <div ng-show="api.open" class="show-hide bg" ng-class="api.open ? 'md-whiteframe-1dp' : ''">
                         <div layout="column" layout-padding class="info">
                             <div layout="row" layout-align="space-between">
                                 <div class="md-body-1">Added</div>
@@ -435,9 +480,199 @@
             </div>
         </div>
     </md-content>
+    <md-content flex ng-show="vm.path && !vm.loading" layout="column" md-scroll-y>
+        <div layout-gt-sm="row" flex>
+            <div flex="100" flex-gt-sm="33" flex-gt-lg="25" layout="column" style="min-width: 360px">
+                <md-content md-scroll-y>
+                    <div md-whiteframe="4" style="margin: 24px">
+                        <md-subheader class="md-accent md-no-sticky">API</md-subheader>
+                        <!--<md-divider></md-divider>-->
+                        <md-tabs md-border-bottom md-dynamic-height class="md-hue-2">
+                            <md-tab label="Info">
+                                <div layout="column" layout-padding class="info" style="padding: 16px">
+                                    <div layout="row" layout-align="space-between">
+                                        <div class="md-body-1">Id</div>
+                                        <div class="md-body-2" ng-bind="vm.path"></div>
+                                    </div>
+                                    <md-divider></md-divider>
+                                    <div layout="row" layout-align="space-between">
+                                        <div class="md-body-1">Added</div>
+                                        <div class="md-body-2" ng-bind="vm.api.added | date"></div>
+                                    </div>
+                                    <md-divider></md-divider>
+                                    <div layout="row" layout-align="space-between">
+                                        <div class="md-body-1">Prefered Version</div>
+                                        <div class="md-body-2" ng-bind="vm.api.preferred"></div>
+                                    </div><!--
+                                    <md-divider></md-divider>
+                                    <div layout="row" layout-align="space-between">
+                                        <div class="md-body-1">Operations</div>
+                                        <div class="md-body-2" ng-bind="vm.detail.meta.operations"></div>
+                                    </div>-->
+                                    <!--<md-divider></md-divider>-->
+                                    <!--<div ng-if="(vm.detail.meta.security && vm.detail.meta.security.length)"
+                                         layout="row"
+                                         layout-align="space-between">
+                                        <div class="md-body-1">Security</div>
+                                        <div class="md-body-2" ng-bind="vm.detail.meta.security"></div>
+                                    </div>
+                                    <md-divider
+                                        ng-if="(vm.detail.meta.security && vm.detail.meta.security.length)"></md-divider>
+                                    <div layout="row" layout-align="space-between">
+                                        <div class="md-body-1">CORS</div>
+                                        <div class="md-body-2" ng-if="(vm.detail.meta.cors === true)">enabled
+                                            <md-icon>verified_user</md-icon>
+                                        </div>
+                                        <div class="md-body-2" ng-if="(vm.detail.meta.cors === false)">disabled
+                                            <md-icon>security</md-icon>
+                                        </div>
+                                        <div class="md-body-2"
+                                             ng-if="(vm.detail.meta.cors !== true && vm.detail.meta.cors !== false)">
+                                            unknown
+                                            <md-icon>close</md-icon>
+                                        </div>
+                                    </div>-->
+                                </div>
+                            </md-tab>
+                            <md-tab label="Raw">
+                                <div class="md-padding">
+                                    <pre style="margin: 12px">{{vm.raw | json}}</pre>
+                                </div>
+                            </md-tab>
+                        </md-tabs>
+                    </div>
+                    <div flex layout="column">
+                        <div md-whiteframe="4" style="margin: 0 24px 24px 24px">
+                            <md-subheader class="md-accent md-no-sticky">Versions</md-subheader>
+                            <div style="padding-top: 0" flex>
+                                <md-tabs md-dynamic-height md-border-bottom md-selected="vm.selectedVersion"
+                                         class="md-hue-2 no-transform">
+                                    <md-tab ng-repeat="k in vm.versions" label="{{k}}">
+                                        <div layout="column" layout-padding class="info" style="padding: 16px 16px">
+                                            <div layout="row" layout-align="space-between">
+                                                <div class="md-body-1">Added</div>
+                                                <div class="md-body-2"
+                                                     ng-bind="vm.api.versions[k].added | date"></div>
+                                            </div>
+                                            <md-divider></md-divider>
+                                            <div layout="row" layout-align="space-between">
+                                                <div class="md-body-1">Updated</div>
+                                                <div class="md-body-2"
+                                                     ng-bind="vm.api.versions[k].updated | date"></div>
+                                            </div>
+                                            <md-divider ng-repeat-start="m in vm.meta" ng-if="m[2]"></md-divider>
+                                            <div ng-repeat-end layout="row" layout-align="space-between" ng-if="m[2]">
+                                                <div class="md-body-1" style="white-space: nowrap; margin-right: 24px;">
+                                                    <md-icon ng-bind="m[1]" style="margin-right: 6px"></md-icon>
+                                                    <span ng-if="m[0]" ng-bind="m[0]">Contact</span>
+                                                </div>
+                                                <div ng-if="m[0] && !m[3]" ng-bind="m[2]" class="md-body-2"></div>
+                                                <div ng-if="(m[0] !== 'Validation') && m[3]" class="md-body-1"
+                                                     style="text-align: right; word-break: break-all">
+                                                    <a ng-bind="m[2]"
+                                                       ng-href="{{m[3]}}"
+                                                       ng-click="m[4]($event, m[2])"
+                                                       target="_blank"></a>
+                                                </div>
+                                                <div ng-if="m[0] === 'Validation'">
+                                                    <a style="margin-top: -6px; display: inline-flex; height: 30px"
+                                                       target="_blank" ng-href="{{m[2]}}">
+                                                        <img ng-src="{{m[3]}}" style="width: 97px; height: 30px;"/>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </md-tab>
+                                </md-tabs>
+                            </div>
+                        </div>
+                    </div>
+                </md-content>
+            </div>
+            <div flex-gt-sm layout="column" layout-align="start stretch">
+                <div>
+                    <div layout="row" class="short-buttons" style="margin-top: 24px" layout-align="space-between start">
+                        <div flex="nogrow">
+                            <md-subheader class="md-accent md-no-sticky">Version
+                                {{vm.versions[vm.selectedVersion]}}
+                            </md-subheader>
+                        </div>
+                        <div layout="column" layout-gt-sm="row" layout-no-wrap-gt-sm layout-align="end start">
+                            <div style="height: 46px">
+                                <md-button class="md-primary md-hue-2" target="_blank"
+                                           ng-href="{{vm.curent.swaggerYamlUrl}}">
+                                    YAML
+                                </md-button>
+                            </div>
+                            <div style="height: 46px">
+                                <md-button class="md-primary md-hue-2" target="_blank"
+                                           ng-href="{{vm.curent.swaggerUrl}}">
+                                    JSON
+                                </md-button>
+                            </div>
+                            <div style="height: 46px">
+                                <md-button class="md-primary md-hue-2" target="_blank"
+                                           ng-href="{{vm.gitHubLink}}">
+                                    GitHub
+                                </md-button>
+                            </div>
+                            <div style="height: 46px" ng-if="vm.diffLink">
+                                <md-button class="md-accent" target="_blank"
+                                           ng-href="{{vm.diffLink}}">
+                                    Diff
+                                </md-button>
+                            </div>
+                            <div style="height: 46px">
+                                <md-button class="md-accent" target="_blank"
+                                           ng-href="http://editor.swagger.io/#/?import={{vm.curent.swaggerUrl}}">
+                                    Edit
+                                </md-button>
+                            </div>
+                            <div style="height: 46px">
+                                <md-button class="md-accent" target="_blank"
+                                           ng-href="http://petstore.swagger.io/?url={{vm.curent.swaggerUrl}}">
+                                    UI
+                                </md-button>
+                            </div>
+                            <div style="height:46px; margin-right: 18px">
+                                <md-button class="md-accent" target="_blank"
+                                           ng-href="../#?url={{vm.curent.swaggerUrl}}">
+                                    Open
+                                </md-button>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <md-tabs md-selected="vm.selectedTab" md-dynamic-height md-border-bottom class="md-hue-2">
+                            <md-tab label="Description">
+                                <div class="md-padding md" flex
+                                     ng-bind-html="vm.curent.info.description"></div>
+                            </md-tab>
+                            <md-tab label="Logo"
+                                    ng-disabled="!vm.curent.info['x-logo']">
+                                <img ng-src="{{vm.curent.info['x-logo'].url}}"
+                                     ng-style="{'background-color': vm.curent.info['x-logo'].backgroundColor}"
+                                     style="padding: 6px; margin: 24px; max-width: calc(100% - 48px)"
+                                     alt="logo">
+                            </md-tab>
+                            <md-tab label="Raw"></md-tab>
+                            <md-tab label="YAML"></md-tab>
+                            <md-tab label="JSON"></md-tab>
+                        </md-tabs>
+                    </div>
+                </div>
+                <div flex layout="row">
+                    <div ng-if="vm.selectedTab === 2" class="md-padding pre" flex
+                         ng-bind="vm.curent | json"></div>
+                    <div ng-if="vm.selectedTab === 3" class="md-padding pre" flex ng-bind="vm.yaml"></div>
+                    <div ng-if="vm.selectedTab === 4" class="md-padding pre" flex ng-bind="vm.json | json"></div>
+                </div>
+            </div>
+        </div>
+    </md-content>
 </div>
 <md-sidenav md-is-open="vm.sidenav" class="md-sidenav-right" layout="column">
-    <md-toolbar md-whiteframe="2" class="md-accent md-hue-1">
+    <md-toolbar md-whiteframe="2" class="md-primary md-hue-3">
         <div class="md-toolbar-tools">
             <span>Filters</span>
             <span flex></span>
@@ -448,14 +683,14 @@
     </md-toolbar>
     <md-content md-scroll-y flex>
         <md-list>
-            <md-subheader class="md-no-sticky">CORS</md-subheader>
+            <md-subheader class="md-accent md-no-sticky">CORS</md-subheader>
             <md-list-item aria-label="switch" ng-if="vm.filter.cors.true"
                           ng-click="vm.filter.cors.true.show = !vm.filter.cors.true.show">
                 <md-icon>verified_user</md-icon>
                 <p><span>enabled</span>
                     <badge ng-bind="::vm.filter.cors.true.count"></badge>
                 </p>
-                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.cors.true.show"></md-switch>
+                <md-switch class="md-secondary md-primary" ng-model="vm.filter.cors.true.show"></md-switch>
             </md-list-item>
             <md-list-item aria-label="switch" ng-if="vm.filter.cors.false"
                           ng-click="vm.filter.cors.false.show = !vm.filter.cors.false.show">
@@ -463,7 +698,7 @@
                 <p><span>disabled</span>
                     <badge ng-bind="::vm.filter.cors.false.count"></badge>
                 </p>
-                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.cors.false.show"></md-switch>
+                <md-switch class="md-secondary md-primary" ng-model="vm.filter.cors.false.show"></md-switch>
             </md-list-item>
             <md-list-item aria-label="switch" ng-if="vm.filter.cors.none"
                           ng-click="vm.filter.cors.none.show = !vm.filter.cors.none.show">
@@ -471,10 +706,10 @@
                 <p><span>unknown</span>
                     <badge ng-bind="::vm.filter.cors.none.count"></badge>
                 </p>
-                <md-switch class="md-secondary md-accent md-hue-3" ng-model="vm.filter.cors.none.show"></md-switch>
+                <md-switch class="md-secondary md-primary" ng-model="vm.filter.cors.none.show"></md-switch>
             </md-list-item>
             <md-divider></md-divider>
-            <md-subheader class="md-no-sticky">Security</md-subheader>
+            <md-subheader class="md-accent md-no-sticky">Security</md-subheader>
             <md-list-item
                 aria-label="switch"
                 ng-repeat="v in vm.filterArray.security"
@@ -482,10 +717,10 @@
                 <p><span ng-bind="v.name"></span>
                     <badge ng-bind="::v.count"></badge>
                 </p>
-                <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
+                <md-switch class="md-secondary md-primary" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
             <md-divider></md-divider>
-            <md-subheader class="md-no-sticky">Tested</md-subheader>
+            <md-subheader class="md-accent md-no-sticky">Tested</md-subheader>
             <md-list-item
                 aria-label="switch"
                 ng-repeat="v in vm.filterArray.tested"
@@ -493,7 +728,7 @@
                 <p><span ng-bind="v.name"></span>
                     <badge ng-bind="::v.count"></badge>
                 </p>
-                <md-switch class="md-secondary md-accent md-hue-3" ng-model="v.show" aria-label="switch"></md-switch>
+                <md-switch class="md-secondary md-primary" ng-model="v.show" aria-label="switch"></md-switch>
             </md-list-item>
             <md-divider></md-divider>
             <div layout="row" layout-align="end" layout-padding>
@@ -507,15 +742,16 @@
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-aria.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
 
 <script type="text/javascript">
-    angular.module('hub', ['ngMaterial'])
+    angular.module('hub', ['ngMaterial', 'ngSanitize'])
         .config(function ($mdThemingProvider, $logProvider, $windowProvider) {
             $mdThemingProvider
                 .theme('default')
-                .primaryPalette('teal')
-                .accentPalette('grey')
+                .primaryPalette('grey')
+                .accentPalette('indigo')
                 .warnPalette('amber');
 
             var $window = $windowProvider.$get();
@@ -523,6 +759,10 @@
             if ($window.location.hostname !== 'localhost') {
                 $logProvider.debugEnabled(false);
             }
+
+            /*if ('scrollRestoration' in $window.history) {
+             $window.history.scrollRestoration = 'manual';
+             }*/
         })
         // from http://embed.plnkr.co/CaZAVeC90qxQP1E4Z5Fb/preview
         .factory('HubCache', function ($cacheFactory, $window) {
@@ -586,7 +826,10 @@
             var deferred = $q.defer();
             var self = {
                 promise: deferred.promise,
-                apis: []
+                apis: [],
+                list: {},
+                details: {},
+                colors: {}
             };
 
             var data = deferPromise(loadData);
@@ -615,16 +858,22 @@
             function processList (response) {
                 $log.debug('hub:processList');
 
+                angular.extend(self.list, response.data);
+
                 angular.forEach(response.data, function (v, k) {
-                    var s = v.versions[v.preferred];
-                    s.key = k;
-                    s.info.title = s.info.title.replace(/([^A-Z])([A-Z])/, '$1\u200b$2');
-                    s.ui = '../#?url=' + s.swaggerUrl;
-                    s.updatedValue = (new Date(s.updated)).getTime();
-                    s.info.titleLowerCase = s.info.title.toLowerCase();
-                    s.keyLowerCase = s.key.toLowerCase();
-                    s.view = '#' + s.key;
-                    self.apis.push(s);
+                    var preferred = angular.copy(v.versions[v.preferred]);
+
+                    preferred.key = k;
+                    preferred.info.title = preferred.info.title.replace(/([^A-Z])([A-Z])/, '$1\u200b$2');
+                    preferred.ui = '../#?url=' + preferred.swaggerUrl;
+                    preferred.updatedValue = (new Date(preferred.updated)).getTime();
+                    preferred.info.titleLowerCase = preferred.info.title.toLowerCase();
+                    preferred.keyLowerCase = preferred.key.toLowerCase();
+                    preferred.view = '#' + preferred.key;
+
+                    self.details[k] = preferred;
+
+                    self.apis.push(preferred);
                 });
 
                 self.apis.sort(function (a, b) {
@@ -657,6 +906,7 @@
 
                     api.gradientLight = 'linear-gradient(135deg, ' + rgb.join(',') + ')';
                     api.style = {background: api.gradientLight};
+                    self.colors[api.key] = api.style;
                 });
 
                 deferred.resolve();
@@ -674,7 +924,7 @@
                 return deferred.promise;
             }
         })
-        .controller('HubCtrl', function ($scope, $http, $timeout, $location, $q, $log, Data) {
+        .controller('HubCtrl', function ($scope, $http, $timeout, $location, $q, $log, $window, $document, Data) {
             var vm = this;
 
             vm.loading = true;
@@ -682,6 +932,13 @@
             vm.count = 0;
             vm.sortBy = -1;
             vm.path = '';
+            vm.api = null;
+            vm.apiStyle = null;
+            vm.prefered = null;
+            vm.curent = null;
+            vm.selectedVersion = null;
+            vm.detail = null;
+            vm.meta = [];
             vm.apis = Data.apis;
             vm.apisFiltered = [];
             vm.apisDelayed = [];
@@ -693,10 +950,14 @@
             vm.toggle = defer(toggle, 100);
             vm.sort = defer(sort, 100);
             vm.reset = defer(reset, 100);
+            vm.back = back;
 
             var unregister;
 
             $scope.$on('$locationChangeSuccess', locationUpdated);
+            $scope.$watch(function () {
+                return vm.selectedVersion;
+            }, versionUpdated);
 
             Data.promise.then(function () {
                 buildFilters();
@@ -706,6 +967,14 @@
                 vm.loading = false;
                 register();
             });
+
+            function back () {
+                if ($document[0].referer) {
+                    $location.path('');
+                } else {
+                    $window.history.back();
+                }
+            }
 
             function register () {
                 unregister = $scope.$watch('vm.filter', defer(safeUpdate, 25), true);
@@ -718,16 +987,53 @@
 
                 var s = $location.search();
 
-                vm.filter.search = s.search || '';
-                deserializeFilter(vm.filter.security, s.security);
-                deserializeFilter(vm.filter.cors, s.cors);
-                deserializeFilter(vm.filter.tested, s.tested);
+                if (!vm.path) {
+                    vm.filter.search = s.search || '';
+                    deserializeFilter(vm.filter.security, s.security);
+                    deserializeFilter(vm.filter.cors, s.cors);
+                    deserializeFilter(vm.filter.tested, s.tested);
 
-                var order = parseInt(s.order || 0);
+                    if (unregister) {
+                        unregister();
+                        register();
+                        vm.updating = true;
+                        $timeout(function () {
+                            Data.promise.then(update);
+                        });
+                    }
 
-                if (order !== vm.sortBy) {
-                    sort(order);
+                    sort(parseInt(s.order || 0));
+
+                    vm.api = null;
+                    vm.prefered = null;
+                    vm.apiStyle = null;
+                    vm.detail = null;
+                    vm.versions = null;
+                    vm.selectedVersion = null;
+                } else {
+                    Data.promise.then(function () {
+                        vm.api = Data.list[vm.path];
+                        vm.prefered = vm.api.versions[vm.api.preferred];
+                        vm.apiStyle = Data.colors[vm.path];
+                        vm.detail = Data.details[vm.path];
+                        vm.raw = angular.copy(vm.api);
+                        delete vm.raw.versions;
+
+                        vm.versions = [];
+
+                        angular.forEach(vm.api.versions, function (v, k) {
+                            vm.versions.push(k);
+                        });
+
+                        vm.versions.reverse();
+
+                        vm.selectedVersion = vm.versions.indexOf(vm.api.preferred);
+
+                        versionUpdated();
+                    });
                 }
+
+                $log.debug('hub:locationUpdated:end');
             }
 
             function deserializeFilter (f, s) {
@@ -817,6 +1123,8 @@
                     }
                 });
 
+                sort(parseInt($location.search().order || 0));
+
                 $location.search('search', vm.filter.search || null);
                 $location.search('security', serializeFilter(vm.filterArray.security));
                 $location.search('cors', serializeFilter(vm.filterArray.cors));
@@ -880,7 +1188,7 @@
             }
 
             function sort (by) {
-                if ((by === vm.sortBy) || !vm.apis) {
+                if ((by === vm.sortBy) || !vm.apis.length) {
                     return
                 }
 
@@ -987,7 +1295,82 @@
                     }, time);
                 }
             }
-        });
+
+            function gitHubLink () {
+                if (!vm.api) {
+                    return;
+                }
+
+                var i = vm.curent.info;
+
+                return 'https://github.com/APIs-guru/api-models/tree/master/APIs/' +
+                    i['x-providerName'] + '/' +
+                    (i['x-serviceName'] ? (i['x-serviceName']) + '/' : '' ) +
+                    vm.versions[vm.selectedVersion] + '/';
+
+            }
+
+            function diffLink () {
+                if (vm.curent === vm.prefered || vm.versions.length < 2) {
+                    return;
+                }
+
+                return 'https://zallek.github.io/swagger-diff/?' +
+                    'oldSpecUrl=' + vm.curent.swaggerUrl +
+                    '&' +
+                    'newSpecUrl=' + vm.prefered.swaggerUrl;
+            }
+
+            function meta () {
+                var v = vm.api && vm.curent;
+
+                if (!v) {
+                    return;
+                }
+
+                var validatorUrl = 'http://online.swagger.io/validator';
+                var i = v.info;
+                i.contact = i.contact || {};
+                var validatorDebug = (validatorUrl && v.swaggerUrl) ? (validatorUrl + '/debug?url=' + v.swaggerUrl) : null;
+                var validatorBadge = validatorUrl + '?url=' + v.swaggerUrl;
+
+                return [
+                    ['Contact', 'person', (i.contact.name && !i.contact.email) ? i.contact.name : null, null],
+                    ['Email', 'email', i.contact.email ? (i.contact.name || i.contact.email) : null, 'mailto:' + i.contact.email + '?subject=' + i.title],
+                    ['Client registration', 'work', i['x-apiClientRegistration'] && i['x-apiClientRegistration'].url, i['x-apiClientRegistration'] && i['x-apiClientRegistration'].url],
+                    ['Documentation', 'help_outline', v.externalDocs && (v.externalDocs.description || v.externalDocs.url), v.externalDocs && v.externalDocs.url],
+                    ['Origin', 'cloud_download', i['x-origin'] && i['x-origin'].url, i['x-origin'] && i['x-origin'].url],
+                    ['Validation', 'code', validatorDebug, validatorBadge]
+                ];
+            }
+
+            function versionUpdated () {
+                $log.debug('hub:version:start');
+
+                Data.promise.then(function () {
+                    if (!vm.api) {
+                        return;
+                    }
+
+
+                    vm.curent = vm.api.versions[vm.versions[vm.selectedVersion]];
+                    vm.gitHubLink = gitHubLink();
+                    vm.diffLink = diffLink();
+                    vm.meta = meta();
+                    vm.json = null;
+                    vm.yaml = null;
+
+                    $http.get(vm.curent.swaggerUrl).then(function (response) {
+                        vm.json = response.data;
+                    });
+
+                    $http.get(vm.curent.swaggerYamlUrl).then(function (response) {
+                        vm.yaml = response.data;
+                    });
+                });
+            }
+        })
+    ;
 </script>
 <script type="text/ng-template" id="toolbar-search.html">
     <md-button ng-click="open = true; focus()" class="md-icon-button">
