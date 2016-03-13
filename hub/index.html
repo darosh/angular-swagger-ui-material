@@ -953,6 +953,7 @@
             vm.back = back;
 
             var unregister;
+            var visits = 0;
 
             $scope.$on('$locationChangeSuccess', locationUpdated);
             $scope.$watch(function () {
@@ -969,7 +970,7 @@
             });
 
             function back () {
-                if ($document[0].referer || $window.history.length <= 1) {
+                if ($document[0].referer || ($window.history.length <= 1) || (visits <= 1)) {
                     $location.path('');
                 } else {
                     $window.history.back();
@@ -980,9 +981,14 @@
                 unregister = $scope.$watch('vm.filter', defer(safeUpdate, 25), true);
             }
 
-            function locationUpdated () {
+            function locationUpdated (n) {
+                if (n) {
+                    visits++;
+                }
+
                 vm.path = $location.path().replace(/^\//, '');
 
+                $log.debug('hub:locationUpdated:visits', visits);
                 $log.debug('hub:locationUpdated', vm.path);
 
                 var s = $location.search();
