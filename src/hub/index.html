@@ -208,11 +208,12 @@
 <body ng-controller="HubCtrl as vm" layout="row" class="ng-cloak" style="overflow: hidden">
 <div layout="column" flex>
     <md-toolbar md-whiteframe="2" class="md-accent md-hue-1" style="z-index: 3">
-        <div class="md-toolbar-tools" ng-style="{'padding-left': (vm.loading || vm.updating) ? 0 : null}">
-            <md-progress-circular ng-show="vm.loading || vm.updating" class="md-accent md-hue-3" md-mode="indeterminate"
+        <div ng-show="!vm.path" class="md-toolbar-tools"
+             ng-style="{'padding-left': (vm.loading) ? 0 : null}">
+            <md-progress-circular ng-show="vm.loading" class="md-accent md-hue-3" md-mode="indeterminate"
                                   md-diameter="56"></md-progress-circular>
             <span ng-show="vm.loading">Loading&hellip;</span>
-            <div hide show-gt-sm ng-hide="vm.loading || vm.updating">
+            <div hide show-gt-sm ng-hide="vm.loading">
                 <span style="opacity: 0.5"
                       ng-if="vm.apis.length && (vm.count != vm.apis.length)">{{vm.count}} of</span>
                 <span class="md-title">{{vm.apis.length}} APIs</span>
@@ -265,8 +266,19 @@
                 <md-icon>filter_list</md-icon>
             </md-button>
         </div>
+        <div ng-show="vm.path" class="md-toolbar-tools"
+             ng-style="{'padding-left': (vm.loading || vm.updating) ? 0 : null}">
+            <md-progress-circular ng-show="vm.loading" class="md-accent md-hue-3" md-mode="indeterminate"
+                                  md-diameter="56"></md-progress-circular>
+            <span ng-show="vm.loading">Loading&hellip;</span>
+            <div hide show-gt-sm ng-hide="vm.loading || vm.updating">
+                <span class="md-title" ng-bind="vm.path"></span>
+            </div>
+        </div>
     </md-toolbar>
-    <md-content style="background-color: #fff">
+    <md-progress-linear class="md-accent" ng-show="vm.updating"
+                        style="position: relative; z-index: 61; margin-top: -5px;"></md-progress-linear>
+    <md-content ng-show="!vm.path">
         <div ng-show="!vm.loading" class="doc md-body-1" layout="row" layout-wrap layout-padding layout-align="end"
              style="margin-top: 2px; padding-bottom: 6px">
             <div flex-xs="100"
@@ -372,9 +384,9 @@
                             <md-button class="md-accent md-hue-3" ng-href="{{::api.ui}}">
                                 Open
                             </md-button>
-                            <!--<md-button class="md-accent md-hue-3" ng-href="{{::api.view}}">-->
-                                <!--View-->
-                            <!--</md-button>-->
+                            <md-button class="md-accent md-hue-3" ng-href="{{::api.view}}">
+                                View
+                            </md-button>
                             <!--<md-button class="md-accent md-hue-2" ng-href="{{::api.swaggerYamlUrl}}" target="_blank">
                                 YAML
                             </md-button>
@@ -434,6 +446,9 @@
                 </div>
             </div>
         </div>
+    </md-content>
+    <md-content ng-show="vm.path && !vm.loading">
+        <pre>{{vm.api | json}}</pre>
     </md-content>
 </div>
 <md-sidenav md-is-open="vm.sidenav" class="md-sidenav-right" layout="column">
@@ -586,7 +601,8 @@
             var deferred = $q.defer();
             var self = {
                 promise: deferred.promise,
-                apis: []
+                apis: [],
+                list: {}
             };
 
             var data = deferPromise(loadData);
@@ -615,16 +631,20 @@
             function processList (response) {
                 $log.debug('hub:processList');
 
+                angular.extend(self.list, response.data);
+
                 angular.forEach(response.data, function (v, k) {
-                    var s = v.versions[v.preferred];
-                    s.key = k;
-                    s.info.title = s.info.title.replace(/([^A-Z])([A-Z])/, '$1\u200b$2');
-                    s.ui = '../#?url=' + s.swaggerUrl;
-                    s.updatedValue = (new Date(s.updated)).getTime();
-                    s.info.titleLowerCase = s.info.title.toLowerCase();
-                    s.keyLowerCase = s.key.toLowerCase();
-                    s.view = '#' + s.key;
-                    self.apis.push(s);
+                    var preferred = angular.copy(v.versions[v.preferred]);
+
+                    preferred.key = k;
+                    preferred.info.title = preferred.info.title.replace(/([^A-Z])([A-Z])/, '$1\u200b$2');
+                    preferred.ui = '../#?url=' + preferred.swaggerUrl;
+                    preferred.updatedValue = (new Date(preferred.updated)).getTime();
+                    preferred.info.titleLowerCase = preferred.info.title.toLowerCase();
+                    preferred.keyLowerCase = preferred.key.toLowerCase();
+                    preferred.view = '#' + preferred.key;
+
+                    self.apis.push(preferred);
                 });
 
                 self.apis.sort(function (a, b) {
@@ -718,16 +738,29 @@
 
                 var s = $location.search();
 
-                vm.filter.search = s.search || '';
-                deserializeFilter(vm.filter.security, s.security);
-                deserializeFilter(vm.filter.cors, s.cors);
-                deserializeFilter(vm.filter.tested, s.tested);
+                if (!vm.path) {
+                    vm.filter.search = s.search || '';
+                    deserializeFilter(vm.filter.security, s.security);
+                    deserializeFilter(vm.filter.cors, s.cors);
+                    deserializeFilter(vm.filter.tested, s.tested);
 
-                var order = parseInt(s.order || 0);
+                    if (unregister) {
+                        unregister();
+                        register();
+                        vm.updating = true;
+                        $timeout(function () {
+                            Data.promise.then(update);
+                        });
+                    }
 
-                if (order !== vm.sortBy) {
-                    sort(order);
+                    sort(parseInt(s.order || 0));
+                } else {
+                    Data.promise.then(function () {
+                        vm.api = Data.list[vm.path];
+                    });
                 }
+
+                $log.debug('hub:locationUpdated:end');
             }
 
             function deserializeFilter (f, s) {
@@ -817,6 +850,8 @@
                     }
                 });
 
+                sort(parseInt($location.search().order || 0));
+
                 $location.search('search', vm.filter.search || null);
                 $location.search('security', serializeFilter(vm.filterArray.security));
                 $location.search('cors', serializeFilter(vm.filterArray.cors));
@@ -880,7 +915,7 @@
             }
 
             function sort (by) {
-                if ((by === vm.sortBy) || !vm.apis) {
+                if ((by === vm.sortBy) || !vm.apis.length) {
                     return
                 }
 
