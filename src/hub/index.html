@@ -132,21 +132,24 @@
             text-align: center;
         }
 
-        .doc h2 {
-            margin-top: 6px;
+        .doc {
+            line-height: 20px;
         }
 
-        ul, p {
-            padding-right: 24px;
-            margin-bottom: 0;
+        .doc h2 {
+            margin: 6px 0 20px 0;
+            padding: 0;
         }
 
         p {
-            margin-top: 18px;
+            margin: 18px 0 0 0;
+            padding: 0 24px 0 0;
         }
 
         ul {
-            padding-left: 24px;
+            margin: 0;
+            padding: 0 24px;
+            line-height: 20px;
         }
 
         a.flink {
@@ -305,7 +308,7 @@
             <div flex style="padding: 12px">
                 <h2 class="md-title">Filters</h2>
                 <ul>
-                    <li><em>CORS</em> information is grabbed <a
+                    <li>CORS information is grabbed <a
                         href="https://github.com/darosh/angular-swagger-ui-material/blob/master/lib/api-models-meta/index.js">automatically</a>
                         and may be incorrect
                     </li>
@@ -313,7 +316,7 @@
                         href="http://swagger.io/specification/#securityDefinitionsObject">securityDefinitions</a> spec
                         (except <em>local</em> value)
                     </li>
-                    <li><em>Tested</em> filter shows <a
+                    <li>Tested filter shows <a
                         href="https://github.com/darosh/angular-swagger-ui-material/blob/master/test/manual/manual.json">manual
                         testing</a> success or fail
                     </li>
@@ -369,9 +372,9 @@
                             <md-button class="md-accent md-hue-3" ng-href="{{::api.ui}}">
                                 Open
                             </md-button>
-                            <md-button class="md-accent md-hue-3" ng-href="{{::api.view}}">
-                                View
-                            </md-button>
+                            <!--<md-button class="md-accent md-hue-3" ng-href="{{::api.view}}">-->
+                                <!--View-->
+                            <!--</md-button>-->
                             <!--<md-button class="md-accent md-hue-2" ng-href="{{::api.swaggerYamlUrl}}" target="_blank">
                                 YAML
                             </md-button>
