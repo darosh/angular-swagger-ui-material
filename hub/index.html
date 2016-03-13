@@ -969,7 +969,7 @@
             });
 
             function back () {
-                if ($document[0].referer) {
+                if ($document[0].referer || $window.history.length <= 1) {
                     $location.path('');
                 } else {
                     $window.history.back();
