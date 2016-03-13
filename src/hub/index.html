@@ -297,6 +297,12 @@
             <md-progress-circular ng-show="vm.loading" class="md-primary md-hue-2" md-mode="indeterminate"
                                   md-diameter="56"></md-progress-circular>
             <span ng-show="vm.loading">Loading&hellip;</span>
+
+            <md-button ng-hide="vm.loading || vm.updating" style="margin-left: -6px" ng-click="vm.back()"
+                       class="md-icon-button">
+                <md-icon>keyboard_backspace</md-icon>
+            </md-button>
+
             <div ng-hide="vm.loading || vm.updating">
                 <span class="md-title" ng-bind="vm.prefered.info.title || vm.path"></span>
             </div>
@@ -593,26 +599,26 @@
                         </div>
                         <div layout="column" layout-gt-sm="row" layout-no-wrap-gt-sm layout-align="end start">
                             <div style="height: 46px">
-                                <md-button class="md-accent" target="_blank"
+                                <md-button class="md-primary md-hue-2" target="_blank"
                                            ng-href="{{vm.curent.swaggerYamlUrl}}">
                                     YAML
                                 </md-button>
                             </div>
                             <div style="height: 46px">
-                                <md-button class="md-accent" target="_blank"
+                                <md-button class="md-primary md-hue-2" target="_blank"
                                            ng-href="{{vm.curent.swaggerUrl}}">
                                     JSON
                                 </md-button>
                             </div>
                             <div style="height: 46px">
-                                <md-button class="md-accent" target="_blank"
+                                <md-button class="md-primary md-hue-2" target="_blank"
                                            ng-href="{{vm.gitHubLink}}">
                                     GitHub
                                 </md-button>
                             </div>
-                            <div style="height: 46px">
+                            <div style="height: 46px" ng-if="vm.diffLink">
                                 <md-button class="md-accent" target="_blank"
-                                           ng-href="http://editor.swagger.io/#/?import={{vm.curent.swaggerUrl}}">
+                                           ng-href="{{vm.diffLink}}">
                                     Diff
                                 </md-button>
                             </div>
@@ -640,7 +646,7 @@
                         <md-tabs md-selected="vm.selectedTab" md-dynamic-height md-border-bottom class="md-hue-2">
                             <md-tab label="Description">
                                 <div class="md-padding md" flex
-                                     ng-bind="vm.curent.info.description"></div>
+                                     ng-bind-html="vm.curent.info.description"></div>
                             </md-tab>
                             <md-tab label="Logo"
                                     ng-disabled="!vm.curent.info['x-logo']">
@@ -736,10 +742,11 @@
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-aria.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
 
 <script type="text/javascript">
-    angular.module('hub', ['ngMaterial'])
+    angular.module('hub', ['ngMaterial', 'ngSanitize'])
         .config(function ($mdThemingProvider, $logProvider, $windowProvider) {
             $mdThemingProvider
                 .theme('default')
@@ -752,6 +759,10 @@
             if ($window.location.hostname !== 'localhost') {
                 $logProvider.debugEnabled(false);
             }
+
+            /*if ('scrollRestoration' in $window.history) {
+             $window.history.scrollRestoration = 'manual';
+             }*/
         })
         // from http://embed.plnkr.co/CaZAVeC90qxQP1E4Z5Fb/preview
         .factory('HubCache', function ($cacheFactory, $window) {
@@ -913,7 +924,7 @@
                 return deferred.promise;
             }
         })
-        .controller('HubCtrl', function ($scope, $http, $timeout, $location, $q, $log, Data) {
+        .controller('HubCtrl', function ($scope, $http, $timeout, $location, $q, $log, $window, $document, Data) {
             var vm = this;
 
             vm.loading = true;
@@ -927,6 +938,7 @@
             vm.curent = null;
             vm.selectedVersion = null;
             vm.detail = null;
+            vm.meta = [];
             vm.apis = Data.apis;
             vm.apisFiltered = [];
             vm.apisDelayed = [];
@@ -938,7 +950,7 @@
             vm.toggle = defer(toggle, 100);
             vm.sort = defer(sort, 100);
             vm.reset = defer(reset, 100);
-            vm.meta = [];
+            vm.back = back;
 
             var unregister;
 
@@ -955,6 +967,14 @@
                 vm.loading = false;
                 register();
             });
+
+            function back () {
+                if ($document[0].referer) {
+                    $location.path('');
+                } else {
+                    $window.history.back();
+                }
+            }
 
             function register () {
                 unregister = $scope.$watch('vm.filter', defer(safeUpdate, 25), true);
@@ -1290,6 +1310,17 @@
 
             }
 
+            function diffLink () {
+                if (vm.curent === vm.prefered || vm.versions.length < 2) {
+                    return;
+                }
+
+                return 'https://zallek.github.io/swagger-diff/?' +
+                    'oldSpecUrl=' + vm.curent.swaggerUrl +
+                    '&' +
+                    'newSpecUrl=' + vm.prefered.swaggerUrl;
+            }
+
             function meta () {
                 var v = vm.api && vm.curent;
 
@@ -1324,6 +1355,7 @@
 
                     vm.curent = vm.api.versions[vm.versions[vm.selectedVersion]];
                     vm.gitHubLink = gitHubLink();
+                    vm.diffLink = diffLink();
                     vm.meta = meta();
                     vm.json = null;
                     vm.yaml = null;
