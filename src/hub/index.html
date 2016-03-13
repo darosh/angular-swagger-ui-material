@@ -369,12 +369,15 @@
                             <md-button class="md-accent md-hue-3" ng-href="{{::api.ui}}">
                                 Open
                             </md-button>
-                            <md-button class="md-accent md-hue-2" ng-href="{{::api.swaggerYamlUrl}}" target="_blank">
+                            <md-button class="md-accent md-hue-3" ng-href="{{::api.view}}">
+                                View
+                            </md-button>
+                            <!--<md-button class="md-accent md-hue-2" ng-href="{{::api.swaggerYamlUrl}}" target="_blank">
                                 YAML
                             </md-button>
                             <md-button class="md-accent md-hue-2" ng-href="{{::api.swaggerUrl}}" target="_blank">
                                 JSON
-                            </md-button>
+                            </md-button>-->
                             <span flex></span>
                             <md-button ng-click="api.open = !api.open" aria-label="toggle">
                                 <md-icon ng-bind="api.open ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"></md-icon>
@@ -576,64 +579,38 @@
                 }
             };
         })
-        .controller('HubCtrl', function ($scope, $http, $timeout, $location, $q, $log, HubCache) {
-            var vm = this;
-
-            vm.loading = true;
-            vm.updating = false;
-            vm.count = 0;
-            vm.sortBy = -1;
-            vm.apisFiltered = [];
-            vm.apisDelayed = [];
-            vm.filterArray = {};
-            vm.filter = {
-                search: ''
+        .factory('Data', function (HubCache, $q, $log, $http, $timeout) {
+            var deferred = $q.defer();
+            var self = {
+                promise: deferred.promise,
+                apis: []
             };
 
-            vm.toggle = defer(toggle, 100);
-            vm.sort = defer(sort, 100);
-            vm.reset = defer(reset, 100);
-
-            var data = deferPromise(loadData, 25);
-            var list = deferPromise(loadList, 25);
+            var data = deferPromise(loadData);
+            var list = deferPromise(loadList);
 
             list.then(processList);
 
-            var unregister;
+            return self;
 
-            $scope.$on('$locationChangeSuccess', locationUpdated);
-
-            function register () {
-                unregister = $scope.$watch('vm.filter', defer(safeUpdate, 25), true);
+            function loadData () {
+                return $http({
+                    method: 'GET',
+                    url: 'hub.json',
+                    cache: HubCache
+                });
             }
 
-            function locationUpdated () {
-                $log.debug('hub:locationUpdated');
-
-                var s = $location.search();
-
-                vm.filter.search = s.search || '';
-                deserializeFilter(vm.filter.security, s.security);
-                deserializeFilter(vm.filter.cors, s.cors);
-                deserializeFilter(vm.filter.tested, s.tested);
-
-                var order = parseInt(s.order || 0);
-
-                if (order !== vm.sortBy) {
-                    sort(order);
-                }
-            }
-
-            function deserializeFilter (f, s) {
-                angular.forEach(f, function (i) {
-                    i.show = (s || []).indexOf(i.name) === -1;
+            function loadList () {
+                return $http({
+                    method: 'GET',
+                    url: 'https://apis-guru.github.io/api-models/api/v1/list.json',
+                    cache: HubCache
                 });
             }
 
             function processList (response) {
                 $log.debug('hub:processList');
-
-                vm.apis = [];
 
                 angular.forEach(response.data, function (v, k) {
                     var s = v.versions[v.preferred];
@@ -643,10 +620,11 @@
                     s.updatedValue = (new Date(s.updated)).getTime();
                     s.info.titleLowerCase = s.info.title.toLowerCase();
                     s.keyLowerCase = s.key.toLowerCase();
-                    vm.apis.push(s);
+                    s.view = '#' + s.key;
+                    self.apis.push(s);
                 });
 
-                vm.apis.sort(function (a, b) {
+                self.apis.sort(function (a, b) {
                     return (a.key).localeCompare(b.key);
                 });
 
@@ -656,7 +634,7 @@
             function processData (response) {
                 $log.debug('hub:processData');
 
-                angular.forEach(vm.apis, function (api) {
+                angular.forEach(self.apis, function (api) {
                     var meta = response.data[api.key];
 
                     api.meta = meta || {};
@@ -678,12 +656,81 @@
                     api.style = {background: api.gradientLight};
                 });
 
+                deferred.resolve();
+            }
+
+            function deferPromise (fnc, time) {
+                var deferred = $q.defer();
+
+                $timeout(function () {
+                    fnc().then(function (val) {
+                        deferred.resolve(val);
+                    });
+                }, time);
+
+                return deferred.promise;
+            }
+        })
+        .controller('HubCtrl', function ($scope, $http, $timeout, $location, $q, $log, Data) {
+            var vm = this;
+
+            vm.loading = true;
+            vm.updating = false;
+            vm.count = 0;
+            vm.sortBy = -1;
+            vm.path = '';
+            vm.apis = Data.apis;
+            vm.apisFiltered = [];
+            vm.apisDelayed = [];
+            vm.filterArray = {};
+            vm.filter = {
+                search: ''
+            };
+
+            vm.toggle = defer(toggle, 100);
+            vm.sort = defer(sort, 100);
+            vm.reset = defer(reset, 100);
+
+            var unregister;
+
+            $scope.$on('$locationChangeSuccess', locationUpdated);
+
+            Data.promise.then(function () {
                 buildFilters();
                 locationUpdated();
                 update();
                 sort(vm.sortBy);
                 vm.loading = false;
                 register();
+            });
+
+            function register () {
+                unregister = $scope.$watch('vm.filter', defer(safeUpdate, 25), true);
+            }
+
+            function locationUpdated () {
+                vm.path = $location.path().replace(/^\//, '');
+
+                $log.debug('hub:locationUpdated', vm.path);
+
+                var s = $location.search();
+
+                vm.filter.search = s.search || '';
+                deserializeFilter(vm.filter.security, s.security);
+                deserializeFilter(vm.filter.cors, s.cors);
+                deserializeFilter(vm.filter.tested, s.tested);
+
+                var order = parseInt(s.order || 0);
+
+                if (order !== vm.sortBy) {
+                    sort(order);
+                }
+            }
+
+            function deserializeFilter (f, s) {
+                angular.forEach(f, function (i) {
+                    i.show = (s || []).indexOf(i.name) === -1;
+                });
             }
 
             function buildFilters () {
@@ -718,8 +765,8 @@
                 vm.updating = true;
 
                 $timeout(function () {
-                    $q.all([data, list]).then(update);
-                }, 200);
+                    Data.promise.then(update);
+                });
             }
 
             function update () {
@@ -920,40 +967,12 @@
                 });
             }
 
-            function loadData () {
-                return $http({
-                    method: 'GET',
-                    url: 'hub.json',
-                    cache: HubCache
-                });
-            }
-
-            function loadList () {
-                return $http({
-                    method: 'GET',
-                    url: 'https://apis-guru.github.io/api-models/api/v1/list.json',
-                    cache: HubCache
-                });
-            }
-
             function toggle (open) {
                 angular.forEach(vm.apis, function (api) {
                     if (!api.hide) {
                         api.open = open;
                     }
                 });
-            }
-
-            function deferPromise (fnc, time) {
-                var deferred = $q.defer();
-
-                $timeout(function () {
-                    fnc().then(function (val) {
-                        deferred.resolve(val);
-                    });
-                }, time);
-
-                return deferred.promise;
             }
 
             function defer (fnc, time) {
