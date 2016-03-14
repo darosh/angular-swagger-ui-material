@@ -282,6 +282,12 @@
                     <md-menu-item>
                         <md-button ng-click="vm.sort(3)">
                             <md-icon ng-bind="vm.sortBy == 3 ? 'done' : ''"></md-icon>
+                            Added
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="vm.sort(4)">
+                            <md-icon ng-bind="vm.sortBy == 4 ? 'done' : ''"></md-icon>
                             Operations
                         </md-button>
                     </md-menu-item>
@@ -312,7 +318,7 @@
                         class="md-primary"
                         ng-show="vm.updating"
                         style="position: relative; z-index: 59; margin-top: -5px;"></md-progress-linear>
-    <md-content flex ng-show="!vm.path">
+    <md-content flex ng-show="!vm.path" style="overflow-y: scroll">
         <div ng-show="!vm.loading" class="doc md-body-1" layout="row" layout-wrap layout-padding layout-align="end"
              style="margin-top: 2px; padding-bottom: 6px">
             <div flex-xs="100"
@@ -867,6 +873,7 @@
                     preferred.info.title = preferred.info.title.replace(/([^A-Z])([A-Z])/, '$1\u200b$2');
                     preferred.ui = '../#?url=' + preferred.swaggerUrl;
                     preferred.updatedValue = (new Date(preferred.updated)).getTime();
+                    preferred.addedValue = (new Date(preferred.added)).getTime();
                     preferred.info.titleLowerCase = preferred.info.title.toLowerCase();
                     preferred.keyLowerCase = preferred.key.toLowerCase();
                     preferred.view = '#' + preferred.key;
@@ -1211,6 +1218,9 @@
                     },
                     function (a, b) {
                         return b.updatedValue - a.updatedValue;
+                    },
+                    function (a, b) {
+                        return b.addedValue - a.addedValue;
                     },
                     function (a, b) {
                         return (a.meta.operations || 0) - (b.meta.operations || 0);
