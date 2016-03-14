@@ -20,7 +20,7 @@ angular.module('sw.plugin.base', ['sw.plugins'])
                     min = Math.min(min, parts[key].length);
                 });
 
-                var paths = Object.keys(swagger.paths)
+                var paths = Object.keys(swagger.paths);
                 var sames = [];
 
                 for (var i = 0; i < min; i++) {
@@ -47,7 +47,7 @@ angular.module('sw.plugin.base', ['sw.plugins'])
                 }
 
                 if (sames.length > 1) {
-                    var extracted = sames.join('/')
+                    var extracted = sames.join('/');
 
                     $log.debug('sw:plugin:base:extracted', extracted);
 
