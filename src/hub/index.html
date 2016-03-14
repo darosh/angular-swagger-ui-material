@@ -566,6 +566,12 @@
                                                 <div class="md-body-2"
                                                      ng-bind="vm.api.versions[k].updated | date"></div>
                                             </div>
+                                            <md-divider ng-if="vm.api.versions[k].info['x-unofficialSpec']"></md-divider>
+                                            <div ng-if="vm.api.versions[k].info['x-unofficialSpec']" layout="row" layout-align="space-between">
+                                                <div class="md-body-1">Unofficial specification</div>
+                                                <div class="md-body-2"
+                                                     ng-bind="vm.api.versions[k].info['x-unofficialSpec']"></div>
+                                            </div>
                                             <md-divider ng-repeat-start="m in vm.meta" ng-if="m[2]"></md-divider>
                                             <div ng-repeat-end layout="row" layout-align="space-between" ng-if="m[2]">
                                                 <div class="md-body-1" style="white-space: nowrap; margin-right: 24px;">
