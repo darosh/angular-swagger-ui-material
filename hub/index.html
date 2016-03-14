@@ -229,6 +229,12 @@
             overflow: auto;
             white-space: pre-wrap;
         }
+
+        @media screen and (min-height: 540px) {
+            md-menu-content {
+                max-height: 384px;
+            }
+        }
     </style>
 </head>
 <body ng-controller="HubCtrl as vm" layout="row" class="ng-cloak" style="overflow: hidden">
@@ -254,11 +260,15 @@
                        class="md-icon-button">
                 <md-icon>keyboard_arrow_up</md-icon>
             </md-button>
-            <md-menu ng-hide="vm.loading">
+            <md-button ng-hide="vm.loading" hide show-gt-sm aria-label="group" ng-click="vm.group = !vm.group"
+                       class="md-icon-button">
+                <md-icon ng-bind="vm.group ? 'folder' : 'folder_open'"></md-icon>
+            </md-button>
+            <md-menu ng-hide="vm.loading" md-position-mode="target-right target">
                 <md-button aria-label="sort" ng-click="$mdOpenMenu($event)" class="md-icon-button">
                     <md-icon>sort</md-icon>
                 </md-button>
-                <md-menu-content>
+                <md-menu-content width="4">
                     <md-subheader>Sort by</md-subheader>
                     <md-divider></md-divider>
                     <md-menu-item>
@@ -267,6 +277,12 @@
                             Provider
                         </md-button>
                     </md-menu-item>
+                    <!--<md-menu-item>
+                        <md-button ng-click="vm.sort(5)">
+                            <md-icon ng-bind="vm.sortBy == 5 ? 'done' : ''"></md-icon>
+                            Provider groups
+                        </md-button>
+                    </md-menu-item>-->
                     <md-menu-item>
                         <md-button ng-click="vm.sort(1)">
                             <md-icon ng-bind="vm.sortBy == 1 ? 'done' : ''"></md-icon>
@@ -390,12 +406,20 @@
         <md-divider ng-show="!vm.loading && vm.count" style="margin: 4px 0 2px 0"></md-divider>
         <div ng-show="!vm.loading && vm.count" layout="row" class="app-optimized" layout-wrap layout-padding
              style="margin-top: 2px">
-            <div flex-xs="100"
+            <div ng-repeat-start="api in vm.apisDelayed track by api.key"
+                 ng-if="vm.group && api.first"
+                 flex="100">
+                <md-divider ng-if="!$first" style="margin: 6px 3px 16px 3px"></md-divider>
+                <div class="md-headline"
+                     style="margin-left: 18px; font-weight: 300"
+                     ng-bind="api.info['x-providerName']"></div>
+            </div>
+            <div ng-repeat-end
+                 flex-xs="100"
                  flex-sm="50"
                  flex-md="33"
                  flex-lg="25"
                  flex-xl="20"
-                 ng-repeat="api in vm.apisDelayed track by api.key"
                  style="padding: 12px">
                 <div>
                     <div class="header" ng-class="api.open ? 'md-whiteframe-6dp' : 'md-whiteframe-2dp'"
@@ -553,7 +577,7 @@
                             <div style="padding-top: 0" flex>
                                 <md-tabs md-dynamic-height md-border-bottom md-selected="vm.selectedVersion"
                                          class="md-hue-2 no-transform">
-                                    <md-tab ng-repeat="k in vm.versions" label="{{k}}">
+                                    <md-tab ng-repeat="k in vm.versions track by $index" label="{{k}}">
                                         <div layout="column" layout-padding class="info" style="padding: 16px 16px">
                                             <div layout="row" layout-align="space-between">
                                                 <div class="md-body-1">Added</div>
@@ -566,8 +590,10 @@
                                                 <div class="md-body-2"
                                                      ng-bind="vm.api.versions[k].updated | date"></div>
                                             </div>
-                                            <md-divider ng-if="vm.api.versions[k].info['x-unofficialSpec']"></md-divider>
-                                            <div ng-if="vm.api.versions[k].info['x-unofficialSpec']" layout="row" layout-align="space-between">
+                                            <md-divider
+                                                ng-if="vm.api.versions[k].info['x-unofficialSpec']"></md-divider>
+                                            <div ng-if="vm.api.versions[k].info['x-unofficialSpec']" layout="row"
+                                                 layout-align="space-between">
                                                 <div class="md-body-1">Unofficial specification</div>
                                                 <div class="md-body-2"
                                                      ng-bind="vm.api.versions[k].info['x-unofficialSpec']"></div>
@@ -758,6 +784,8 @@
 <script src="//ajax.googleapis.com/ajax/libs/angular_material/1.0.5/angular-material.min.js"></script>
 
 <script type="text/javascript">
+    'use strict';
+
     angular.module('hub', ['ngMaterial', 'ngSanitize'])
         .config(function ($mdThemingProvider, $logProvider, $windowProvider) {
             $mdThemingProvider
@@ -945,6 +973,7 @@
             vm.count = 0;
             vm.sortBy = -1;
             vm.path = '';
+            vm.group = false;
             vm.api = null;
             vm.apiStyle = null;
             vm.prefered = null;
@@ -972,6 +1001,7 @@
             $scope.$watch(function () {
                 return vm.selectedVersion;
             }, versionUpdated);
+            $scope.$watch('vm.group', defer(groupUpdate, 25));
 
             Data.promise.then(function () {
                 buildFilters();
@@ -1008,6 +1038,7 @@
 
                 if (!vm.path) {
                     vm.filter.search = s.search || '';
+                    vm.group = s.group || false;
                     deserializeFilter(vm.filter.security, s.security);
                     deserializeFilter(vm.filter.cors, s.cors);
                     deserializeFilter(vm.filter.tested, s.tested);
@@ -1143,6 +1174,7 @@
                 });
 
                 sort(parseInt($location.search().order || 0));
+                group();
 
                 $location.search('search', vm.filter.search || null);
                 $location.search('security', serializeFilter(vm.filterArray.security));
@@ -1238,6 +1270,21 @@
                 vm.apisDelayed.sort(sorters[vm.sortBy]);
 
                 $location.search('order', vm.sortBy || null);
+            }
+
+            function group () {
+                $log.debug('hub:group');
+
+                var previous = null;
+
+                angular.forEach(vm.apisFiltered, function (api) {
+                    if (api.info['x-providerName'] !== previous) {
+                        previous = api.info['x-providerName'];
+                        api.first = true;
+                    } else {
+                        api.first = false;
+                    }
+                });
             }
 
             function buildFilter (member, type) {
@@ -1390,6 +1437,10 @@
                         vm.yaml = response.data;
                     });
                 });
+            }
+
+            function groupUpdate () {
+                $location.search('group', vm.group || null);
             }
         })
     ;
