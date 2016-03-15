@@ -17,6 +17,11 @@ angular.module('sw.plugin.base', ['sw.plugins'])
 
                 angular.forEach(swagger.paths, function (path, key) {
                     parts[key] = key.split('/');
+
+                    if (key[0] === '/') {
+                        parts[key].shift();
+                    }
+
                     min = Math.min(min, parts[key].length);
                 });
 
@@ -26,13 +31,13 @@ angular.module('sw.plugin.base', ['sw.plugins'])
                 for (var i = 0; i < min; i++) {
                     var first = parts[paths[0]][i];
 
-                    if (/\{.+\}/.test(first)) {
+                    if (/\{.+\}/.test(first) || (parts[paths[0]].length <= 1)) {
                         break;
                     }
 
                     var same = true;
 
-                    for (var j = 1; j < paths.length; j++) {
+                    for (var j = 0; j < paths.length; j++) {
                         if (parts[paths[j]][i] !== first) {
                             same = false;
                             break;
@@ -46,12 +51,12 @@ angular.module('sw.plugin.base', ['sw.plugins'])
                     }
                 }
 
-                if (sames.length > 1) {
-                    var extracted = sames.join('/').substring(1);
+                if (sames.length > 0) {
+                    var extracted = sames.join('/');
 
                     $log.debug('sw:plugin:base:extracted', extracted);
 
-                    swagger.basePath = (swagger.basePath || '/') + extracted;
+                    swagger.basePath = (swagger.basePath || '') + '/' + extracted;
 
                     angular.forEach(paths, function (path) {
                         swagger.paths['/' + parts[path].slice(sames.length).join('/')] = swagger.paths[path];
