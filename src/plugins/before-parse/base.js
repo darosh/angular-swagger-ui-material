@@ -56,7 +56,9 @@ angular.module('sw.plugin.base', ['sw.plugins'])
 
                     $log.debug('sw:plugin:base:extracted', extracted);
 
-                    swagger.basePath = (swagger.basePath || '') + '/' + extracted;
+                    swagger.basePath = (swagger.basePath || '/');
+                    swagger.basePath = swagger.basePath +
+                        ((swagger.basePath[swagger.basePath.length - 1] === '/') ? '' : '/') + extracted;
 
                     angular.forEach(paths, function (path) {
                         swagger.paths['/' + parts[path].slice(sames.length).join('/')] = swagger.paths[path];
