@@ -158,7 +158,7 @@ var explorer = require('loopback-component-explorer');
 var app = module.exports = loopback();
 
 explorer(app, {
-    basePath: '/explorer',
+    basePath: '/api',
     uiDirs: [
         require('angular-swagger-ui-material').dist
     ]
