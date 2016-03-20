@@ -120,3 +120,47 @@ gulp deploy
 * [ ] GFM task lists vs SCE
 * [ ] E2E tests
 * [ ] No more compatible with [angular-swagger-ui](https://github.com/Orange-OpenSource/angular-swagger-ui)
+
+## Usage
+
+### [LoopBack](http://loopback.io/) with [loopback-component-explorer](https://github.com/strongloop/loopback-component-explorer)
+
+**package.json**
+
+angular-swagger-ui-material is not published in npm, so we use [napa](https://www.npmjs.com/package/napa) instead
+
+```json
+{
+  "dependencies": {
+    "loopback-component-explorer": "^2.4.0",
+    "napa": "^2.3.0"
+  },
+  "napa": {
+    "angular-swagger-ui-material": "darosh/angular-swagger-ui-material"
+  },
+  "napa-config": {
+    "cache": false,
+    "cache-path": "./.napa-cache",
+    "log-level": "error"
+  },
+  "scripts": {
+      "install": "napa"
+  }
+}
+```
+
+**server/server.json**
+
+```javascript
+var loopback = require('loopback');
+var explorer = require('loopback-component-explorer');
+
+var app = module.exports = loopback();
+
+explorer(app, {
+    basePath: '/explorer',
+    uiDirs: [
+        require('angular-swagger-ui-material').dist
+    ]
+});
+```
