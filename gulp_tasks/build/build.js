@@ -1,3 +1,3 @@
 var gulp = require('gulp');
 
-gulp.task('build', ['scripts', 'full', 'plugins', 'styles', 'dist', 'eslint']);
+gulp.task('build', ['scripts', 'full', 'plugins', 'styles', 'dist', 'auth', 'eslint']);
