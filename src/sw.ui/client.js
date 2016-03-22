@@ -8,7 +8,9 @@
 
 angular
     .module('sw.ui')
-    .factory('client', function ($q, $window, $http, plugins) {
+    .factory('client', function ($q, $window, $http, $log, plugins) {
+        // var reqCnt = 1;
+
         return {
             configure: configure,
             send: send,
@@ -24,12 +26,39 @@ angular
             var options = configure(operation, values, baseUrl);
 
             function done (response) {
+                if ($window.performance) {
+                    var items = $window.performance.getEntriesByType('resource');
+
+                    response.timing = timing(items[items.length - 1]);
+
+                    $log.debug('sw:measure', items[items.length - 1], response.timing);
+                }
+
                 // execute modules
                 plugins
                     .execute(plugins.AFTER_EXPLORER_LOAD, response)
                     .then(function () {
                         deferred.resolve(response);
                     });
+            }
+
+            function time (e, s) {
+                if (s && e) {
+                    return e - s;
+                } else {
+                    return false;
+                }
+            }
+
+            function timing (timing) {
+                return [
+                    ['redirect', time(timing.redirectEnd, timing.redirectStart)],
+                    ['dns', time(timing.domainLookupEnd, timing.domainLookupStart)],
+                    ['connect', time(timing.connectEnd, timing.connectStart)],
+                    ['request', time(timing.responseStart, timing.requestStart)],
+                    ['response', time(timing.responseEnd, timing.responseStart)],
+                    ['fetch', time(timing.responseEnd, timing.fetchStart)]
+                ];
             }
 
             // execute modules
@@ -41,6 +70,7 @@ angular
                     } else {
                         checkMixedContent(options).then(function () {
                             // send request
+                            // $window.performance.mark('mark_start_xhr');
                             $http(options).then(done, done);
                         }, done);
                     }
