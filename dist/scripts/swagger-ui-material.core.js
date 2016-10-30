@@ -78,28 +78,6 @@ angular.module('sw.ui.md')
 'use strict';
 
 angular.module('sw.ui.md')
-    .controller('MetaController', ["$scope", "$log", "data", "tools", "display", function ($scope, $log, data, tools, display) {
-        var vm = this;
-
-        $scope.$on('sw:changed', update);
-
-        update();
-
-        function update () {
-            $log.debug('sw:changed:meta');
-
-            vm.meta = data.model.info && display.meta(
-                    data.model.info,
-                    data.options.url,
-                    data.options.validatorUrl,
-                    tools.openFile
-                );
-        }
-    }]);
-
-'use strict';
-
-angular.module('sw.ui.md')
     .controller('DetailController', ["$scope", "$rootScope", "$timeout", "$log", "data", "theme", "style", "tools", "utils", "syntax", "client", "format", function ($scope, $rootScope, $timeout, $log, data, theme, style, tools, utils, syntax, client, format) {
         var vm = this;
 
@@ -250,6 +228,28 @@ angular.module('sw.ui.md')
             $timeout(function () {
                 operation.tab = 2;
             }, 50);
+        }
+    }]);
+
+'use strict';
+
+angular.module('sw.ui.md')
+    .controller('MetaController', ["$scope", "$log", "data", "tools", "display", function ($scope, $log, data, tools, display) {
+        var vm = this;
+
+        $scope.$on('sw:changed', update);
+
+        update();
+
+        function update () {
+            $log.debug('sw:changed:meta');
+
+            vm.meta = data.model.info && display.meta(
+                    data.model.info,
+                    data.options.url,
+                    data.options.validatorUrl,
+                    tools.openFile
+                );
         }
     }]);
 
@@ -818,7 +818,7 @@ angular.module('sw.ui.md')
 'use strict';
 
 angular.module('sw.ui.md')
-    .factory('security', ["$q", "$http", "$timeout", "$interval", "$window", "$rootScope", "dialog", "data", function ($q, $http, $timeout, $interval, $window, $rootScope, dialog, data) {
+    .factory('security', ["$q", "$httpParamSerializer", "$http", "$timeout", "$interval", "$window", "$rootScope", "dialog", "data", function ($q, $httpParamSerializer, $http, $timeout, $interval, $window, $rootScope, dialog, data) {
         var storage = $window.sessionStorage;
         var securityDefinitions;
         var credentials;
@@ -885,6 +885,7 @@ angular.module('sw.ui.md')
         }
 
         function saveCredentials () {
+            console.log('saved credentials');
             storage.setItem('swaggerUiSecurity:' + host, angular.toJson(credentials));
         }
 
@@ -1017,6 +1018,34 @@ angular.module('sw.ui.md')
                         sec.link = '#';
 
                         counter(sec, locals);
+
+                        sec.clickedPassword = function ($event) {
+                            $event.preventDefault();
+
+                            $http({
+                                method: 'POST',
+                                url: sec.tokenUrl,
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                data: $httpParamSerializer({
+                                    username: credentials[sec.scopeKey].username,
+                                    password: credentials[sec.scopeKey].password
+                                })
+                            }).then(function (response) {
+                                var qp = response.data;
+                                
+
+                                angular.extend(credentials[sec.scopeKey], {
+                                    accessToken: qp['token'],
+                                    tokenType: 'Bearer',
+                                    expiresIn: 3600,
+                                    expiresFrom: Date.now()
+                                });
+
+                                console.log(credentials, qp);
+                            });
+                        };
 
                         sec.clicked = function ($event) {
                             $event.preventDefault();
@@ -2721,7 +2750,9 @@ angular.module('sw.ui')
 
 angular
     .module('sw.ui')
-    .factory('client', ["$q", "$window", "$http", "plugins", function ($q, $window, $http, plugins) {
+    .factory('client', ["$q", "$window", "$http", "$log", "plugins", function ($q, $window, $http, $log, plugins) {
+        // var reqCnt = 1;
+
         return {
             configure: configure,
             send: send,
@@ -2737,12 +2768,39 @@ angular
             var options = configure(operation, values, baseUrl);
 
             function done (response) {
+                if ($window.performance) {
+                    var items = $window.performance.getEntriesByType('resource');
+
+                    response.timing = timing(items[items.length - 1]);
+
+                    $log.debug('sw:measure', items[items.length - 1], response.timing);
+                }
+
                 // execute modules
                 plugins
                     .execute(plugins.AFTER_EXPLORER_LOAD, response)
                     .then(function () {
                         deferred.resolve(response);
                     });
+            }
+
+            function time (e, s) {
+                if (s && e) {
+                    return e - s;
+                } else {
+                    return false;
+                }
+            }
+
+            function timing (timing) {
+                return [
+                    ['redirect', time(timing.redirectEnd, timing.redirectStart)],
+                    ['dns', time(timing.domainLookupEnd, timing.domainLookupStart)],
+                    ['connect', time(timing.connectEnd, timing.connectStart)],
+                    ['request', time(timing.responseStart, timing.requestStart)],
+                    ['response', time(timing.responseEnd, timing.responseStart)],
+                    ['fetch', time(timing.responseEnd, timing.fetchStart)]
+                ];
             }
 
             // execute modules
@@ -2754,6 +2812,7 @@ angular
                     } else {
                         checkMixedContent(options).then(function () {
                             // send request
+                            // $window.performance.mark('mark_start_xhr');
                             $http(options).then(done, done);
                         }, done);
                     }
@@ -2847,6 +2906,34 @@ angular.module('sw.ui.directives', []);
 'use strict';
 
 angular.module('sw.ui.directives')
+    .directive('toolbarSearch', ["$timeout", function ($timeout) {
+        return {
+            restrict: 'E',
+            templateUrl: 'directives/toolbar-search/toolbar-search.html',
+            scope: {
+                ngModel: '=',
+                ngChanged: '=',
+                open: '='
+            },
+            link: function (scope, element) {
+                $timeout(function () {
+                    scope.init = true;
+                }, 200);
+
+                scope.focus = function () {
+                    $timeout(function () {
+                        element.children()[1].focus();
+                    }, 200);
+                };
+
+                scope.$watch('ngModel', scope.ngChanged);
+            }
+        };
+    }]);
+
+'use strict';
+
+angular.module('sw.ui.directives')
     .directive('truncate', ["truncation", function (truncation) {
         return {
             restrict: 'A',
@@ -2928,34 +3015,6 @@ angular.module('sw.ui.directives')
             return root;
         };
     });
-
-'use strict';
-
-angular.module('sw.ui.directives')
-    .directive('toolbarSearch', ["$timeout", function ($timeout) {
-        return {
-            restrict: 'E',
-            templateUrl: 'directives/toolbar-search/toolbar-search.html',
-            scope: {
-                ngModel: '=',
-                ngChanged: '=',
-                open: '='
-            },
-            link: function (scope, element) {
-                $timeout(function () {
-                    scope.init = true;
-                }, 200);
-
-                scope.focus = function () {
-                    $timeout(function () {
-                        element.children()[1].focus();
-                    }, 200);
-                };
-
-                scope.$watch('ngModel', scope.ngChanged);
-            }
-        };
-    }]);
 
 'use strict';
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sw.ui.md')
-    .factory('security', function ($q, $http, $timeout, $interval, $window, $rootScope, dialog, data) {
+    .factory('security', function ($q, $httpParamSerializer, $http, $timeout, $interval, $window, $rootScope, dialog, data) {
         var storage = $window.sessionStorage;
         var securityDefinitions;
         var credentials;
@@ -68,6 +68,7 @@ angular.module('sw.ui.md')
         }
 
         function saveCredentials () {
+            console.log('saved credentials');
             storage.setItem('swaggerUiSecurity:' + host, angular.toJson(credentials));
         }
 
@@ -200,6 +201,34 @@ angular.module('sw.ui.md')
                         sec.link = '#';
 
                         counter(sec, locals);
+
+                        sec.clickedPassword = function ($event) {
+                            $event.preventDefault();
+
+                            $http({
+                                method: 'POST',
+                                url: sec.tokenUrl,
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                data: $httpParamSerializer({
+                                    username: credentials[sec.scopeKey].username,
+                                    password: credentials[sec.scopeKey].password
+                                })
+                            }).then(function (response) {
+                                var qp = response.data;
+                                
+
+                                angular.extend(credentials[sec.scopeKey], {
+                                    accessToken: qp['token'],
+                                    tokenType: 'Bearer',
+                                    expiresIn: 3600,
+                                    expiresFrom: Date.now()
+                                });
+
+                                console.log(credentials, qp);
+                            });
+                        };
 
                         sec.clicked = function ($event) {
                             $event.preventDefault();

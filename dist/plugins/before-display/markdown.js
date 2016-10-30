@@ -4,10 +4,41 @@ angular.module('sw.plugin.markdown', ['sw.plugins'])
     .factory('markdown', function ($q, $log, $window) {
         $log.debug('sw:plugin', 'markdown');
 
-        var showdown = new $window.showdown.Converter({
+        var hljs = $window.hljs;
+        var showdown = $window.showdown;
+
+        showdown.extension('codehighlight', function () {
+            function htmlunencode (text) {
+                return (
+                  text
+                    .replace(/&amp;/g, '&')
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>')
+                  );
+            }
+
+            return [
+                {
+                    type: 'output',
+                    filter: function (text, converter, options) {
+                        var left = '<pre><code\\b[^>]*>';
+                        var right = '</code></pre>';
+                        var flags = 'g';
+                        var replacement = function (wholeMatch, match, left, right) {
+                            match = htmlunencode(match);
+                            return left + hljs.highlightAuto(match).value + right;
+                        };
+
+                        return showdown.helper.replaceRecursiveRegExp(text, replacement, left, right, flags);
+                    }
+                }
+            ];
+        });
+
+        var converter = new showdown.Converter({
+            extensions: ['codehighlight'],
             simplifiedAutoLink: true,
             tables: true,
-            ghCodeBlocks: true,
             tasklists: true
         });
 
@@ -48,6 +79,7 @@ angular.module('sw.plugin.markdown', ['sw.plugins'])
                     operation.description = markdown(operation.description);
 
                     // TODO: remove workaround? http://darosh.github.io/angular-swagger-ui-material/#?url=https:%2F%2Fapi.apis.guru%2Fspecs%2Fwinning.email%2F1.0.0%2Fswagger.json
+
                     operation.summary = operation.summary ? operation.summary.replace(/(<br>)+$/, '') : operation.summary;
 
                     angular.forEach(operation.responses, function (response) {
@@ -62,7 +94,7 @@ angular.module('sw.plugin.markdown', ['sw.plugins'])
         }
 
         function markdown (text) {
-            return showdown.makeHtml(text || '');
+            return converter.makeHtml(text || '');
         }
     })
     .run(function (plugins, markdown) {
