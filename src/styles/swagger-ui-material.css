@@ -292,3 +292,97 @@ md-dialog md-toolbar {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
 }
+.markdown-body {
+    max-width: 40em;
+    color:#444;
+    margin: 0 auto;
+}
+
+.markdown-body .table-container {
+    width: 100%;
+    overflow: auto;
+    margin: 0 0 1em;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+}
+.markdown-body th, .markdown-body td {
+  padding: 0.8rem;
+  text-align: left;
+  border: 1px solid #ccc;
+}
+.markdown-body tbody tr:nth-child(odd) {
+  background: #F5F5F5;
+}
+.markdown-body p {
+  line-height: 1.4em;
+}
+
+.markdown-body > p > code, .markdown-body > p >tt {
+    padding: 0.3em;
+    box-shadow: 0px 1px 1px #CCC;
+    margin: 0;
+    font-size: 85%;
+    background-color: rgba(0,0,0,.04);
+    border-radius: 3px;
+}
+
+.mardown-body tt, code {
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 12px;
+}
+
+.markdown-body pre {
+    background-color: #f5f5f5;
+    padding: 12px;
+    border: 1px solid #cfcfcf;
+    white-space: pre;
+    word-wrap: normal;
+    overflow-x: auto;
+}
+
+.layout-row {
+    flex-wrap: wrap;
+}
+.md-method {
+    color: #FFF!important;
+    font-weight: bold;
+}
+
+.md-get {
+    background-color: #0099e5!important;
+}
+.md-post {
+    background-color: #85a546!important;
+}
+.md-delete {
+    background-color: #c14a74!important;
+}
+.md-put {
+    background-color: #ffc107!important;
+}
+.md-patch {
+    background-color: #FFA726!important;
+}
+.md-head {
+    background-color: #AB47BC!important;
+}
+.md-options {
+    background-color: #FFE082!important;
+}
+
+/* Change autocomplete styles in WebKit */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus
+input:-webkit-autofill, 
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: none!important;
+  background-color: none!important;
+}

@@ -78,6 +78,28 @@ angular.module('sw.ui.md')
 'use strict';
 
 angular.module('sw.ui.md')
+    .controller('MetaController', ["$scope", "$log", "data", "tools", "display", function ($scope, $log, data, tools, display) {
+        var vm = this;
+
+        $scope.$on('sw:changed', update);
+
+        update();
+
+        function update () {
+            $log.debug('sw:changed:meta');
+
+            vm.meta = data.model.info && display.meta(
+                    data.model.info,
+                    data.options.url,
+                    data.options.validatorUrl,
+                    tools.openFile
+                );
+        }
+    }]);
+
+'use strict';
+
+angular.module('sw.ui.md')
     .controller('DetailController', ["$scope", "$rootScope", "$timeout", "$log", "data", "theme", "style", "tools", "utils", "syntax", "client", "format", function ($scope, $rootScope, $timeout, $log, data, theme, style, tools, utils, syntax, client, format) {
         var vm = this;
 
@@ -177,7 +199,6 @@ angular.module('sw.ui.md')
             $log.debug('sw:submit');
 
             operation.loading = true;
-
             client.send(data.model.info, operation, data.model.form[operation.id])
                 .then(function (response) {
                     clientDone(operation, response);
@@ -228,28 +249,6 @@ angular.module('sw.ui.md')
             $timeout(function () {
                 operation.tab = 2;
             }, 50);
-        }
-    }]);
-
-'use strict';
-
-angular.module('sw.ui.md')
-    .controller('MetaController', ["$scope", "$log", "data", "tools", "display", function ($scope, $log, data, tools, display) {
-        var vm = this;
-
-        $scope.$on('sw:changed', update);
-
-        update();
-
-        function update () {
-            $log.debug('sw:changed:meta');
-
-            vm.meta = data.model.info && display.meta(
-                    data.model.info,
-                    data.options.url,
-                    data.options.validatorUrl,
-                    tools.openFile
-                );
         }
     }]);
 
@@ -717,13 +716,13 @@ angular.module('sw.ui.md')
 angular.module('sw.ui.md')
     .factory('theme', function () {
         var defaults = {
-            get: 'md-primary',
-            head: 'md-primary md-hue-2',
-            options: 'md-primary md-hue-3',
-            post: 'md-accent',
-            put: 'md-accent md-hue-2',
-            patch: 'md-accent md-hue-2',
-            delete: 'md-warn',
+            get: 'md-method md-get',
+            head: 'md-method md-head',
+            options: 'md-method md-options',
+            post: 'md-method md-post',
+            put: 'md-method md-put',
+            patch: 'md-method md-patch',
+            delete: 'md-method md-delete',
             1: 'md-accent',
             2: 'md-primary',
             3: 'md-accent md-hue-2',
@@ -885,7 +884,6 @@ angular.module('sw.ui.md')
         }
 
         function saveCredentials () {
-            console.log('saved credentials');
             storage.setItem('swaggerUiSecurity:' + host, angular.toJson(credentials));
         }
 
@@ -1034,16 +1032,12 @@ angular.module('sw.ui.md')
                                 })
                             }).then(function (response) {
                                 var qp = response.data;
-                                
-
                                 angular.extend(credentials[sec.scopeKey], {
                                     accessToken: qp['token'],
                                     tokenType: 'Bearer',
                                     expiresIn: 3600,
                                     expiresFrom: Date.now()
                                 });
-
-                                console.log(credentials, qp);
                             });
                         };
 
@@ -2750,7 +2744,7 @@ angular.module('sw.ui')
 
 angular
     .module('sw.ui')
-    .factory('client', ["$q", "$window", "$http", "$log", "plugins", function ($q, $window, $http, $log, plugins) {
+    .factory('client', ["$q", "$window", "$http", "$httpParamSerializer", "$log", "plugins", function ($q, $window, $http, $httpParamSerializer, $log, plugins) {
         // var reqCnt = 1;
 
         return {
@@ -2847,11 +2841,18 @@ angular
                         }
                         break;
                     case 'formData':
-                        body = body || new $window.FormData();
-                        if (value) {
-                            // make browser defining it by himself
-                            values.contentType = (param.type === 'file') ? undefined : values.contentType;
-                            body.append(param.name, value);
+                        if (values.contentType === 'application/x-www-form-urlencoded') {
+                            body = body || {};
+                            if (value) {
+                                body[param.name] = value;
+                            }
+                        } else {
+                            body = body || new $window.FormData();
+                            if (value) {
+                                // make browser defining it by himself
+                                values.contentType = (param.type === 'file') ? undefined : values.contentType;
+                                body.append(param.name, value);
+                            }
                         }
                         break;
                     case 'body':
@@ -2863,6 +2864,11 @@ angular
             // add headers
             headers.accept = values.responseType;
             headers['content-type'] = body ? values.contentType : 'text/plain';
+
+            if (values.contentType === 'application/x-www-form-urlencoded') {
+                console.log('SERIALIZING', body);
+                body = $httpParamSerializer(body);
+            }
 
             return {
                 method: operation.httpMethod,
@@ -2902,34 +2908,6 @@ angular
 'use strict';
 
 angular.module('sw.ui.directives', []);
-
-'use strict';
-
-angular.module('sw.ui.directives')
-    .directive('toolbarSearch', ["$timeout", function ($timeout) {
-        return {
-            restrict: 'E',
-            templateUrl: 'directives/toolbar-search/toolbar-search.html',
-            scope: {
-                ngModel: '=',
-                ngChanged: '=',
-                open: '='
-            },
-            link: function (scope, element) {
-                $timeout(function () {
-                    scope.init = true;
-                }, 200);
-
-                scope.focus = function () {
-                    $timeout(function () {
-                        element.children()[1].focus();
-                    }, 200);
-                };
-
-                scope.$watch('ngModel', scope.ngChanged);
-            }
-        };
-    }]);
 
 'use strict';
 
@@ -3057,6 +3035,34 @@ angular.module('sw.ui.directives')
                         scope.ngChanged();
                     }
                 };
+            }
+        };
+    }]);
+
+'use strict';
+
+angular.module('sw.ui.directives')
+    .directive('toolbarSearch', ["$timeout", function ($timeout) {
+        return {
+            restrict: 'E',
+            templateUrl: 'directives/toolbar-search/toolbar-search.html',
+            scope: {
+                ngModel: '=',
+                ngChanged: '=',
+                open: '='
+            },
+            link: function (scope, element) {
+                $timeout(function () {
+                    scope.init = true;
+                }, 200);
+
+                scope.focus = function () {
+                    $timeout(function () {
+                        element.children()[1].focus();
+                    }, 200);
+                };
+
+                scope.$watch('ngModel', scope.ngChanged);
             }
         };
     }]);

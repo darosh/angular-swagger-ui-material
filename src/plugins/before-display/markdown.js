@@ -7,16 +7,16 @@ angular.module('sw.plugin.markdown', ['sw.plugins'])
         var hljs = $window.hljs;
         var showdown = $window.showdown;
 
-        showdown.extension('codehighlight', function () {
-            function htmlunencode (text) {
-                return (
-                  text
-                    .replace(/&amp;/g, '&')
-                    .replace(/&lt;/g, '<')
-                    .replace(/&gt;/g, '>')
-                  );
-            }
+        function htmlunencode (text) {
+            return (
+              text
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+              );
+        }
 
+        showdown.extension('codehighlight', function () {
             return [
                 {
                     type: 'output',
@@ -35,8 +35,27 @@ angular.module('sw.plugin.markdown', ['sw.plugins'])
             ];
         });
 
+        showdown.extension('tablecontainer', function () {
+            return [
+                {
+                    type: 'output',
+                    filter: function (text, converter, options) {
+                        var left = '<table>';
+                        var right = '</table>';
+                        var flags = 'g';
+                        var replacement = function (wholeMatch, match, left, right) {
+                            match = htmlunencode(match);
+                            return '<div class="table-container">' + left + match + right + '</div>';
+                        };
+
+                        return showdown.helper.replaceRecursiveRegExp(text, replacement, left, right, flags);
+                    }
+                }
+            ];
+        });
+
         var converter = new showdown.Converter({
-            extensions: ['codehighlight'],
+            extensions: ['codehighlight', 'tablecontainer'],
             simplifiedAutoLink: true,
             tables: true,
             tasklists: true

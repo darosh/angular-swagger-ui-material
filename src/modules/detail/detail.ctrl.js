@@ -100,7 +100,6 @@ angular.module('sw.ui.md')
             $log.debug('sw:submit');
 
             operation.loading = true;
-
             client.send(data.model.info, operation, data.model.form[operation.id])
                 .then(function (response) {
                     clientDone(operation, response);

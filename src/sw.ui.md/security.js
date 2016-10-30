@@ -68,7 +68,6 @@ angular.module('sw.ui.md')
         }
 
         function saveCredentials () {
-            console.log('saved credentials');
             storage.setItem('swaggerUiSecurity:' + host, angular.toJson(credentials));
         }
 
@@ -202,6 +201,7 @@ angular.module('sw.ui.md')
 
                         counter(sec, locals);
 
+                        // Oauth2 Password Flow
                         sec.clickedPassword = function ($event) {
                             $event.preventDefault();
 
@@ -217,16 +217,12 @@ angular.module('sw.ui.md')
                                 })
                             }).then(function (response) {
                                 var qp = response.data;
-                                
-
                                 angular.extend(credentials[sec.scopeKey], {
                                     accessToken: qp['token'],
                                     tokenType: 'Bearer',
                                     expiresIn: 3600,
                                     expiresFrom: Date.now()
                                 });
-
-                                console.log(credentials, qp);
                             });
                         };
 

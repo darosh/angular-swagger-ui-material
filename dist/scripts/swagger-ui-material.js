@@ -78,6 +78,28 @@ angular.module('sw.ui.md')
 'use strict';
 
 angular.module('sw.ui.md')
+    .controller('MetaController', ["$scope", "$log", "data", "tools", "display", function ($scope, $log, data, tools, display) {
+        var vm = this;
+
+        $scope.$on('sw:changed', update);
+
+        update();
+
+        function update () {
+            $log.debug('sw:changed:meta');
+
+            vm.meta = data.model.info && display.meta(
+                    data.model.info,
+                    data.options.url,
+                    data.options.validatorUrl,
+                    tools.openFile
+                );
+        }
+    }]);
+
+'use strict';
+
+angular.module('sw.ui.md')
     .controller('DetailController', ["$scope", "$rootScope", "$timeout", "$log", "data", "theme", "style", "tools", "utils", "syntax", "client", "format", function ($scope, $rootScope, $timeout, $log, data, theme, style, tools, utils, syntax, client, format) {
         var vm = this;
 
@@ -177,7 +199,6 @@ angular.module('sw.ui.md')
             $log.debug('sw:submit');
 
             operation.loading = true;
-
             client.send(data.model.info, operation, data.model.form[operation.id])
                 .then(function (response) {
                     clientDone(operation, response);
@@ -228,28 +249,6 @@ angular.module('sw.ui.md')
             $timeout(function () {
                 operation.tab = 2;
             }, 50);
-        }
-    }]);
-
-'use strict';
-
-angular.module('sw.ui.md')
-    .controller('MetaController', ["$scope", "$log", "data", "tools", "display", function ($scope, $log, data, tools, display) {
-        var vm = this;
-
-        $scope.$on('sw:changed', update);
-
-        update();
-
-        function update () {
-            $log.debug('sw:changed:meta');
-
-            vm.meta = data.model.info && display.meta(
-                    data.model.info,
-                    data.options.url,
-                    data.options.validatorUrl,
-                    tools.openFile
-                );
         }
     }]);
 
@@ -717,13 +716,13 @@ angular.module('sw.ui.md')
 angular.module('sw.ui.md')
     .factory('theme', function () {
         var defaults = {
-            get: 'md-primary',
-            head: 'md-primary md-hue-2',
-            options: 'md-primary md-hue-3',
-            post: 'md-accent',
-            put: 'md-accent md-hue-2',
-            patch: 'md-accent md-hue-2',
-            delete: 'md-warn',
+            get: 'md-method md-get',
+            head: 'md-method md-head',
+            options: 'md-method md-options',
+            post: 'md-method md-post',
+            put: 'md-method md-put',
+            patch: 'md-method md-patch',
+            delete: 'md-method md-delete',
             1: 'md-accent',
             2: 'md-primary',
             3: 'md-accent md-hue-2',
@@ -885,7 +884,6 @@ angular.module('sw.ui.md')
         }
 
         function saveCredentials () {
-            console.log('saved credentials');
             storage.setItem('swaggerUiSecurity:' + host, angular.toJson(credentials));
         }
 
@@ -1034,16 +1032,12 @@ angular.module('sw.ui.md')
                                 })
                             }).then(function (response) {
                                 var qp = response.data;
-                                
-
                                 angular.extend(credentials[sec.scopeKey], {
                                     accessToken: qp['token'],
                                     tokenType: 'Bearer',
                                     expiresIn: 3600,
                                     expiresFrom: Date.now()
                                 });
-
-                                console.log(credentials, qp);
                             });
                         };
 
@@ -2750,7 +2744,7 @@ angular.module('sw.ui')
 
 angular
     .module('sw.ui')
-    .factory('client', ["$q", "$window", "$http", "$log", "plugins", function ($q, $window, $http, $log, plugins) {
+    .factory('client', ["$q", "$window", "$http", "$httpParamSerializer", "$log", "plugins", function ($q, $window, $http, $httpParamSerializer, $log, plugins) {
         // var reqCnt = 1;
 
         return {
@@ -2847,11 +2841,18 @@ angular
                         }
                         break;
                     case 'formData':
-                        body = body || new $window.FormData();
-                        if (value) {
-                            // make browser defining it by himself
-                            values.contentType = (param.type === 'file') ? undefined : values.contentType;
-                            body.append(param.name, value);
+                        if (values.contentType === 'application/x-www-form-urlencoded') {
+                            body = body || {};
+                            if (value) {
+                                body[param.name] = value;
+                            }
+                        } else {
+                            body = body || new $window.FormData();
+                            if (value) {
+                                // make browser defining it by himself
+                                values.contentType = (param.type === 'file') ? undefined : values.contentType;
+                                body.append(param.name, value);
+                            }
                         }
                         break;
                     case 'body':
@@ -2863,6 +2864,11 @@ angular
             // add headers
             headers.accept = values.responseType;
             headers['content-type'] = body ? values.contentType : 'text/plain';
+
+            if (values.contentType === 'application/x-www-form-urlencoded') {
+                console.log('SERIALIZING', body);
+                body = $httpParamSerializer(body);
+            }
 
             return {
                 method: operation.httpMethod,
@@ -2902,34 +2908,6 @@ angular
 'use strict';
 
 angular.module('sw.ui.directives', []);
-
-'use strict';
-
-angular.module('sw.ui.directives')
-    .directive('toolbarSearch', ["$timeout", function ($timeout) {
-        return {
-            restrict: 'E',
-            templateUrl: 'directives/toolbar-search/toolbar-search.html',
-            scope: {
-                ngModel: '=',
-                ngChanged: '=',
-                open: '='
-            },
-            link: function (scope, element) {
-                $timeout(function () {
-                    scope.init = true;
-                }, 200);
-
-                scope.focus = function () {
-                    $timeout(function () {
-                        element.children()[1].focus();
-                    }, 200);
-                };
-
-                scope.$watch('ngModel', scope.ngChanged);
-            }
-        };
-    }]);
 
 'use strict';
 
@@ -3061,6 +3039,34 @@ angular.module('sw.ui.directives')
         };
     }]);
 
+'use strict';
+
+angular.module('sw.ui.directives')
+    .directive('toolbarSearch', ["$timeout", function ($timeout) {
+        return {
+            restrict: 'E',
+            templateUrl: 'directives/toolbar-search/toolbar-search.html',
+            scope: {
+                ngModel: '=',
+                ngChanged: '=',
+                open: '='
+            },
+            link: function (scope, element) {
+                $timeout(function () {
+                    scope.init = true;
+                }, 200);
+
+                scope.focus = function () {
+                    $timeout(function () {
+                        element.children()[1].focus();
+                    }, 200);
+                };
+
+                scope.$watch('ngModel', scope.ngChanged);
+            }
+        };
+    }]);
+
 /*
  * Orange angular-swagger-ui - v0.3.0
  *
@@ -3094,14 +3100,14 @@ $templateCache.put("views/info.dialog.html","<md-dialog class=\"sum-dialog\" lay
 $templateCache.put("views/proxy.dialog.html","<md-dialog class=\"sum-dialog\" layout=\"column\"> <md-toolbar class=\"md-warn\"> <div class=\"md-toolbar-tools\"> <h2><span class=\"md-title\">Proxy</span></h2> </div> </md-toolbar> <md-dialog-content class=\"md-dialog-content\"> <p><md-icon style=\"line-height: 20px\">warning</md-icon> Use only proxies <b>you trust</b>!</p> <form ng-submit=\"closeDialog()\"> <div layout=\"column\"> <md-input-container class=\"sum-hide-spacer\"> <label>Proxy</label> <input type=\"text\" ng-model=\"vm.options.proxy\"> </md-input-container> </div> </form> </md-dialog-content> <md-dialog-actions> <md-button ng-click=\"closeDialog()\">Close</md-button> </md-dialog-actions> </md-dialog>");
 $templateCache.put("views/security.dialog.html","<md-dialog class=\"sum-dialog-wide\" layout=\"column\"> <md-dialog-content ng-class=\"{\'sum-hide-tabs\': vm.singleSecurity}\" style=\"max-width: 800px; max-height: 810px\"> <md-toolbar ng-class=\"style\"> <div class=\"md-toolbar-tools\"> <h2><span class=\"md-title\">Security</span></h2> </div> </md-toolbar> <md-tabs md-no-pagination md-dynamic-height> <md-tab label=\"{{s.flow ? s.flow : s.type}}\" ng-repeat=\"(name, s) in vm.security\"> <div style=\"padding: 24px 24px 0 24px\"> <form ng-submit=\"closeDialog()\"> <h3 ng-if=\"s.type == \'apiKey\'\" class=\"md-title\" style=\"margin-top: 0\">API Key Authentication</h3> <div ng-if=\"s.type == \'apiKey\'\" layout=\"column\"> <p ng-if=\"s.description\" ng-bind-html=\"s.description\" class=\"markdown-body sum-short-md\"></p> <md-input-container class=\"sum-hide-spacer\"> <label>API key</label> <input type=\"text\" ng-model=\"vm.credentials[name].apiKey\"> </md-input-container> </div> <h3 ng-if=\"s.type == \'basic\'\" class=\"md-title\" style=\"margin-top: 0\">Basic HTTP Authentication</h3> <div ng-if=\"s.type == \'basic\'\" layout=\"column\"> <p ng-if=\"s.description\" ng-bind-html=\"s.description\" class=\"markdown-body sum-short-md\"></p> <md-input-container class=\"sum-hide-spacer\"> <label>Username</label> <input type=\"text\" ng-model=\"vm.credentials[name].username\"> </md-input-container> <md-input-container class=\"sum-hide-spacer\"> <label>Password</label> <input type=\"password\" ng-model=\"vm.credentials[name].password\"> </md-input-container> </div> <h3 ng-if=\"s.type == \'oauth2\'\" class=\"md-title\" style=\"margin-top: 0; white-space: nowrap\">OAuth 2.0 Authentication <small style=\"opacity: 0.5\"><span ng-bind=\"s.flow\" style=\"text-transform: uppercase\"></span> </small> </h3> <p ng-if=\"(s.type == \'oauth2\') && s.description\" ng-bind-html=\"s.description\" class=\"markdown-body sum-short-md\"></p> <div ng-if=\"(s.type == \'oauth2\') && (s.flow != \'password\')\" layout=\"column\"> <md-input-container class=\"sum-hide-spacer\"> <label>Client id</label> <input type=\"text\" ng-model=\"vm.credentials[s.scopeKey].clientId\"> </md-input-container> </div> <div ng-if=\"s.flow == \'password\'\" layout=\"column\"> <md-input-container class=\"sum-hide-spacer\"> <label>Login</label> <input type=\"login\" ng-model=\"vm.credentials[s.scopeKey].username\"> </md-input-container> <md-input-container class=\"sum-hide-spacer\"> <label>Password</label> <input type=\"password\" ng-model=\"vm.credentials[s.scopeKey].password\"> </md-input-container> </div> <div ng-if=\"(s.type == \'oauth2\') && vm.credentials[s.scopeKey].accessToken\" layout=\"column\"> <md-input-container class=\"sum-hide-spacer\"> <label>Access token</label> <input type=\"text\" readonly=\"readonly\" ng-model=\"vm.credentials[s.scopeKey].accessToken\"> </md-input-container> <md-input-container class=\"sum-hide-spacer\" ng-if=\"vm.credentials[s.scopeKey].expiresIn\"> <label>Expires in</label> <input type=\"text\" readonly=\"readonly\" ng-model=\"s.counter\"> </md-input-container> </div> <div layout=\"column\"> <md-checkbox ng-repeat=\"(k, v) in s.scopes\" ng-model=\"vm.credentials[s.scopeKey].scopes[k]\" aria-label=\"checkbox\"> <span class=\"md-body-1\" ng-bind=\"s.friendlyScopes[k]\"></span>: <span class=\"md-body-2\" ng-bind=\"v\"></span> </md-checkbox> </div> <div ng-if=\"(s.type == \'oauth2\') && (s.flow != \'password\')\"> <md-button class=\"md-raised md-primary\" ng-href=\"{{s.link}}\" style=\"margin-left: 0\" ng-click=\"s.clicked($event)\">Authenticate </md-button> </div> <div ng-if=\"(s.type == \'oauth2\') && (s.flow == \'password\')\"> <md-button class=\"md-raised md-primary\" ng-href=\"{{s.link}}\" style=\"margin-left: 0\" ng-click=\"s.clickedPassword($event)\">Login </md-button> </div> </form> </div> </md-tab> </md-tabs> </md-dialog-content> <md-dialog-actions> <md-button ng-click=\"closeDialog()\">Close</md-button> </md-dialog-actions> </md-dialog>");
 $templateCache.put("modules/group/group.html","<div md-whiteframe=\"2\"> <md-toolbar ng-click=\"vm.toggleGroup(group, $event)\" tabindex=\"-1\" ng-class=\"{\'md-whiteframe-2dp\': group.open}\" class=\"md-accent\"> <div class=\"md-toolbar-tools\"> <span class=\"md-title\" flex ng-bind=\"::group.name\"></span> <md-button ng-click=\"toggleApi(group, $event)\" aria-label=\"toggle\" class=\"md-icon-button md-accent md-hue-3\"> <md-icon ng-bind=\"group.open ? \'keyboard_arrow_up\' : \'keyboard_arrow_down\'\"></md-icon> </md-button> </div> </md-toolbar> <div ng-show=\"group.open && group.description\" style=\"padding-bottom: 0\" layout-padding> <div style=\"padding-bottom: 0\" ng-bind-html=\"::group.description\" class=\"sum-short-md markdown-body md-body-2\"></div> </div> <div ng-show=\"group.open\" style=\"padding: 13px\"> <div ng-class=\"{\'sum-selected\': vm.data.model.sop === op}\" ng-repeat=\"op in group.operations | filter:vm.data.model.search:false track by op.id\" ng-include=\"\'modules/operation/operation.html\'\"></div> </div> </div>");
-$templateCache.put("modules/meta/meta.html","<div layout=\"row\" layout-wrap ng-if=\"!vm.data.loading\" ng-controller=\"MetaController as vm\"> <div ng-repeat=\"m in vm.meta\" ng-if=\"m[2]\" flex-xs=\"100\" layout=\"row\" flex-sm=\"{{sidenavLockedOpen ? 100 : 50}}\" flex-md=\"{{sidenavLockedOpen ? 50 : 33}}\" flex-lg=\"{{sidenavLockedOpen ? 33 : 25}}\" flex-xl=\"{{sidenavLockedOpen ? 25 : 20}}\"> <md-list flex> <md-list-item class=\"md-2-line\" style=\"overflow: hidden\" layout=\"row\"> <md-icon class=\"md-avatar-icon\" ng-bind=\"m[1]\"></md-icon> <div class=\"md-list-item-text\" flex layout=\"column\"> <span ng-if=\"m[0]\" ng-bind=\"m[0]\">Contact</span> <p style=\"overflow: hidden; text-overflow: ellipsis; line-height: 14px\" ng-if=\"m[0] && !m[3]\" ng-bind=\"m[2]\" flex></p> <p ng-if=\"m[0] && m[3]\" flex> <a style=\"display: block; text-overflow: ellipsis; padding-left: 5px; text-align: left\" class=\"md-button md-primary\" ng-bind=\"m[2]\" ng-href=\"{{m[3]}}\" ng-click=\"m[4]($event, m[2])\" target=\"_blank\"></a> </p> <p ng-if=\"!m[0]\"> <a style=\"margin-top: 4px; display: inline-flex; height: 30px\" target=\"_blank\" ng-href=\"{{m[2]}}\"> <img ng-src=\"{{m[3]}}\" style=\"width: 97px; height: 30px\"/> </a> </p> </div> </md-list-item> </md-list> </div> </div>");
 $templateCache.put("modules/detail/header.html","<div class=\"md-body-1\" style=\"text-indent: -9px; margin-left: 9px\"> <md-button ng-click=\"vm.utils.header(header.name, $event)\" class=\"sum-http-header md-raised\" ng-disabled=\"!vm.style.header(header.name)\" ng-class=\"vm.style.header(header.name)\" style=\"font-weight: bold; top: 0\" aria-label=\"header\" ng-bind=\"header.name\"></md-button> <br> <span style=\"word-wrap: break-word; line-height: 24px\" ng-bind-html=\"header.value\"></span> </div> <md-divider ng-if=\"!$last\" style=\"margin: 4px 0 8px 0\"></md-divider>");
 $templateCache.put("modules/detail/response.html","<div class=\"md-body-1\" layout=\"row\"> <md-button ng-click=\"vm.utils.status(resp.code, $event)\" class=\"sum-http-code md-raised\" ng-class=\"vm.theme[resp.code[0]]\" ng-disabled=\"!vm.theme[resp.code[0]]\" aria-label=\"code\" ng-bind=\"resp.code\"></md-button> <span flex style=\"padding-left: 8px; padding-top: 4px; word-wrap: break-word\" ng-bind-html=\"resp.description\"></span> </div> <md-divider ng-if=\"!$last\" style=\"margin: 8px 0 8px 0\"></md-divider>");
 $templateCache.put("modules/operation/operation.html","<md-divider ng-if=\"!vm.data.ui.grouped\"></md-divider> <div id=\"{{op.operationId}}\" ng-style=\"{\'padding-top\': (!vm.data.ui.grouped || (vm.data.ui.descriptions && !$first)) ? \'6px\' : \'0\', \'padding-bottom\': (!vm.data.ui.grouped || (vm.data.ui.descriptions && !$last)) ? \'6px\' : \'0\'}\" ng-class=\"::{\'sum-deprecated\': op.deprecated}\" ng-click=\"vm.selectOperation(op, $event)\" tabindex=\"-1\"> <div layout=\"row\"> <md-button ng-class=\"::vm.theme[op.httpMethod]\" ng-click=\"vm.selectOperation(op, $event);\" aria-label=\"method\" class=\"sum-http-method md-raised\" ng-bind=\"::op.httpMethod\"></md-button> <div flex class=\"sum-path\" ng-bind=\"::op.path\"></div> </div> <div style=\"padding-left: 76px; line-height: 16px\" ng-show=\"vm.data.ui.descriptions\" class=\"md-body-2\" ng-bind=\"::op.summary\"></div> </div> <md-divider ng-if=\"vm.data.ui.grouped && (vm.data.ui.descriptions && !$last)\"></md-divider>");
+$templateCache.put("modules/meta/meta.html","<div layout=\"row\" layout-wrap ng-if=\"!vm.data.loading\" ng-controller=\"MetaController as vm\"> <div ng-repeat=\"m in vm.meta\" ng-if=\"m[2]\" flex-xs=\"100\" layout=\"row\" flex-sm=\"{{sidenavLockedOpen ? 100 : 50}}\" flex-md=\"{{sidenavLockedOpen ? 50 : 33}}\" flex-lg=\"{{sidenavLockedOpen ? 33 : 25}}\" flex-xl=\"{{sidenavLockedOpen ? 25 : 20}}\"> <md-list flex> <md-list-item class=\"md-2-line\" style=\"overflow: hidden\" layout=\"row\"> <md-icon class=\"md-avatar-icon\" ng-bind=\"m[1]\"></md-icon> <div class=\"md-list-item-text\" flex layout=\"column\"> <span ng-if=\"m[0]\" ng-bind=\"m[0]\">Contact</span> <p style=\"overflow: hidden; text-overflow: ellipsis; line-height: 14px\" ng-if=\"m[0] && !m[3]\" ng-bind=\"m[2]\" flex></p> <p ng-if=\"m[0] && m[3]\" flex> <a style=\"display: block; text-overflow: ellipsis; padding-left: 5px; text-align: left\" class=\"md-button md-primary\" ng-bind=\"m[2]\" ng-href=\"{{m[3]}}\" ng-click=\"m[4]($event, m[2])\" target=\"_blank\"></a> </p> <p ng-if=\"!m[0]\"> <a style=\"margin-top: 4px; display: inline-flex; height: 30px\" target=\"_blank\" ng-href=\"{{m[2]}}\"> <img ng-src=\"{{m[3]}}\" style=\"width: 97px; height: 30px\"/> </a> </p> </div> </md-list-item> </md-list> </div> </div>");
 $templateCache.put("modules/toolbar/toolbar.html","<md-toolbar md-whiteframe=\"2\" ng-controller=\"ToolbarController as vm\" style=\"max-height: 64px\"> <div class=\"md-toolbar-tools\" ng-if=\"vm.loading\" style=\"padding-left: 0\"> <md-progress-circular class=\"md-accent md-hue-1\" md-mode=\"indeterminate\" md-diameter=\"56\"></md-progress-circular> <span flex>Loading&hellip;</span> </div> <div class=\"md-toolbar-tools\" ng-show=\"!vm.loading\"> <toolbar-edit class=\"sum-delay md-toolbar-tools\" ng-model=\"vm.editUrl\" ng-changed=\"vm.editedUrl\" display-title=\"vm.data.model.info.title\" ng-show=\"vm.searchOpened && vm.$mdMedia(\'gt-sm\') || !vm.searchOpened\" flex style=\"padding-left: 0; padding-right: 0\"></toolbar-edit> <span flex ng-show=\"vm.searchOpened\"></span> <toolbar-search ng-show=\"!vm.loading\" ng-model=\"vm.search\" ng-changed=\"vm.searchUpdated\" open=\"vm.searchOpened\"></toolbar-search> <md-button hide show-gt-sm aria-label=\"expand\" ng-if=\"vm.ui.grouped\" ng-click=\"vm.toggleGroups(true)\" class=\"md-icon-button\"> <md-icon>keyboard_arrow_down</md-icon> </md-button> <md-button hide show-gt-sm aria-label=\"collapse\" ng-if=\"vm.ui.grouped\" ng-click=\"vm.toggleGroups(false)\" class=\"md-icon-button\"> <md-icon>keyboard_arrow_up</md-icon> </md-button> <md-button hide show-gt-sm aria-label=\"view\" ng-click=\"vm.ui.grouped = !vm.ui.grouped\" class=\"md-icon-button\"> <md-icon ng-bind=\"vm.ui.grouped ? \'view_comfy\' : \'view_column\'\"></md-icon> </md-button> <md-button hide show-gt-sm aria-label=\"description\" ng-click=\"vm.ui.descriptions = !vm.ui.descriptions\" class=\"md-icon-button\"> <md-icon ng-bind=\"vm.ui.descriptions ? \'speaker_notes_off\' : \'speaker_notes\'\"></md-icon> </md-button> <md-button hide show-gt-sm aria-label=\"security\" ng-click=\"vm.showSecurity($event)\" ng-if=\"vm.data.model.hasSecurity\" class=\"md-icon-button\"> <md-icon>vpn_key</md-icon> </md-button> <md-menu> <md-button hide-gt-sm aria-label=\"menu\" ng-click=\"$mdOpenMenu($event)\" class=\"md-icon-button\"> <md-icon>more_vert</md-icon> </md-button> <md-menu-content> <md-menu-item ng-if=\"grouped\"> <md-button ng-click=\"vm.toggleGroups(true)\"> <md-icon>keyboard_arrow_down</md-icon> Expand </md-button> </md-menu-item> <md-menu-item ng-if=\"grouped\"> <md-button ng-click=\"vm.toggleGroups(false)\"> <md-icon>keyboard_arrow_up</md-icon> Collapse </md-button> </md-menu-item> <md-menu-item> <md-button ng-click=\"vm.ui.grouped = !vm.ui.grouped\"> <md-icon ng-bind=\"vm.ui.grouped ? \'view_comfy\' : \'view_column\'\"></md-icon> Switch view </md-button> </md-menu-item> <md-menu-item> <md-button ng-click=\"vm.ui.descriptions = !vm.ui.descriptions\"> <md-icon ng-bind=\"vm.ui.descriptions ? \'speaker_notes_off\' : \'speaker_notes\'\"></md-icon> Descriptions </md-button> </md-menu-item> <md-menu-item> <md-button ng-click=\"vm.showProxy($event)\" ng-class=\"{\'md-warn\': proxy.url}\"> <md-icon>security</md-icon> Proxy </md-button> </md-menu-item> <md-menu-item> <md-button ng-click=\"vm.showSecurity($event)\" ng-if=\"vm.data.model.hasSecurity\"> <md-icon>vpn_key</md-icon> Security </md-button> </md-menu-item> </md-menu-content> </md-menu> </div> </md-toolbar>");
-$templateCache.put("directives/toolbar-edit/toolbar-edit.html","<md-button ng-click=\"toggle()\" class=\"md-icon-button\"> <md-icon>edit</md-icon> </md-button> <form ng-show=\"init && open\" ng-submit=\"blur()\" layout=\"row\" flex><input flex ng-show=\"init && open\" ng-model=\"ngModel\" type=\"text\" class=\"md-input\" ng-blur=\"blur()\"/></form> <span ng-show=\"init && !open\" ng-click=\"toggle()\" ng-bind=\"displayTitle\" tabindex=\"-1\"></span>");
 $templateCache.put("directives/toolbar-search/toolbar-search.html","<md-button ng-click=\"open = true; focus()\" class=\"md-icon-button\"> <md-icon>search</md-icon> </md-button> <input ng-show=\"open\" ng-model=\"ngModel\" type=\"text\" class=\"md-input\" ng-class=\"{\'input-show-hide\': init}\" ng-model-options=\"{debounce: {default: 200, blur: 0}}\"/> <md-button ng-show=\"open\" ng-click=\"ngModel = \'\'; open = false\" class=\"md-icon-button\" ng-class=\"{\'input-show-hide\': init}\"> <md-icon>close</md-icon> </md-button>");
+$templateCache.put("directives/toolbar-edit/toolbar-edit.html","<md-button ng-click=\"toggle()\" class=\"md-icon-button\"> <md-icon>edit</md-icon> </md-button> <form ng-show=\"init && open\" ng-submit=\"blur()\" layout=\"row\" flex><input flex ng-show=\"init && open\" ng-model=\"ngModel\" type=\"text\" class=\"md-input\" ng-blur=\"blur()\"/></form> <span ng-show=\"init && !open\" ng-click=\"toggle()\" ng-bind=\"displayTitle\" tabindex=\"-1\"></span>");
 $templateCache.put("modules/detail/request/parameter.html","<div layout=\"column\"> <md-input-container ng-if=\"vm.data.ui.explorer && (param.in != \'body\') && (param.subtype == \'file\')\"> <label ng-bind=\"param.name + (param.required ? \' (required)\' : \'\')\"></label> <input type=\"file\" file-input ng-model=\"vm.form[param.name]\" placeholder=\"{{param.required?\'(required)\':\'\'}}\" ng-required=\"param.required\"/> </md-input-container> <md-input-container ng-if=\"vm.data.ui.explorer && (param.in != \'body\') && (param.subtype != \'enum\') && (param.subtype != \'file\')\"> <label ng-bind=\"param.name + (param.required ? \' (required)\' : \'\')\"></label> <input type=\"text\" ng-model=\"vm.form[param.name]\" ng-required=\"param.required\"/> </md-input-container> <md-input-container ng-if=\"vm.data.ui.explorer && (param.in == \'body\')\"> <label ng-bind=\"param.name + (param.required ? \' (required)\' : \'\')\"></label> <textarea ng-model=\"vm.form[param.name]\" ng-required=\"param.required\"></textarea> </md-input-container> <md-input-container ng-if=\"vm.data.ui.explorer && (param.subtype == \'enum\')\"> <label ng-bind=\"param.name + (param.required ? \' (required)\' : \'\')\"></label> <md-select class=\"sum-no-margin\" ng-required=\"param.required\" ng-model=\"vm.form[param.name]\"> <md-option ng-repeat=\"value in param.enum\" value=\"{{value}}\" ng-selected=\"param.default == value\" ng-bind=\"value + (param.default == value ? \' (default)\' : \'\')\"></md-option> </md-select> </md-input-container> <div layout=\"row\" style=\"padding-right: 4px\"> <div class=\"md-body-1 sum-param-info markdown-body\" flex ng-bind-html=\"param.description\" truncate style=\"padding-left: 2px; padding-right: 8px\"></div> <div class=\"md-body-1 sum-param-info\" layout=\"column\"> <div layout=\"row\" layout-align=\"end\"> <div style=\"padding-right: 4px\">in:</div> <div><em ng-bind-html=\"param.in\"></em></div> </div> <div layout=\"row\" ng-if=\"param.type\" layout-align=\"end\"> <div style=\"padding-right: 4px\">type:</div> <div ng-switch=\"param.type\"> <code ng-switch-when=\"array\" ng-bind=\"\'Array[\'+param.items.type+\']\'\"></code> <code ng-switch-default ng-bind=\"param.type\"></code> </div> </div> </div> </div> <div ng-if=\"(param.in == \'body\') || param.schema\" layout=\"row\" class=\"sum-ind\" style=\"margin-top: 8px\"> <md-input-container flex ng-if=\"param.in == \'body\'\" style=\"margin-top: 2px; padding-right: 16px\"> <md-select aria-label=\"parameter type\" ng-model=\"vm.form.contentType\"> <md-option ng-repeat=\"item in vm.sop.consumes track by item\" value=\"{{item}}\" ng-bind=\"::item\"> </md-option> </md-select> </md-input-container> <div class=\"sum-tools-in\" ng-if=\"param.schema\"> <a class=\"md-button md-primary\" ng-click=\"vm.form[param.name] = param.schema.json\">Set</a> <a class=\"md-button md-primary\" ng-click=\"param.schema.display = !param.schema.display + 0\" ng-bind=\"param.schema.display ? \'Model\' : \'Example\'\"></a> </div> </div> <pre class=\"sum-pre sum-wrap sum-no-margin sum-ind\" ng-if=\"param.schema.display == 0 && param.schema.model\" ng-bind-html=\"param.schema.model\"></pre> <pre class=\"sum-pre sum-no-margin sum-ind\" ng-if=\"param.schema.display == 1 && param.schema.json\" ng-bind=\"param.schema.json\"></pre> <div ng-if=\"!vm.data.ui.explorer\"> <div ng-if=\"param.in != \'body\'\"> <div ng-if=\"param.default\"><span ng-bind=\"param.default\"></span> (default)</div> <div ng-if=\"param.enum\"> <span ng-repeat=\"value in param.enum track by $index\">{{value}}<span ng-if=\"!$last\"> or </span></span> </div> <div ng-if=\"param.required\">(required)</div> </div> </div> </div>");
-$templateCache.put("modules/detail/request/request.html","<div ng-if=\"vm.sop.description\"> <md-subheader class=\"md-warn md-no-sticky\">Description</md-subheader> <div layout-padding> <div class=\"md-body-1\" truncate ng-bind-html=\"vm.sop.description\"></div> </div> </div> <form role=\"form\" name=\"vm.ngForm.explorerForm\" ng-submit=\"vm.submit(vm.sop)\"> <div ng-if=\"vm.sop.responseClass.schema\" layout=\"row\"> <div flex> <md-subheader class=\"md-warn md-no-sticky\">Response class</md-subheader> </div> <div class=\"sum-tools\" ng-if=\"vm.sop.responseClass.display != -1\"> <a class=\"md-button md-primary\" ng-click=\"vm.sop.responseClass.display = !vm.sop.responseClass.display + 0\" ng-bind=\"vm.sop.responseClass.display ? \'Model\' : \'Example\'\"></a> </div> </div> <div ng-if=\"vm.sop.responseClass.schema && (vm.sop.responseClass.display != -1)\" layout-padding class=\"sum-top\"> <pre class=\"sum-pre sum-wrap sum-no-margin\" ng-if=\"vm.sop.responseClass.display == 0\" ng-bind-html=\"vm.sop.responseClass.schema.model\"></pre> <pre class=\"sum-pre sum-no-margin\" ng-if=\"vm.sop.responseClass.display == 1\" ng-bind-html=\"vm.sop.responseClass.schema.json\"></pre> </div> <div ng-if=\"vm.sop.produces.length\"> <md-subheader class=\"md-warn md-no-sticky\">Response type</md-subheader> <div layout-padding style=\"padding-bottom: 0; top: -8px; position: relative\"> <div layout=\"row\"> <md-input-container flex style=\"min-height: 34px\"> <md-select aria-label=\"response type\" ng-model=\"vm.form.responseType\" ng-disabled=\"vm.sop.produces.length == 1\"> <md-option ng-repeat=\"item in vm.sop.produces track by item\" value=\"{{item}}\" ng-bind=\"::item\"> </md-option> </md-select> </md-input-container> </div> </div> </div> <div ng-if=\"vm.sop.parameters.length\"> <md-subheader class=\"md-warn md-no-sticky\">Parameters</md-subheader> <div layout-padding style=\"padding-top: 8px\" ng-repeat=\"param in vm.sop.parameters track by $index\" ng-include=\"\'modules/detail/request/parameter.html\'\"></div> </div> <div ng-if=\"vm.sop.responseArray.length\" style=\"padding-bottom: 8px\"> <md-subheader class=\"md-warn md-no-sticky\">Response messages</md-subheader> <div layout-padding> <div> <div ng-repeat=\"resp in vm.sop.responseArray track by $index\" ng-include=\"\'modules/detail/response.html\'\"></div> </div> </div> </div> <button hide type=\"submit\">Submit</button> </form>");
+$templateCache.put("modules/detail/request/request.html","<div ng-if=\"vm.sop.description\"> <md-subheader class=\"md-no-sticky\">Description</md-subheader> <div layout-padding> <div class=\"md-body-1\" truncate ng-bind-html=\"vm.sop.description\"></div> </div> </div> <form role=\"form\" name=\"vm.ngForm.explorerForm\" ng-submit=\"vm.submit(vm.sop)\"> <div ng-if=\"vm.sop.responseClass.schema\" layout=\"row\"> <div flex> <md-subheader class=\"md-no-sticky\">Response class</md-subheader> </div> <div class=\"sum-tools\" ng-if=\"vm.sop.responseClass.display != -1\"> <a class=\"md-button md-primary\" ng-click=\"vm.sop.responseClass.display = !vm.sop.responseClass.display + 0\" ng-bind=\"vm.sop.responseClass.display ? \'Model\' : \'Example\'\"></a> </div> </div> <div ng-if=\"vm.sop.responseClass.schema && (vm.sop.responseClass.display != -1)\" layout-padding class=\"sum-top\"> <pre class=\"sum-pre sum-wrap sum-no-margin\" ng-if=\"vm.sop.responseClass.display == 0\" ng-bind-html=\"vm.sop.responseClass.schema.model\"></pre> <pre class=\"sum-pre sum-no-margin\" ng-if=\"vm.sop.responseClass.display == 1\" ng-bind-html=\"vm.sop.responseClass.schema.json\"></pre> </div> <div ng-if=\"vm.sop.produces.length\"> <md-subheader class=\"md-no-sticky\">Response type</md-subheader> <div layout-padding style=\"padding-bottom: 0; top: -8px; position: relative\"> <div layout=\"row\"> <md-input-container flex style=\"min-height: 34px\"> <md-select aria-label=\"response type\" ng-model=\"vm.form.responseType\" ng-disabled=\"vm.sop.produces.length == 1\"> <md-option ng-repeat=\"item in vm.sop.produces track by item\" value=\"{{item}}\" ng-bind=\"::item\"> </md-option> </md-select> </md-input-container> </div> </div> </div> <div ng-if=\"vm.sop.consumes.length\"> <md-subheader class=\"md-no-sticky\">Content type</md-subheader> <div layout-padding style=\"padding-bottom: 0; top: -8px; position: relative\"> <div layout=\"row\"> <md-input-container flex style=\"min-height: 34px\"> <md-select aria-label=\"content type\" ng-model=\"vm.form.contentType\" ng-disabled=\"vm.sop.consumes.length == 1\"> <md-option ng-repeat=\"item in vm.sop.consumes track by item\" value=\"{{item}}\" ng-bind=\"::item\"> </md-option> </md-select> </md-input-container> </div> </div> </div> <div ng-if=\"vm.sop.parameters.length\"> <md-subheader class=\"md-no-sticky\">Parameters</md-subheader> <div layout-padding style=\"padding-top: 8px\" ng-repeat=\"param in vm.sop.parameters track by $index\" ng-include=\"\'modules/detail/request/parameter.html\'\"></div> </div> <div ng-if=\"vm.sop.responseArray.length\" style=\"padding-bottom: 8px\"> <md-subheader class=\"md-no-sticky\">Response messages</md-subheader> <div layout-padding> <div> <div ng-repeat=\"resp in vm.sop.responseArray track by $index\" ng-include=\"\'modules/detail/response.html\'\"></div> </div> </div> </div> <button hide type=\"submit\">Submit</button> </form>");
 $templateCache.put("modules/detail/result/result.html","<md-subheader class=\"md-warn md-no-sticky\">Request URL</md-subheader> <div layout-padding> <div> <a class=\"md-button sum-link md-primary\" style=\"font-weight: normal; white-space: normal; display: inline; overflow: auto; word-wrap: break-word\" ng-href=\"{{vm.sop.explorerResult.fullUrl}}\" target=\"_blank\" ng-bind=\"vm.sop.explorerResult.fullUrl\"></a> </div> </div> <md-subheader class=\"md-warn md-no-sticky\">Response status</md-subheader> <div layout-padding> <div> <div ng-repeat=\"resp in vm.sop.explorerResult.statusArray track by $index\" ng-include=\"\'modules/detail/response.html\'\"></div> </div> </div> <md-subheader class=\"md-warn md-no-sticky\">Timing</md-subheader> <div layout-padding> <div> <div ng-if=\"t[1]\" ng-repeat=\"t in vm.sop.explorerResult.timing track by $index\"> <span class=\"md-body-1\">{{t[0]}}: </span> <span class=\"md-body-2\">{{t[1] | number:2}} ms</span> </div> </div> </div> <div ng-if=\"vm.sop.explorerResult.headerArray.length\"> <md-subheader class=\"md-warn md-no-sticky\">Response headers</md-subheader> <div layout-padding> <div> <div ng-repeat=\"header in vm.sop.explorerResult.headerArray\" ng-include=\"\'modules/detail/header.html\'\"></div> </div> </div> </div> <div ng-if=\"vm.sop.explorerResult.body\"> <div class=\"sum-subheader\" layout=\"row\"> <div flex> <md-subheader class=\"md-warn md-no-sticky\">Response body</md-subheader> </div> <div class=\"sum-tools\"> <a href=\"#\" target=\"_blank\" class=\"md-button md-primary\" ng-click=\"vm.openFile($event)\">Open</a> </div> </div> <div layout-padding> <pre class=\"sum-pre\" style=\"word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 0; margin-bottom: 0\" truncate=\"1728\" ng-bind=\"vm.sop.explorerResult.body\"></pre> </div> </div>");
 $templateCache.put("modules/detail/scripts/scripts.html","<div layout=\"row\"> <div flex> <md-subheader class=\"md-warn md-no-sticky\">AngularJS</md-subheader> </div> <div class=\"sum-tools\" ng-if=\"vm.sop.responseClass.display != -1\"> <a class=\"md-button md-primary\" href=\"https://docs.angularjs.org/api/ng/service/$http\" target=\"_blank\">Reference</a> </div> </div> <div layout-padding class=\"sum-top\"> <pre class=\"sum-pre sum-wrap sum-no-margin\">$http({{vm.sop.mock | json}})\n.then(\n    function success(response) {\n    },\n    function error(response) {\n    }\n)</pre> </div>");}]);

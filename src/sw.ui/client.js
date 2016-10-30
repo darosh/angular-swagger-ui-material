@@ -8,7 +8,7 @@
 
 angular
     .module('sw.ui')
-    .factory('client', function ($q, $window, $http, $log, plugins) {
+    .factory('client', function ($q, $window, $http, $httpParamSerializer, $log, plugins) {
         // var reqCnt = 1;
 
         return {
@@ -105,11 +105,18 @@ angular
                         }
                         break;
                     case 'formData':
-                        body = body || new $window.FormData();
-                        if (value) {
-                            // make browser defining it by himself
-                            values.contentType = (param.type === 'file') ? undefined : values.contentType;
-                            body.append(param.name, value);
+                        if (values.contentType === 'application/x-www-form-urlencoded') {
+                            body = body || {};
+                            if (value) {
+                                body[param.name] = value;
+                            }
+                        } else {
+                            body = body || new $window.FormData();
+                            if (value) {
+                                // make browser defining it by himself
+                                values.contentType = (param.type === 'file') ? undefined : values.contentType;
+                                body.append(param.name, value);
+                            }
                         }
                         break;
                     case 'body':
@@ -121,6 +128,10 @@ angular
             // add headers
             headers.accept = values.responseType;
             headers['content-type'] = body ? values.contentType : 'text/plain';
+
+            if (values.contentType === 'application/x-www-form-urlencoded') {
+                body = $httpParamSerializer(body);
+            }
 
             return {
                 method: operation.httpMethod,
