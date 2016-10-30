@@ -255,23 +255,6 @@ angular.module('sw.ui.md')
 'use strict';
 
 angular.module('sw.ui.md')
-    .controller('DescriptionController', ["$scope", "$log", "data", function ($scope, $log, data) {
-        var vm = this;
-
-        $scope.$on('sw:changed', update);
-
-        update();
-
-        function update () {
-            $log.debug('sw:changed:description');
-
-            vm.description = data.model.info && data.model.info.description;
-        }
-    }]);
-
-'use strict';
-
-angular.module('sw.ui.md')
     .controller('ContentController', ["$rootScope", "data", "theme", function ($rootScope, data, theme) {
         var vm = this;
 
@@ -297,6 +280,24 @@ angular.module('sw.ui.md')
             $event.stopPropagation();
             data.model.sop = op;
             $rootScope.$emit('sw:operation');
+        }
+    }]);
+
+'use strict';
+
+angular.module('sw.ui.md')
+    .controller('DescriptionController', ["$scope", "$log", "data", function ($scope, $log, data) {
+        
+        var vm = this;
+
+        $scope.$on('sw:changed', update);
+
+        update();
+
+        function update () {
+            $log.debug('sw:changed:description');
+
+            vm.description = data.model.info && data.model.info.description;
         }
     }]);
 
@@ -857,7 +858,6 @@ angular.module('sw.ui.md')
         function init () {
             var stored = storage.getItem('swaggerUiSecurity:' + host);
             credentials = stored ? angular.fromJson(stored) : {};
-
             angular.forEach(securityDefinitions, function (sec, name) {
                 if (sec.type === 'apiKey') {
                     credentials[name] = credentials[name] || '';
@@ -865,7 +865,6 @@ angular.module('sw.ui.md')
                     credentials[name] = credentials[name] || {username: '', password: ''};
                 } else if (sec.type === 'oauth2') {
                     sec.scopeKey = getScopeKey(name, sec);
-
                     if (config[host] && config[host]['oauth2']) {
                         var cid = config[host]['oauth2'].clientId;
                     }
@@ -950,7 +949,6 @@ angular.module('sw.ui.md')
 
         function getSelectedScopes (sec) {
             var s = [];
-
             angular.forEach(credentials[sec.scopeKey].scopes, function (v, k) {
                 if (v) {
                     s.push(k);
@@ -1017,6 +1015,7 @@ angular.module('sw.ui.md')
 
                         counter(sec, locals);
 
+                        // Oauth2 Password Flow
                         sec.clickedPassword = function ($event) {
                             $event.preventDefault();
 
@@ -1033,9 +1032,9 @@ angular.module('sw.ui.md')
                             }).then(function (response) {
                                 var qp = response.data;
                                 angular.extend(credentials[sec.scopeKey], {
-                                    accessToken: qp['token'],
-                                    tokenType: 'Bearer',
-                                    expiresIn: 3600,
+                                    accessToken: qp['access_token'],
+                                    tokenType: qp['token_type'],
+                                    expiresIn: parseInt(qp['expires_in']),
                                     expiresFrom: Date.now()
                                 });
                             });
@@ -1104,7 +1103,9 @@ angular.module('sw.ui.md')
             var obj = {};
 
             angular.forEach(sec.scopes, function (v, k) {
+                console.log('REPLACE', v, k, sec.scopes);
                 obj[k] = k.replace(/^.*\/([^\/]+)$/g, '$1') || k;
+                console.log('AFTER REPLACE');
             });
 
             return obj;
@@ -2866,7 +2867,6 @@ angular
             headers['content-type'] = body ? values.contentType : 'text/plain';
 
             if (values.contentType === 'application/x-www-form-urlencoded') {
-                console.log('SERIALIZING', body);
                 body = $httpParamSerializer(body);
             }
 

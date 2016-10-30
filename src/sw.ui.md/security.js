@@ -41,7 +41,6 @@ angular.module('sw.ui.md')
         function init () {
             var stored = storage.getItem('swaggerUiSecurity:' + host);
             credentials = stored ? angular.fromJson(stored) : {};
-
             angular.forEach(securityDefinitions, function (sec, name) {
                 if (sec.type === 'apiKey') {
                     credentials[name] = credentials[name] || '';
@@ -49,7 +48,6 @@ angular.module('sw.ui.md')
                     credentials[name] = credentials[name] || {username: '', password: ''};
                 } else if (sec.type === 'oauth2') {
                     sec.scopeKey = getScopeKey(name, sec);
-
                     if (config[host] && config[host]['oauth2']) {
                         var cid = config[host]['oauth2'].clientId;
                     }
@@ -134,7 +132,6 @@ angular.module('sw.ui.md')
 
         function getSelectedScopes (sec) {
             var s = [];
-
             angular.forEach(credentials[sec.scopeKey].scopes, function (v, k) {
                 if (v) {
                     s.push(k);
@@ -218,9 +215,9 @@ angular.module('sw.ui.md')
                             }).then(function (response) {
                                 var qp = response.data;
                                 angular.extend(credentials[sec.scopeKey], {
-                                    accessToken: qp['token'],
-                                    tokenType: 'Bearer',
-                                    expiresIn: 3600,
+                                    accessToken: qp['access_token'],
+                                    tokenType: qp['token_type'],
+                                    expiresIn: parseInt(qp['expires_in']),
                                     expiresFrom: Date.now()
                                 });
                             });
@@ -289,7 +286,9 @@ angular.module('sw.ui.md')
             var obj = {};
 
             angular.forEach(sec.scopes, function (v, k) {
+                console.log('REPLACE', v, k, sec.scopes);
                 obj[k] = k.replace(/^.*\/([^\/]+)$/g, '$1') || k;
+                console.log('AFTER REPLACE');
             });
 
             return obj;
