@@ -24,8 +24,8 @@
   "dependencies": {
     "angular-material": "^1.0.5",
     "github-markdown-css": "^2.2.1",
-    "showdown": "^1.4.3",
-    "js-yaml": "^3.5.3"
+    "js-yaml": "^3.5.3",
+    "angular-schema-form": "^0.8.13"
   },
   "resolutions": {
     "showdown": "^1.4.3"

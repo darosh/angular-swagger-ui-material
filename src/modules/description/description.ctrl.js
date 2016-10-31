@@ -2,7 +2,6 @@
 
 angular.module('sw.ui.md')
     .controller('DescriptionController', function ($scope, $log, data) {
-        
         var vm = this;
 
         $scope.$on('sw:changed', update);

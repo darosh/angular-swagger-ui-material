@@ -286,9 +286,7 @@ angular.module('sw.ui.md')
             var obj = {};
 
             angular.forEach(sec.scopes, function (v, k) {
-                console.log('REPLACE', v, k, sec.scopes);
                 obj[k] = k.replace(/^.*\/([^\/]+)$/g, '$1') || k;
-                console.log('AFTER REPLACE');
             });
 
             return obj;

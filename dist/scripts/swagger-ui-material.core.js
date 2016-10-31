@@ -102,7 +102,6 @@ angular.module('sw.ui.md')
 angular.module('sw.ui.md')
     .controller('DetailController', ["$scope", "$rootScope", "$timeout", "$log", "data", "theme", "style", "tools", "utils", "syntax", "client", "format", function ($scope, $rootScope, $timeout, $log, data, theme, style, tools, utils, syntax, client, format) {
         var vm = this;
-
         vm.data = data;
         vm.theme = theme;
         vm.style = style;
@@ -172,7 +171,6 @@ angular.module('sw.ui.md')
             op.responseArray.sort(function (a, b) {
                 a.code.toString().localeCompare(b.code.toString());
             });
-
             deregister = $scope.$watch('vm.form', function () {
                 changed(op);
             }, true);
@@ -255,6 +253,23 @@ angular.module('sw.ui.md')
 'use strict';
 
 angular.module('sw.ui.md')
+    .controller('DescriptionController', ["$scope", "$log", "data", function ($scope, $log, data) {
+        var vm = this;
+
+        $scope.$on('sw:changed', update);
+
+        update();
+
+        function update () {
+            $log.debug('sw:changed:description');
+
+            vm.description = data.model.info && data.model.info.description;
+        }
+    }]);
+
+'use strict';
+
+angular.module('sw.ui.md')
     .controller('ContentController', ["$rootScope", "data", "theme", function ($rootScope, data, theme) {
         var vm = this;
 
@@ -280,24 +295,6 @@ angular.module('sw.ui.md')
             $event.stopPropagation();
             data.model.sop = op;
             $rootScope.$emit('sw:operation');
-        }
-    }]);
-
-'use strict';
-
-angular.module('sw.ui.md')
-    .controller('DescriptionController', ["$scope", "$log", "data", function ($scope, $log, data) {
-        
-        var vm = this;
-
-        $scope.$on('sw:changed', update);
-
-        update();
-
-        function update () {
-            $log.debug('sw:changed:description');
-
-            vm.description = data.model.info && data.model.info.description;
         }
     }]);
 
@@ -1103,9 +1100,7 @@ angular.module('sw.ui.md')
             var obj = {};
 
             angular.forEach(sec.scopes, function (v, k) {
-                console.log('REPLACE', v, k, sec.scopes);
                 obj[k] = k.replace(/^.*\/([^\/]+)$/g, '$1') || k;
-                console.log('AFTER REPLACE');
             });
 
             return obj;
@@ -2912,6 +2907,34 @@ angular.module('sw.ui.directives', []);
 'use strict';
 
 angular.module('sw.ui.directives')
+    .directive('toolbarSearch', ["$timeout", function ($timeout) {
+        return {
+            restrict: 'E',
+            templateUrl: 'directives/toolbar-search/toolbar-search.html',
+            scope: {
+                ngModel: '=',
+                ngChanged: '=',
+                open: '='
+            },
+            link: function (scope, element) {
+                $timeout(function () {
+                    scope.init = true;
+                }, 200);
+
+                scope.focus = function () {
+                    $timeout(function () {
+                        element.children()[1].focus();
+                    }, 200);
+                };
+
+                scope.$watch('ngModel', scope.ngChanged);
+            }
+        };
+    }]);
+
+'use strict';
+
+angular.module('sw.ui.directives')
     .directive('truncate', ["truncation", function (truncation) {
         return {
             restrict: 'A',
@@ -3035,34 +3058,6 @@ angular.module('sw.ui.directives')
                         scope.ngChanged();
                     }
                 };
-            }
-        };
-    }]);
-
-'use strict';
-
-angular.module('sw.ui.directives')
-    .directive('toolbarSearch', ["$timeout", function ($timeout) {
-        return {
-            restrict: 'E',
-            templateUrl: 'directives/toolbar-search/toolbar-search.html',
-            scope: {
-                ngModel: '=',
-                ngChanged: '=',
-                open: '='
-            },
-            link: function (scope, element) {
-                $timeout(function () {
-                    scope.init = true;
-                }, 200);
-
-                scope.focus = function () {
-                    $timeout(function () {
-                        element.children()[1].focus();
-                    }, 200);
-                };
-
-                scope.$watch('ngModel', scope.ngChanged);
             }
         };
     }]);

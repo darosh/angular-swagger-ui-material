@@ -102,7 +102,6 @@ angular.module('sw.ui.md')
 angular.module('sw.ui.md')
     .controller('DetailController', ["$scope", "$rootScope", "$timeout", "$log", "data", "theme", "style", "tools", "utils", "syntax", "client", "format", function ($scope, $rootScope, $timeout, $log, data, theme, style, tools, utils, syntax, client, format) {
         var vm = this;
-
         vm.data = data;
         vm.theme = theme;
         vm.style = style;
@@ -172,7 +171,6 @@ angular.module('sw.ui.md')
             op.responseArray.sort(function (a, b) {
                 a.code.toString().localeCompare(b.code.toString());
             });
-
             deregister = $scope.$watch('vm.form', function () {
                 changed(op);
             }, true);
@@ -255,6 +253,23 @@ angular.module('sw.ui.md')
 'use strict';
 
 angular.module('sw.ui.md')
+    .controller('DescriptionController', ["$scope", "$log", "data", function ($scope, $log, data) {
+        var vm = this;
+
+        $scope.$on('sw:changed', update);
+
+        update();
+
+        function update () {
+            $log.debug('sw:changed:description');
+
+            vm.description = data.model.info && data.model.info.description;
+        }
+    }]);
+
+'use strict';
+
+angular.module('sw.ui.md')
     .controller('ContentController', ["$rootScope", "data", "theme", function ($rootScope, data, theme) {
         var vm = this;
 
@@ -280,24 +295,6 @@ angular.module('sw.ui.md')
             $event.stopPropagation();
             data.model.sop = op;
             $rootScope.$emit('sw:operation');
-        }
-    }]);
-
-'use strict';
-
-angular.module('sw.ui.md')
-    .controller('DescriptionController', ["$scope", "$log", "data", function ($scope, $log, data) {
-        
-        var vm = this;
-
-        $scope.$on('sw:changed', update);
-
-        update();
-
-        function update () {
-            $log.debug('sw:changed:description');
-
-            vm.description = data.model.info && data.model.info.description;
         }
     }]);
 
@@ -1103,9 +1100,7 @@ angular.module('sw.ui.md')
             var obj = {};
 
             angular.forEach(sec.scopes, function (v, k) {
-                console.log('REPLACE', v, k, sec.scopes);
                 obj[k] = k.replace(/^.*\/([^\/]+)$/g, '$1') || k;
-                console.log('AFTER REPLACE');
             });
 
             return obj;
@@ -2912,6 +2907,34 @@ angular.module('sw.ui.directives', []);
 'use strict';
 
 angular.module('sw.ui.directives')
+    .directive('toolbarSearch', ["$timeout", function ($timeout) {
+        return {
+            restrict: 'E',
+            templateUrl: 'directives/toolbar-search/toolbar-search.html',
+            scope: {
+                ngModel: '=',
+                ngChanged: '=',
+                open: '='
+            },
+            link: function (scope, element) {
+                $timeout(function () {
+                    scope.init = true;
+                }, 200);
+
+                scope.focus = function () {
+                    $timeout(function () {
+                        element.children()[1].focus();
+                    }, 200);
+                };
+
+                scope.$watch('ngModel', scope.ngChanged);
+            }
+        };
+    }]);
+
+'use strict';
+
+angular.module('sw.ui.directives')
     .directive('truncate', ["truncation", function (truncation) {
         return {
             restrict: 'A',
@@ -3039,34 +3062,6 @@ angular.module('sw.ui.directives')
         };
     }]);
 
-'use strict';
-
-angular.module('sw.ui.directives')
-    .directive('toolbarSearch', ["$timeout", function ($timeout) {
-        return {
-            restrict: 'E',
-            templateUrl: 'directives/toolbar-search/toolbar-search.html',
-            scope: {
-                ngModel: '=',
-                ngChanged: '=',
-                open: '='
-            },
-            link: function (scope, element) {
-                $timeout(function () {
-                    scope.init = true;
-                }, 200);
-
-                scope.focus = function () {
-                    $timeout(function () {
-                        element.children()[1].focus();
-                    }, 200);
-                };
-
-                scope.$watch('ngModel', scope.ngChanged);
-            }
-        };
-    }]);
-
 /*
  * Orange angular-swagger-ui - v0.3.0
  *
@@ -3108,9 +3103,9 @@ $templateCache.put("modules/toolbar/toolbar.html","<md-toolbar md-whiteframe=\"2
 $templateCache.put("directives/toolbar-search/toolbar-search.html","<md-button ng-click=\"open = true; focus()\" class=\"md-icon-button\"> <md-icon>search</md-icon> </md-button> <input ng-show=\"open\" ng-model=\"ngModel\" type=\"text\" class=\"md-input\" ng-class=\"{\'input-show-hide\': init}\" ng-model-options=\"{debounce: {default: 200, blur: 0}}\"/> <md-button ng-show=\"open\" ng-click=\"ngModel = \'\'; open = false\" class=\"md-icon-button\" ng-class=\"{\'input-show-hide\': init}\"> <md-icon>close</md-icon> </md-button>");
 $templateCache.put("directives/toolbar-edit/toolbar-edit.html","<md-button ng-click=\"toggle()\" class=\"md-icon-button\"> <md-icon>edit</md-icon> </md-button> <form ng-show=\"init && open\" ng-submit=\"blur()\" layout=\"row\" flex><input flex ng-show=\"init && open\" ng-model=\"ngModel\" type=\"text\" class=\"md-input\" ng-blur=\"blur()\"/></form> <span ng-show=\"init && !open\" ng-click=\"toggle()\" ng-bind=\"displayTitle\" tabindex=\"-1\"></span>");
 $templateCache.put("modules/detail/request/parameter.html","<div layout=\"column\"> <md-input-container ng-if=\"vm.data.ui.explorer && (param.in != \'body\') && (param.subtype == \'file\')\"> <label ng-bind=\"param.name + (param.required ? \' (required)\' : \'\')\"></label> <input type=\"file\" file-input ng-model=\"vm.form[param.name]\" placeholder=\"{{param.required?\'(required)\':\'\'}}\" ng-required=\"param.required\"/> </md-input-container> <md-input-container ng-if=\"vm.data.ui.explorer && (param.in != \'body\') && (param.subtype != \'enum\') && (param.subtype != \'file\')\"> <label ng-bind=\"param.name + (param.required ? \' (required)\' : \'\')\"></label> <input type=\"text\" ng-model=\"vm.form[param.name]\" ng-required=\"param.required\"/> </md-input-container> <md-input-container ng-if=\"vm.data.ui.explorer && (param.in == \'body\')\"> <label ng-bind=\"param.name + (param.required ? \' (required)\' : \'\')\"></label> <textarea ng-model=\"vm.form[param.name]\" ng-required=\"param.required\"></textarea> </md-input-container> <md-input-container ng-if=\"vm.data.ui.explorer && (param.subtype == \'enum\')\"> <label ng-bind=\"param.name + (param.required ? \' (required)\' : \'\')\"></label> <md-select class=\"sum-no-margin\" ng-required=\"param.required\" ng-model=\"vm.form[param.name]\"> <md-option ng-repeat=\"value in param.enum\" value=\"{{value}}\" ng-selected=\"param.default == value\" ng-bind=\"value + (param.default == value ? \' (default)\' : \'\')\"></md-option> </md-select> </md-input-container> <div layout=\"row\" style=\"padding-right: 4px\"> <div class=\"md-body-1 sum-param-info markdown-body\" flex ng-bind-html=\"param.description\" truncate style=\"padding-left: 2px; padding-right: 8px\"></div> <div class=\"md-body-1 sum-param-info\" layout=\"column\"> <div layout=\"row\" layout-align=\"end\"> <div style=\"padding-right: 4px\">in:</div> <div><em ng-bind-html=\"param.in\"></em></div> </div> <div layout=\"row\" ng-if=\"param.type\" layout-align=\"end\"> <div style=\"padding-right: 4px\">type:</div> <div ng-switch=\"param.type\"> <code ng-switch-when=\"array\" ng-bind=\"\'Array[\'+param.items.type+\']\'\"></code> <code ng-switch-default ng-bind=\"param.type\"></code> </div> </div> </div> </div> <div ng-if=\"(param.in == \'body\') || param.schema\" layout=\"row\" class=\"sum-ind\" style=\"margin-top: 8px\"> <md-input-container flex ng-if=\"param.in == \'body\'\" style=\"margin-top: 2px; padding-right: 16px\"> <md-select aria-label=\"parameter type\" ng-model=\"vm.form.contentType\"> <md-option ng-repeat=\"item in vm.sop.consumes track by item\" value=\"{{item}}\" ng-bind=\"::item\"> </md-option> </md-select> </md-input-container> <div class=\"sum-tools-in\" ng-if=\"param.schema\"> <a class=\"md-button md-primary\" ng-click=\"vm.form[param.name] = param.schema.json\">Set</a> <a class=\"md-button md-primary\" ng-click=\"param.schema.display = !param.schema.display + 0\" ng-bind=\"param.schema.display ? \'Model\' : \'Example\'\"></a> </div> </div> <pre class=\"sum-pre sum-wrap sum-no-margin sum-ind\" ng-if=\"param.schema.display == 0 && param.schema.model\" ng-bind-html=\"param.schema.model\"></pre> <pre class=\"sum-pre sum-no-margin sum-ind\" ng-if=\"param.schema.display == 1 && param.schema.json\" ng-bind=\"param.schema.json\"></pre> <div ng-if=\"!vm.data.ui.explorer\"> <div ng-if=\"param.in != \'body\'\"> <div ng-if=\"param.default\"><span ng-bind=\"param.default\"></span> (default)</div> <div ng-if=\"param.enum\"> <span ng-repeat=\"value in param.enum track by $index\">{{value}}<span ng-if=\"!$last\"> or </span></span> </div> <div ng-if=\"param.required\">(required)</div> </div> </div> </div>");
-$templateCache.put("modules/detail/request/request.html","<div ng-if=\"vm.sop.description\"> <md-subheader class=\"md-no-sticky\">Description</md-subheader> <div layout-padding> <div class=\"md-body-1\" truncate ng-bind-html=\"vm.sop.description\"></div> </div> </div> <form role=\"form\" name=\"vm.ngForm.explorerForm\" ng-submit=\"vm.submit(vm.sop)\"> <div ng-if=\"vm.sop.responseClass.schema\" layout=\"row\"> <div flex> <md-subheader class=\"md-no-sticky\">Response class</md-subheader> </div> <div class=\"sum-tools\" ng-if=\"vm.sop.responseClass.display != -1\"> <a class=\"md-button md-primary\" ng-click=\"vm.sop.responseClass.display = !vm.sop.responseClass.display + 0\" ng-bind=\"vm.sop.responseClass.display ? \'Model\' : \'Example\'\"></a> </div> </div> <div ng-if=\"vm.sop.responseClass.schema && (vm.sop.responseClass.display != -1)\" layout-padding class=\"sum-top\"> <pre class=\"sum-pre sum-wrap sum-no-margin\" ng-if=\"vm.sop.responseClass.display == 0\" ng-bind-html=\"vm.sop.responseClass.schema.model\"></pre> <pre class=\"sum-pre sum-no-margin\" ng-if=\"vm.sop.responseClass.display == 1\" ng-bind-html=\"vm.sop.responseClass.schema.json\"></pre> </div> <div ng-if=\"vm.sop.produces.length\"> <md-subheader class=\"md-no-sticky\">Response type</md-subheader> <div layout-padding style=\"padding-bottom: 0; top: -8px; position: relative\"> <div layout=\"row\"> <md-input-container flex style=\"min-height: 34px\"> <md-select aria-label=\"response type\" ng-model=\"vm.form.responseType\" ng-disabled=\"vm.sop.produces.length == 1\"> <md-option ng-repeat=\"item in vm.sop.produces track by item\" value=\"{{item}}\" ng-bind=\"::item\"> </md-option> </md-select> </md-input-container> </div> </div> </div> <div ng-if=\"vm.sop.consumes.length\"> <md-subheader class=\"md-no-sticky\">Content type</md-subheader> <div layout-padding style=\"padding-bottom: 0; top: -8px; position: relative\"> <div layout=\"row\"> <md-input-container flex style=\"min-height: 34px\"> <md-select aria-label=\"content type\" ng-model=\"vm.form.contentType\" ng-disabled=\"vm.sop.consumes.length == 1\"> <md-option ng-repeat=\"item in vm.sop.consumes track by item\" value=\"{{item}}\" ng-bind=\"::item\"> </md-option> </md-select> </md-input-container> </div> </div> </div> <div ng-if=\"vm.sop.parameters.length\"> <md-subheader class=\"md-no-sticky\">Parameters</md-subheader> <div layout-padding style=\"padding-top: 8px\" ng-repeat=\"param in vm.sop.parameters track by $index\" ng-include=\"\'modules/detail/request/parameter.html\'\"></div> </div> <div ng-if=\"vm.sop.responseArray.length\" style=\"padding-bottom: 8px\"> <md-subheader class=\"md-no-sticky\">Response messages</md-subheader> <div layout-padding> <div> <div ng-repeat=\"resp in vm.sop.responseArray track by $index\" ng-include=\"\'modules/detail/response.html\'\"></div> </div> </div> </div> <button hide type=\"submit\">Submit</button> </form>");
-$templateCache.put("modules/detail/scripts/scripts.html","<div layout=\"row\"> <div flex> <md-subheader class=\"md-warn md-no-sticky\">AngularJS</md-subheader> </div> <div class=\"sum-tools\" ng-if=\"vm.sop.responseClass.display != -1\"> <a class=\"md-button md-primary\" href=\"https://docs.angularjs.org/api/ng/service/$http\" target=\"_blank\">Reference</a> </div> </div> <div layout-padding class=\"sum-top\"> <pre class=\"sum-pre sum-wrap sum-no-margin\">$http({{vm.sop.mock | json}})\n.then(\n    function success(response) {\n    },\n    function error(response) {\n    }\n)</pre> </div>");
-$templateCache.put("modules/detail/result/result.html","<md-subheader class=\"md-warn md-no-sticky\">Request URL</md-subheader> <div layout-padding> <div> <a class=\"md-button sum-link md-primary\" style=\"font-weight: normal; white-space: normal; display: inline; overflow: auto; word-wrap: break-word\" ng-href=\"{{vm.sop.explorerResult.fullUrl}}\" target=\"_blank\" ng-bind=\"vm.sop.explorerResult.fullUrl\"></a> </div> </div> <md-subheader class=\"md-warn md-no-sticky\">Response status</md-subheader> <div layout-padding> <div> <div ng-repeat=\"resp in vm.sop.explorerResult.statusArray track by $index\" ng-include=\"\'modules/detail/response.html\'\"></div> </div> </div> <md-subheader class=\"md-warn md-no-sticky\">Timing</md-subheader> <div layout-padding> <div> <div ng-if=\"t[1]\" ng-repeat=\"t in vm.sop.explorerResult.timing track by $index\"> <span class=\"md-body-1\">{{t[0]}}: </span> <span class=\"md-body-2\">{{t[1] | number:2}} ms</span> </div> </div> </div> <div ng-if=\"vm.sop.explorerResult.headerArray.length\"> <md-subheader class=\"md-warn md-no-sticky\">Response headers</md-subheader> <div layout-padding> <div> <div ng-repeat=\"header in vm.sop.explorerResult.headerArray\" ng-include=\"\'modules/detail/header.html\'\"></div> </div> </div> </div> <div ng-if=\"vm.sop.explorerResult.body\"> <div class=\"sum-subheader\" layout=\"row\"> <div flex> <md-subheader class=\"md-warn md-no-sticky\">Response body</md-subheader> </div> <div class=\"sum-tools\"> <a href=\"#\" target=\"_blank\" class=\"md-button md-primary\" ng-click=\"vm.openFile($event)\">Open</a> </div> </div> <div layout-padding> <pre class=\"sum-pre\" style=\"word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 0; margin-bottom: 0\" truncate=\"1728\" ng-bind=\"vm.sop.explorerResult.body\"></pre> </div> </div>");}]);
+$templateCache.put("modules/detail/request/request.html","<div ng-if=\"vm.sop.description\"> <md-subheader class=\"md-no-sticky\">Description</md-subheader> <div layout-padding> <div class=\"md-body-1\" truncate ng-bind-html=\"vm.sop.description\"></div> </div> </div> <form role=\"form\" name=\"vm.ngForm.explorerForm\" ng-submit=\"vm.submit(vm.sop)\"> <div ng-if=\"vm.sop.responseClass.schema\" layout=\"row\"> <div flex> <md-subheader class=\"md-no-sticky\">Response class</md-subheader> </div> <div class=\"sum-tools\" ng-if=\"vm.sop.responseClass.display != -1\"> <a class=\"md-button md-primary\" ng-click=\"vm.sop.responseClass.display = !vm.sop.responseClass.display + 0\" ng-bind=\"vm.sop.responseClass.display ? \'Model\' : \'Example\'\"></a> </div> </div> <div ng-if=\"vm.sop.responseClass.schema && (vm.sop.responseClass.display != -1)\" layout-padding class=\"sum-top\"> <pre class=\"sum-pre sum-wrap sum-no-margin\" ng-if=\"vm.sop.responseClass.display == 0\" ng-bind-html=\"vm.sop.responseClass.schema.model\"></pre> <pre class=\"sum-pre sum-no-margin\" ng-if=\"vm.sop.responseClass.display == 1\" ng-bind-html=\"vm.sop.responseClass.schema.json\"></pre> </div> <div ng-if=\"vm.sop.produces.length\"> <md-subheader class=\"md-no-sticky\">Response type</md-subheader> <div layout-padding style=\"padding-bottom: 0; top: -8px; position: relative\"> <div layout=\"row\"> <md-input-container flex style=\"min-height: 34px\"> <md-select aria-label=\"response type\" ng-model=\"vm.form.responseType\" ng-disabled=\"vm.sop.produces.length == 1\"> <md-option ng-repeat=\"item in vm.sop.produces track by item\" value=\"{{item}}\" ng-bind=\"::item\"> </md-option> </md-select> </md-input-container> </div> </div> </div> <div ng-if=\"vm.sop.parameters.length\"> <md-subheader class=\"md-no-sticky\">Parameters</md-subheader> <div layout-padding style=\"padding-top: 8px\" ng-repeat=\"param in vm.sop.parameters track by $index\" ng-include=\"\'modules/detail/request/parameter.html\'\"></div> </div> <div ng-if=\"vm.sop.responseArray.length\" style=\"padding-bottom: 8px\"> <md-subheader class=\"md-no-sticky\">Response messages</md-subheader> <div layout-padding> <div> <div ng-repeat=\"resp in vm.sop.responseArray track by $index\" ng-include=\"\'modules/detail/response.html\'\"></div> </div> </div> </div> <button hide type=\"submit\">Submit</button> </form>");
+$templateCache.put("modules/detail/result/result.html","<md-subheader class=\"md-warn md-no-sticky\">Request URL</md-subheader> <div layout-padding> <div> <a class=\"md-button sum-link md-primary\" style=\"font-weight: normal; white-space: normal; display: inline; overflow: auto; word-wrap: break-word\" ng-href=\"{{vm.sop.explorerResult.fullUrl}}\" target=\"_blank\" ng-bind=\"vm.sop.explorerResult.fullUrl\"></a> </div> </div> <md-subheader class=\"md-warn md-no-sticky\">Response status</md-subheader> <div layout-padding> <div> <div ng-repeat=\"resp in vm.sop.explorerResult.statusArray track by $index\" ng-include=\"\'modules/detail/response.html\'\"></div> </div> </div> <md-subheader class=\"md-warn md-no-sticky\">Timing</md-subheader> <div layout-padding> <div> <div ng-if=\"t[1]\" ng-repeat=\"t in vm.sop.explorerResult.timing track by $index\"> <span class=\"md-body-1\">{{t[0]}}: </span> <span class=\"md-body-2\">{{t[1] | number:2}} ms</span> </div> </div> </div> <div ng-if=\"vm.sop.explorerResult.headerArray.length\"> <md-subheader class=\"md-warn md-no-sticky\">Response headers</md-subheader> <div layout-padding> <div> <div ng-repeat=\"header in vm.sop.explorerResult.headerArray\" ng-include=\"\'modules/detail/header.html\'\"></div> </div> </div> </div> <div ng-if=\"vm.sop.explorerResult.body\"> <div class=\"sum-subheader\" layout=\"row\"> <div flex> <md-subheader class=\"md-warn md-no-sticky\">Response body</md-subheader> </div> <div class=\"sum-tools\"> <a href=\"#\" target=\"_blank\" class=\"md-button md-primary\" ng-click=\"vm.openFile($event)\">Open</a> </div> </div> <div layout-padding> <pre class=\"sum-pre\" style=\"word-wrap: break-word; overflow-y: auto; overflow-x: hidden; margin-top: 0; margin-bottom: 0\" truncate=\"1728\" ng-bind=\"vm.sop.explorerResult.body\"></pre> </div> </div>");
+$templateCache.put("modules/detail/scripts/scripts.html","<div layout=\"row\"> <div flex> <md-subheader class=\"md-warn md-no-sticky\">AngularJS</md-subheader> </div> <div class=\"sum-tools\" ng-if=\"vm.sop.responseClass.display != -1\"> <a class=\"md-button md-primary\" href=\"https://docs.angularjs.org/api/ng/service/$http\" target=\"_blank\">Reference</a> </div> </div> <div layout-padding class=\"sum-top\"> <pre class=\"sum-pre sum-wrap sum-no-margin\">$http({{vm.sop.mock | json}})\n.then(\n    function success(response) {\n    },\n    function error(response) {\n    }\n)</pre> </div>");}]);
 /*
  * Orange angular-swagger-ui - v0.3.0
  *
@@ -3241,6 +3236,67 @@ angular.module('sw.plugin.xmlFormater', ['sw.plugins'])
     })
     .run(function (plugins, xmlFormatter) {
         plugins.add(plugins.AFTER_EXPLORER_LOAD, xmlFormatter);
+    });
+
+'use strict';
+
+angular.module('sw.plugin.transform', ['sw.plugins'])
+    // Catch default transform invalid JSON parse
+    .factory('transform', function ($q, $http) {
+        return {
+            execute: function (config) {
+                var deferred = $q.defer();
+
+                config.transformResponse = function (data, headersGetter, status) {
+                    try {
+                        return $http.defaults.transformResponse[0](data, headersGetter, status);
+                    } catch (ing) {
+                        return data;
+                    }
+                };
+
+                deferred.resolve();
+
+                return deferred.promise;
+            }
+        };
+    })
+    .run(function (plugins, transform) {
+        plugins.add(plugins.BEFORE_EXPLORER_LOAD, transform);
+    });
+
+'use strict';
+
+angular.module('sw.plugin.yaml', ['sw.plugins'])
+    .factory('yaml', function ($q, $window) {
+        return {
+            execute: function (options) {
+                var deferred = $q.defer();
+
+                options.transformResponse = function (data, headersGetter) {
+                    try {
+                        return angular.fromJson(data);
+                    } catch (ign) {
+                        try {
+                            var obj = $window.jsyaml.safeLoad(data);
+
+                            headersGetter()['content-type'] = 'application/json';
+
+                            return obj;
+                        } catch (ign) {
+                            return data;
+                        }
+                    }
+                };
+
+                deferred.resolve();
+
+                return deferred.promise;
+            }
+        };
+    })
+    .run(function (plugins, yaml) {
+        plugins.add(plugins.BEFORE_LOAD, yaml);
     });
 
 'use strict';
@@ -3435,67 +3491,6 @@ angular.module('sw.plugin.sort', ['sw.plugins'])
     })
     .run(function (plugins, sort) {
         plugins.add(plugins.BEFORE_DISPLAY, sort);
-    });
-
-'use strict';
-
-angular.module('sw.plugin.yaml', ['sw.plugins'])
-    .factory('yaml', function ($q, $window) {
-        return {
-            execute: function (options) {
-                var deferred = $q.defer();
-
-                options.transformResponse = function (data, headersGetter) {
-                    try {
-                        return angular.fromJson(data);
-                    } catch (ign) {
-                        try {
-                            var obj = $window.jsyaml.safeLoad(data);
-
-                            headersGetter()['content-type'] = 'application/json';
-
-                            return obj;
-                        } catch (ign) {
-                            return data;
-                        }
-                    }
-                };
-
-                deferred.resolve();
-
-                return deferred.promise;
-            }
-        };
-    })
-    .run(function (plugins, yaml) {
-        plugins.add(plugins.BEFORE_LOAD, yaml);
-    });
-
-'use strict';
-
-angular.module('sw.plugin.transform', ['sw.plugins'])
-    // Catch default transform invalid JSON parse
-    .factory('transform', function ($q, $http) {
-        return {
-            execute: function (config) {
-                var deferred = $q.defer();
-
-                config.transformResponse = function (data, headersGetter, status) {
-                    try {
-                        return $http.defaults.transformResponse[0](data, headersGetter, status);
-                    } catch (ing) {
-                        return data;
-                    }
-                };
-
-                deferred.resolve();
-
-                return deferred.promise;
-            }
-        };
-    })
-    .run(function (plugins, transform) {
-        plugins.add(plugins.BEFORE_EXPLORER_LOAD, transform);
     });
 
 'use strict';
