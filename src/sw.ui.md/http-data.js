@@ -112,7 +112,7 @@ angular.module('sw.ui.md')
             ],
             205: [
                 'Reset Content',
-                'indicates that the server has fulfilled the request and desires that the user agent reset the \"document view\", which caused the request to be sent, to its original state as received from the origin server.',
+                'indicates that the server has fulfilled the request and desires that the user agent reset the "document view", which caused the request to be sent, to its original state as received from the origin server.',
                 'RFC7231#6.3.6',
                 'http://tools.ietf.org/html/rfc7231#section-6.3.6'
             ],
@@ -322,7 +322,7 @@ angular.module('sw.ui.md')
             ],
             429: [
                 'Too Many Requests',
-                'indicates that the user has sent too many requests in a given amount of time (\"rate limiting\").',
+                'indicates that the user has sent too many requests in a given amount of time ("rate limiting").',
                 'RFC6585#4',
                 'http://tools.ietf.org/html/rfc6585#section-4'
             ],
@@ -498,7 +498,7 @@ angular.module('sw.ui.md')
             ],
             pragma: [
                 'Pragma',
-                'allows backwards compatibility with HTTP/1.0 caches, so that clients can specify a \"no-cache\" request that they will understand (as Cache-Control was not defined until HTTP/1.1).',
+                'allows backwards compatibility with HTTP/1.0 caches, so that clients can specify a "no-cache" request that they will understand (as Cache-Control was not defined until HTTP/1.1).',
                 'RFC7234#7.4',
                 'http://tools.ietf.org/html/rfc7234#section-7.4'
             ],
@@ -594,7 +594,7 @@ angular.module('sw.ui.md')
             ],
             referer: [
                 'Referer',
-                'allows the user agent to specify a URI reference for the resource from which the target URI was obtained (i.e., the \"referrer\", though the field name is misspelled).',
+                'allows the user agent to specify a URI reference for the resource from which the target URI was obtained (i.e., the "referrer", though the field name is misspelled).',
                 'RFC7231#5.5.2',
                 'http://tools.ietf.org/html/rfc7231#section-5.5.2'
             ],
