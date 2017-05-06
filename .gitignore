@@ -1,6 +1,7 @@
 node_modules/
 bower_components/
 demo/
+dist/
 
 src/auth.json
 !src/auth.json.sample
