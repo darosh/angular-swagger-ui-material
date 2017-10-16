@@ -1,6 +1,8 @@
 # angular-swagger-ui-material
 
-![work: in progress](https://img.shields.io/badge/work-in%20progress-orange.svg?style=flat)
+__Abandoned in favor of [OpenAPI Specification Explorer](https://github.com/darosh/oax/)!__
+
+![work: abandoned](https://img.shields.io/badge/work-abandoned-red.svg?style=flat)
 [![tested on APIs.guru](https://img.shields.io/badge/tested%20on-APIs.guru%20specs-green.svg)](https://github.com/APIs-guru/openapi-directory)
 
 Material Design ~~template~~ Swagger UI ~~for~~ based on [angular-swagger-ui](https://github.com/Orange-OpenSource/angular-swagger-ui).
