@@ -3,13 +3,13 @@
 angular.module('sw.ui.md')
     .factory('theme', function () {
         var defaults = {
-            get: 'md-primary',
-            head: 'md-primary md-hue-2',
-            options: 'md-primary md-hue-3',
-            post: 'md-accent',
-            put: 'md-accent md-hue-2',
-            patch: 'md-accent md-hue-2',
-            delete: 'md-warn',
+            get: 'md-method md-get',
+            head: 'md-method md-head',
+            options: 'md-method md-options',
+            post: 'md-method md-post',
+            put: 'md-method md-put',
+            patch: 'md-method md-patch',
+            delete: 'md-method md-delete',
             1: 'md-accent',
             2: 'md-primary',
             3: 'md-accent md-hue-2',

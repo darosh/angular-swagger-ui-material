@@ -36,11 +36,13 @@
                    class="md-icon-button">
             <md-icon ng-bind="vm.ui.descriptions ? 'speaker_notes_off' : 'speaker_notes'"></md-icon>
         </md-button>
+        <!--
         <md-button hide show-gt-sm aria-label="proxy" ng-click="vm.showProxy($event)"
                    ng-class="{'md-warn md-hue-1': proxy.url}"
                    class="md-icon-button">
             <md-icon>security</md-icon>
         </md-button>
+        -->
         <md-button hide show-gt-sm aria-label="security" ng-click="vm.showSecurity($event)"
                    ng-if="vm.data.model.hasSecurity"
                    class="md-icon-button">

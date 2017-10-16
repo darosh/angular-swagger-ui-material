@@ -102,7 +102,6 @@ angular.module('sw.ui.md')
 angular.module('sw.ui.md')
     .controller('DetailController', ["$scope", "$rootScope", "$timeout", "$log", "data", "theme", "style", "tools", "utils", "syntax", "client", "format", function ($scope, $rootScope, $timeout, $log, data, theme, style, tools, utils, syntax, client, format) {
         var vm = this;
-
         vm.data = data;
         vm.theme = theme;
         vm.style = style;
@@ -172,7 +171,6 @@ angular.module('sw.ui.md')
             op.responseArray.sort(function (a, b) {
                 a.code.toString().localeCompare(b.code.toString());
             });
-
             deregister = $scope.$watch('vm.form', function () {
                 changed(op);
             }, true);
@@ -199,7 +197,6 @@ angular.module('sw.ui.md')
             $log.debug('sw:submit');
 
             operation.loading = true;
-
             client.send(data.model.info, operation, data.model.form[operation.id])
                 .then(function (response) {
                     clientDone(operation, response);
@@ -717,13 +714,13 @@ angular.module('sw.ui.md')
 angular.module('sw.ui.md')
     .factory('theme', function () {
         var defaults = {
-            get: 'md-primary',
-            head: 'md-primary md-hue-2',
-            options: 'md-primary md-hue-3',
-            post: 'md-accent',
-            put: 'md-accent md-hue-2',
-            patch: 'md-accent md-hue-2',
-            delete: 'md-warn',
+            get: 'md-method md-get',
+            head: 'md-method md-head',
+            options: 'md-method md-options',
+            post: 'md-method md-post',
+            put: 'md-method md-put',
+            patch: 'md-method md-patch',
+            delete: 'md-method md-delete',
             1: 'md-accent',
             2: 'md-primary',
             3: 'md-accent md-hue-2',
@@ -818,7 +815,7 @@ angular.module('sw.ui.md')
 'use strict';
 
 angular.module('sw.ui.md')
-    .factory('security', ["$q", "$http", "$timeout", "$interval", "$window", "$rootScope", "dialog", "data", function ($q, $http, $timeout, $interval, $window, $rootScope, dialog, data) {
+    .factory('security', ["$q", "$httpParamSerializer", "$http", "$timeout", "$interval", "$window", "$rootScope", "dialog", "data", function ($q, $httpParamSerializer, $http, $timeout, $interval, $window, $rootScope, dialog, data) {
         var storage = $window.sessionStorage;
         var securityDefinitions;
         var credentials;
@@ -858,7 +855,6 @@ angular.module('sw.ui.md')
         function init () {
             var stored = storage.getItem('swaggerUiSecurity:' + host);
             credentials = stored ? angular.fromJson(stored) : {};
-
             angular.forEach(securityDefinitions, function (sec, name) {
                 if (sec.type === 'apiKey') {
                     credentials[name] = credentials[name] || '';
@@ -866,7 +862,6 @@ angular.module('sw.ui.md')
                     credentials[name] = credentials[name] || {username: '', password: ''};
                 } else if (sec.type === 'oauth2') {
                     sec.scopeKey = getScopeKey(name, sec);
-
                     if (config[host] && config[host]['oauth2']) {
                         var cid = config[host]['oauth2'].clientId;
                     }
@@ -951,7 +946,6 @@ angular.module('sw.ui.md')
 
         function getSelectedScopes (sec) {
             var s = [];
-
             angular.forEach(credentials[sec.scopeKey].scopes, function (v, k) {
                 if (v) {
                     s.push(k);
@@ -1017,6 +1011,31 @@ angular.module('sw.ui.md')
                         sec.link = '#';
 
                         counter(sec, locals);
+
+                        // Oauth2 Password Flow
+                        sec.clickedPassword = function ($event) {
+                            $event.preventDefault();
+
+                            $http({
+                                method: 'POST',
+                                url: sec.tokenUrl,
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                data: $httpParamSerializer({
+                                    username: credentials[sec.scopeKey].username,
+                                    password: credentials[sec.scopeKey].password
+                                })
+                            }).then(function (response) {
+                                var qp = response.data;
+                                angular.extend(credentials[sec.scopeKey], {
+                                    accessToken: qp['access_token'],
+                                    tokenType: qp['token_type'],
+                                    expiresIn: parseInt(qp['expires_in']),
+                                    expiresFrom: Date.now()
+                                });
+                            });
+                        };
 
                         sec.clicked = function ($event) {
                             $event.preventDefault();
@@ -2721,7 +2740,9 @@ angular.module('sw.ui')
 
 angular
     .module('sw.ui')
-    .factory('client', ["$q", "$window", "$http", "plugins", function ($q, $window, $http, plugins) {
+    .factory('client', ["$q", "$window", "$http", "$httpParamSerializer", "$log", "plugins", function ($q, $window, $http, $httpParamSerializer, $log, plugins) {
+        // var reqCnt = 1;
+
         return {
             configure: configure,
             send: send,
@@ -2737,12 +2758,39 @@ angular
             var options = configure(operation, values, baseUrl);
 
             function done (response) {
+                if ($window.performance) {
+                    var items = $window.performance.getEntriesByType('resource');
+
+                    response.timing = timing(items[items.length - 1]);
+
+                    $log.debug('sw:measure', items[items.length - 1], response.timing);
+                }
+
                 // execute modules
                 plugins
                     .execute(plugins.AFTER_EXPLORER_LOAD, response)
                     .then(function () {
                         deferred.resolve(response);
                     });
+            }
+
+            function time (e, s) {
+                if (s && e) {
+                    return e - s;
+                } else {
+                    return false;
+                }
+            }
+
+            function timing (timing) {
+                return [
+                    ['redirect', time(timing.redirectEnd, timing.redirectStart)],
+                    ['dns', time(timing.domainLookupEnd, timing.domainLookupStart)],
+                    ['connect', time(timing.connectEnd, timing.connectStart)],
+                    ['request', time(timing.responseStart, timing.requestStart)],
+                    ['response', time(timing.responseEnd, timing.responseStart)],
+                    ['fetch', time(timing.responseEnd, timing.fetchStart)]
+                ];
             }
 
             // execute modules
@@ -2754,6 +2802,7 @@ angular
                     } else {
                         checkMixedContent(options).then(function () {
                             // send request
+                            // $window.performance.mark('mark_start_xhr');
                             $http(options).then(done, done);
                         }, done);
                     }
@@ -2788,11 +2837,18 @@ angular
                         }
                         break;
                     case 'formData':
-                        body = body || new $window.FormData();
-                        if (value) {
-                            // make browser defining it by himself
-                            values.contentType = (param.type === 'file') ? undefined : values.contentType;
-                            body.append(param.name, value);
+                        if (values.contentType === 'application/x-www-form-urlencoded') {
+                            body = body || {};
+                            if (value) {
+                                body[param.name] = value;
+                            }
+                        } else {
+                            body = body || new $window.FormData();
+                            if (value) {
+                                // make browser defining it by himself
+                                values.contentType = (param.type === 'file') ? undefined : values.contentType;
+                                body.append(param.name, value);
+                            }
                         }
                         break;
                     case 'body':
@@ -2804,6 +2860,10 @@ angular
             // add headers
             headers.accept = values.responseType;
             headers['content-type'] = body ? values.contentType : 'text/plain';
+
+            if (values.contentType === 'application/x-www-form-urlencoded') {
+                body = $httpParamSerializer(body);
+            }
 
             return {
                 method: operation.httpMethod,
@@ -2843,6 +2903,34 @@ angular
 'use strict';
 
 angular.module('sw.ui.directives', []);
+
+'use strict';
+
+angular.module('sw.ui.directives')
+    .directive('toolbarSearch', ["$timeout", function ($timeout) {
+        return {
+            restrict: 'E',
+            templateUrl: 'directives/toolbar-search/toolbar-search.html',
+            scope: {
+                ngModel: '=',
+                ngChanged: '=',
+                open: '='
+            },
+            link: function (scope, element) {
+                $timeout(function () {
+                    scope.init = true;
+                }, 200);
+
+                scope.focus = function () {
+                    $timeout(function () {
+                        element.children()[1].focus();
+                    }, 200);
+                };
+
+                scope.$watch('ngModel', scope.ngChanged);
+            }
+        };
+    }]);
 
 'use strict';
 
@@ -2928,34 +3016,6 @@ angular.module('sw.ui.directives')
             return root;
         };
     });
-
-'use strict';
-
-angular.module('sw.ui.directives')
-    .directive('toolbarSearch', ["$timeout", function ($timeout) {
-        return {
-            restrict: 'E',
-            templateUrl: 'directives/toolbar-search/toolbar-search.html',
-            scope: {
-                ngModel: '=',
-                ngChanged: '=',
-                open: '='
-            },
-            link: function (scope, element) {
-                $timeout(function () {
-                    scope.init = true;
-                }, 200);
-
-                scope.focus = function () {
-                    $timeout(function () {
-                        element.children()[1].focus();
-                    }, 200);
-                };
-
-                scope.$watch('ngModel', scope.ngChanged);
-            }
-        };
-    }]);
 
 'use strict';
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sw.ui.md')
-    .factory('security', function ($q, $http, $timeout, $interval, $window, $rootScope, dialog, data) {
+    .factory('security', function ($q, $httpParamSerializer, $http, $timeout, $interval, $window, $rootScope, dialog, data) {
         var storage = $window.sessionStorage;
         var securityDefinitions;
         var credentials;
@@ -41,7 +41,6 @@ angular.module('sw.ui.md')
         function init () {
             var stored = storage.getItem('swaggerUiSecurity:' + host);
             credentials = stored ? angular.fromJson(stored) : {};
-
             angular.forEach(securityDefinitions, function (sec, name) {
                 if (sec.type === 'apiKey') {
                     credentials[name] = credentials[name] || '';
@@ -49,7 +48,6 @@ angular.module('sw.ui.md')
                     credentials[name] = credentials[name] || {username: '', password: ''};
                 } else if (sec.type === 'oauth2') {
                     sec.scopeKey = getScopeKey(name, sec);
-
                     if (config[host] && config[host]['oauth2']) {
                         var cid = config[host]['oauth2'].clientId;
                     }
@@ -134,7 +132,6 @@ angular.module('sw.ui.md')
 
         function getSelectedScopes (sec) {
             var s = [];
-
             angular.forEach(credentials[sec.scopeKey].scopes, function (v, k) {
                 if (v) {
                     s.push(k);
@@ -200,6 +197,31 @@ angular.module('sw.ui.md')
                         sec.link = '#';
 
                         counter(sec, locals);
+
+                        // Oauth2 Password Flow
+                        sec.clickedPassword = function ($event) {
+                            $event.preventDefault();
+
+                            $http({
+                                method: 'POST',
+                                url: sec.tokenUrl,
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                data: $httpParamSerializer({
+                                    username: credentials[sec.scopeKey].username,
+                                    password: credentials[sec.scopeKey].password
+                                })
+                            }).then(function (response) {
+                                var qp = response.data;
+                                angular.extend(credentials[sec.scopeKey], {
+                                    accessToken: qp['access_token'],
+                                    tokenType: qp['token_type'],
+                                    expiresIn: parseInt(qp['expires_in']),
+                                    expiresFrom: Date.now()
+                                });
+                            });
+                        };
 
                         sec.clicked = function ($event) {
                             $event.preventDefault();

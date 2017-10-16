@@ -3,7 +3,6 @@
 angular.module('sw.ui.md')
     .controller('DetailController', function ($scope, $rootScope, $timeout, $log, data, theme, style, tools, utils, syntax, client, format) {
         var vm = this;
-
         vm.data = data;
         vm.theme = theme;
         vm.style = style;
@@ -73,7 +72,6 @@ angular.module('sw.ui.md')
             op.responseArray.sort(function (a, b) {
                 a.code.toString().localeCompare(b.code.toString());
             });
-
             deregister = $scope.$watch('vm.form', function () {
                 changed(op);
             }, true);
@@ -100,7 +98,6 @@ angular.module('sw.ui.md')
             $log.debug('sw:submit');
 
             operation.loading = true;
-
             client.send(data.model.info, operation, data.model.form[operation.id])
                 .then(function (response) {
                     clientDone(operation, response);

@@ -9,4 +9,4 @@ src/auth.json
 .architecture/
 .formatted/
 
-.idea/
+/dist/swagger.json

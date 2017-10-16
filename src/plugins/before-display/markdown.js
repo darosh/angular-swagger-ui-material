@@ -4,10 +4,60 @@ angular.module('sw.plugin.markdown', ['sw.plugins'])
     .factory('markdown', function ($q, $log, $window) {
         $log.debug('sw:plugin', 'markdown');
 
-        var showdown = new $window.showdown.Converter({
+        var hljs = $window.hljs;
+        var showdown = $window.showdown;
+
+        function htmlunencode (text) {
+            return (
+              text
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+              );
+        }
+
+        showdown.extension('codehighlight', function () {
+            return [
+                {
+                    type: 'output',
+                    filter: function (text, converter, options) {
+                        var left = '<pre><code\\b[^>]*>';
+                        var right = '</code></pre>';
+                        var flags = 'g';
+                        var replacement = function (wholeMatch, match, left, right) {
+                            match = htmlunencode(match);
+                            return left + hljs.highlightAuto(match).value + right;
+                        };
+
+                        return showdown.helper.replaceRecursiveRegExp(text, replacement, left, right, flags);
+                    }
+                }
+            ];
+        });
+
+        showdown.extension('tablecontainer', function () {
+            return [
+                {
+                    type: 'output',
+                    filter: function (text, converter, options) {
+                        var left = '<table>';
+                        var right = '</table>';
+                        var flags = 'g';
+                        var replacement = function (wholeMatch, match, left, right) {
+                            match = htmlunencode(match);
+                            return '<div class="table-container">' + left + match + right + '</div>';
+                        };
+
+                        return showdown.helper.replaceRecursiveRegExp(text, replacement, left, right, flags);
+                    }
+                }
+            ];
+        });
+
+        var converter = new showdown.Converter({
+            extensions: ['codehighlight', 'tablecontainer'],
             simplifiedAutoLink: true,
             tables: true,
-            ghCodeBlocks: true,
             tasklists: true
         });
 
@@ -63,7 +113,7 @@ angular.module('sw.plugin.markdown', ['sw.plugins'])
         }
 
         function markdown (text) {
-            return showdown.makeHtml(text || '');
+            return converter.makeHtml(text || '');
         }
     })
     .run(function (plugins, markdown) {

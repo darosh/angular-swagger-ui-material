@@ -11,24 +11,14 @@
         </div>
         <div ng-controller="ContentController as vm">
             <div ng-if="vm.data.ui.grouped" layout="row" layout-wrap layout-padding>
-                <div flex-xs="100"
-                     flex-sm="{{vm.data.ui.sidenavLocked ? 100 : 50}}"
-                     flex-md="{{vm.data.ui.sidenavLocked ? 50 : 33}}"
-                     flex-lg="{{vm.data.ui.sidenavLocked ? 33 : 25}}"
-                     flex-xl="{{vm.data.ui.sidenavLocked ? 25 : 20}}"
-                     ng-repeat="group in vm.data.model.groups track by $index"
+                <div ng-repeat="group in vm.data.model.groups track by $index"
                      ng-if="(group.operations | filter:vm.data.model.search:false).length"
-                     style="padding: 12px"
+                     style="padding: 12px; width: 100%"
                      ng-include="'modules/group/group.html'"></div>
             </div>
             <!-- TODO: multi-column layout with top>bottom sort would be better? -->
             <div ng-if="!vm.data.ui.grouped" layout="row" layout-wrap layout-padding style="margin-top: 12px;">
-                <div flex-xs="100"
-                     flex-sm="{{vm.data.ui.sidenavLocked ? 100 : 50}}"
-                     flex-md="{{vm.data.ui.sidenavLocked ? 50 : 33}}"
-                     flex-lg="{{vm.data.ui.sidenavLocked ? 33 : 25}}"
-                     flex-xl="{{vm.data.ui.sidenavLocked ? 25 : 20}}"
-                     ng-repeat="op in vm.data.model.operations | filter:vm.data.model.search:false track by op.id"
+                <div ng-repeat="op in vm.data.model.operations | filter:vm.data.model.search:false track by op.id"
                      style="padding-top: 0; padding-bottom: 0">
                     <div ng-class="{'sum-selected': vm.data.model.sop === op}"
                          ng-include="'modules/operation/operation.html'"></div>
@@ -76,9 +66,11 @@
             <md-tab label="Info" layout="column">
                 <div class="sum-fade" ng-hide="vm.omg" ng-include="'modules/detail/request/request.html'"></div>
             </md-tab>
+            <!--
             <md-tab label="Scripts" layout="column">
                 <div class="sum-fade" ng-hide="vm.omg" ng-include="'modules/detail/scripts/scripts.html'"></div>
             </md-tab>
+            -->
             <md-tab class="sum-tab-result" label="Result" ng-disabled="!vm.sop.explorerResult">
                 <div class="sum-fade" ng-hide="vm.omg" ng-show="vm.sop.explorerResult"
                      ng-include="'modules/detail/result/result.html'"></div>
